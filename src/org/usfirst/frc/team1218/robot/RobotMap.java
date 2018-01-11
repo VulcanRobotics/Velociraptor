@@ -14,6 +14,12 @@ package org.usfirst.frc.team1218.robot;
  * floating around.
  */
 public class RobotMap {
+	
+	public static final int[] leftMotorControllerIds = {1,2,3};
+	public static final int[] rightMotorControllerIds = {4,5,6};
+	public static final boolean leftInverted = true;
+	public static final boolean rightInverted = false;
+	
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
