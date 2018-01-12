@@ -19,8 +19,8 @@ public class DriveDefault extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		double leftPower = -Robot.m_oi.driver.getY() + Robot.m_oi.driver.getX();
-    		double rightPower = -Robot.m_oi.driver.getY() - Robot.m_oi.driver.getX();
+    		double leftPower = -Robot.m_oi.driver.getY() + Math.pow(Robot.m_oi.driver.getX(),3);
+    		double rightPower = -Robot.m_oi.driver.getY() - Math.pow(Robot.m_oi.driver.getX(),3);
     		Robot.driveTrain.setPower(leftPower, rightPower);
     }
 
