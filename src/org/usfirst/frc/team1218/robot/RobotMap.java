@@ -15,8 +15,8 @@ package org.usfirst.frc.team1218.robot;
  */
 public class RobotMap {
 	
-	public static final int[] leftMotorControllerIds = {0,1,2};
-	public static final int[] rightMotorControllerIds = {13,14,15};
+	public static final int[] leftMotorControllerIds = {1,0,2};
+	public static final int[] rightMotorControllerIds = {14,13,15};
 	public static final boolean leftInverted = false;
 	public static final boolean rightInverted = true;
 	public static final int shifterPort = 0;

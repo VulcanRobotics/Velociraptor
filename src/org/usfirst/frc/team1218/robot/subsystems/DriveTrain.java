@@ -27,17 +27,18 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].setInverted(invertRight);
 			rightMotorControllers[i].enableVoltageCompensation(true);
 		}
+		for(int i = 1; i < 3; i++) {
+			leftMotorControllers[i].set(ControlMode.Follower, leftMotorControllerIds[0]);
+			
+			rightMotorControllers[i].set(ControlMode.Follower, rightMotorControllerIds[0]);
+		}
 		shifter = new Solenoid(shifterPort);
 	}
 	
 	public void setPower(double leftPower, double rightPower) {
-		for(TalonSRX leftMotor: leftMotorControllers) {
-			leftMotor.set(ControlMode.PercentOutput, leftPower);
-		}
+		leftMotorControllers[0].set(ControlMode.PercentOutput, leftPower);
 		
-		for(TalonSRX rightMotor: rightMotorControllers) {
-			rightMotor.set(ControlMode.PercentOutput, rightPower);
-		}
+		rightMotorControllers[0].set(ControlMode.PercentOutput, rightPower);
 	}
 	
 	
