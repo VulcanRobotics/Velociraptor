@@ -5,6 +5,7 @@ import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -12,10 +13,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class DriveTrain extends Subsystem {
 	
-	TalonSRX[] leftMotorControllers;
-	TalonSRX[] rightMotorControllers;
+	TalonSRX[] leftMotorControllers = new TalonSRX[3];
+	TalonSRX[] rightMotorControllers = new TalonSRX[3];
+	Solenoid shifter;
 	
-	public DriveTrain(int[] leftMotorControllerIds, int[] rightMotorControllerIds, boolean invertLeft, boolean invertRight) {
+	public DriveTrain(int[] leftMotorControllerIds, int[] rightMotorControllerIds, boolean invertLeft, boolean invertRight,int shifterPort) {
 		for(int i = 0; i < 3; i++) {
 			leftMotorControllers[i] = new TalonSRX(leftMotorControllerIds[i]);
 			leftMotorControllers[i].setInverted(invertLeft);
@@ -25,6 +27,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].setInverted(invertRight);
 			rightMotorControllers[i].enableVoltageCompensation(true);
 		}
+		shifter = new Solenoid(shifterPort);
 	}
 	
 	public void setPower(double leftPower, double rightPower) {

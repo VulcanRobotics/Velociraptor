@@ -15,10 +15,11 @@ package org.usfirst.frc.team1218.robot;
  */
 public class RobotMap {
 	
-	public static final int[] leftMotorControllerIds = {1,2,3};
-	public static final int[] rightMotorControllerIds = {4,5,6};
-	public static final boolean leftInverted = true;
-	public static final boolean rightInverted = false;
+	public static final int[] leftMotorControllerIds = {0,1,2};
+	public static final int[] rightMotorControllerIds = {13,14,15};
+	public static final boolean leftInverted = false;
+	public static final boolean rightInverted = true;
+	public static final int shifterPort = 0;
 	
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
