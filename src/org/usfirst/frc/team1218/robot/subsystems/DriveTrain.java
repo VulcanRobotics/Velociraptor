@@ -3,10 +3,12 @@ package org.usfirst.frc.team1218.robot.subsystems;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -32,6 +34,11 @@ public class DriveTrain extends Subsystem {
 			
 			rightMotorControllers[i].set(ControlMode.Follower, rightMotorControllerIds[0]);
 		}
+		//setting up encoder feedback on Master Controllers
+		//encoder is set as feed back device for PID loop 0(the Main loop)
+		//configSelectedFeedbackSensor(feedbackDevice,loop#,timeout)
+		leftMotorControllers[0].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		rightMotorControllers[0].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0, 0);
 		shifter = new Solenoid(shifterPort);
 	}
 	
@@ -41,6 +48,11 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].set(ControlMode.PercentOutput, rightPower);
 	}
 	
+	public void periodicTasks() {
+		//publish left and right encoder Position to Dashboard.
+		SmartDashboard.putString("DB/String 0", "" + leftMotorControllers[0].getSelectedSensorPosition(0));
+		SmartDashboard.putString("DB/String 1", "" + rightMotorControllers[0].getSelectedSensorPosition(0));
+	}
 	
 
     public void initDefaultCommand() {

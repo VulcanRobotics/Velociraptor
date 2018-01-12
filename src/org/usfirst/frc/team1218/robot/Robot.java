@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		periodicTasks();
 	}
 
 	/**
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		periodicTasks();
 	}
 
 	@Override
@@ -108,6 +110,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		periodicTasks();
 	}
 
 	/**
@@ -115,5 +118,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+	
+	public void periodicTasks() {
+		driveTrain.periodicTasks();
+		
 	}
 }

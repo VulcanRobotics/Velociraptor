@@ -1,4 +1,4 @@
-build/**
-bin/**
-dist/**
-*.class
+/build/**
+/bin/**
+/dist/**
+
