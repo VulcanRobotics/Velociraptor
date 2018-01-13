@@ -19,8 +19,8 @@ public class DriveTrain extends Subsystem {
 	public static final int kd = 2;
 	public static final int kf = 3;
 	//low gear pid constants
-	static final double[] leftLowGearConstants = {0,0,0,1.0/1460.0};
-	static final double[] rightLowGearConstants = {0,0,0,1.0/1400.0};
+	static final double[] leftLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1460.0};
+	static final double[] rightLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1400.0};
 	
 	static final int MaxSpeed = 1300;
 	
@@ -51,23 +51,49 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0, 0);
 		rightMotorControllers[0].setSensorPhase(true);
 		//load pid constants
-		leftMotorControllers[0].config_kP(0, leftLowGearConstants[kp], 0);
-		leftMotorControllers[0].config_kI(0, leftLowGearConstants[ki], 0);
-		leftMotorControllers[0].config_kD(0, leftLowGearConstants[kd], 0);
-		leftMotorControllers[0].config_kF(0, leftLowGearConstants[kf], 0);
+		leftMotorControllers[0].config_kP(0, leftLowGearConstants[kp], 10);
+		leftMotorControllers[0].config_kI(0, leftLowGearConstants[ki], 10);
+		leftMotorControllers[0].config_kD(0, leftLowGearConstants[kd], 10);
+		leftMotorControllers[0].config_kF(0, leftLowGearConstants[kf], 10);
 		
 		rightMotorControllers[0].config_kP(0, rightLowGearConstants[kp], 0);
 		rightMotorControllers[0].config_kI(0, rightLowGearConstants[ki], 0);
 		rightMotorControllers[0].config_kD(0, rightLowGearConstants[kd], 0);
 		rightMotorControllers[0].config_kF(0, rightLowGearConstants[kf], 0);
 		
+		leftMotorControllers[0].configNominalOutputForward(0, 0);
+		leftMotorControllers[0].configPeakOutputForward(1, 0);
+		leftMotorControllers[0].configNominalOutputReverse(0, 0);
+		leftMotorControllers[0].configPeakOutputReverse(-1, 0);
+		
+		rightMotorControllers[0].configNominalOutputForward(0, 0);
+		rightMotorControllers[0].configPeakOutputForward(1, 0);
+		rightMotorControllers[0].configNominalOutputReverse(0, 0);
+		rightMotorControllers[0].configPeakOutputReverse(-1, 0);
+		
 		shifter = new Solenoid(shifterPort);
 	}
 	
 	public void setPower(double leftPower, double rightPower) {
-		leftMotorControllers[0].set(ControlMode.Velocity, leftPower*MaxSpeed);
-		
-		rightMotorControllers[0].set(ControlMode.Velocity, rightPower*MaxSpeed);
+		leftPower = clampPower(leftPower);
+		rightPower = clampPower(rightPower);
+		leftMotorControllers[0].set(ControlMode.PercentOutput, leftPower);
+		rightMotorControllers[0].set(ControlMode.PercentOutput, rightPower);
+	}
+	
+	/**
+	 * turns on velocity closed-loop. sets target velocity for left and right.
+	 * @param leftVelocity in encoder counts per 100ms
+	 * @param rightVelocity in encoder counts per 100ms
+	 */
+	public void setVelocity(int leftVelocity, int rightVelocity) {
+		leftMotorControllers[0].set(ControlMode.Velocity, leftVelocity);
+		rightMotorControllers[0].set(ControlMode.Velocity, rightVelocity);
+
+	}
+	
+	protected double clampPower(double power) {
+		return Math.max(-1.0, Math.min(1.0, power));
 	}
 	
 	public void periodicTasks() {
@@ -76,6 +102,10 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
+		SmartDashboard.putString("DB/String 5", "El:" + leftMotorControllers[0].getClosedLoopError(0));
+		SmartDashboard.putString("DB/String 6", "Er:" + rightMotorControllers[0].getClosedLoopError(0));
+		SmartDashboard.putString("DB/String 7", "Pl:" + leftMotorControllers[0].getMotorOutputVoltage());
+		SmartDashboard.putString("DB/String 8", "Pr:" + rightMotorControllers[0].getMotorOutputVoltage());
 	}
 	
 
