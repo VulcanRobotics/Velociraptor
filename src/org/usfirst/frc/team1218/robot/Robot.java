@@ -13,6 +13,12 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.net.URI;
+import java.net.URL;
+
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.resource.Resource;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 
@@ -48,6 +54,30 @@ public class Robot extends TimedRobot {
 		followPathCmd = new FollowPath();
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		Server jettyServer = new Server(5800);
+		URL webRootLocation = this.getClass().getResource("/webroot/index.html");
+		if (webRootLocation == null) {
+			System.out.println("Got NULL trying to load webroot resource from jar");
+		} else {
+			try {
+				URI webRootUri = URI.create(webRootLocation.toURI().toASCIIString().replaceFirst("/index.html$","/"));
+				System.out.println("Web Root URI: " + webRootUri);
+
+				ServletContextHandler context = new ServletContextHandler();
+				context.setContextPath("/");
+				context.setBaseResource(Resource.newResource(webRootUri));
+				context.setWelcomeFiles(new String[] { "index.html" });
+				context.getMimeTypes().addMimeMapping("txt","text/plain;charset=utf-8");
+				jettyServer.setHandler(context);
+	        
+				jettyServer.start();
+				jettyServer.join();
+				System.out.println("Started web server on port 5800");
+			} catch (Exception e) {
+				System.out.println("Exception " + e.getMessage() + " starting web server on port 5800");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
