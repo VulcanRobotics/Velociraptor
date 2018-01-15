@@ -16,7 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.net.URI;
 import java.net.URL;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
@@ -55,30 +60,30 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		Server jettyServer = new Server(5800);
-		URL webRootLocation = this.getClass().getResource("/webroot/index.html");
-		if (webRootLocation == null) {
-			System.out.println("Got NULL trying to load webroot resource from jar");
-		} else {
-			try {
-				URI webRootUri = URI.create(webRootLocation.toURI().toASCIIString().replaceFirst("/index.html$","/"));
-				System.out.println("Web Root URI: " + webRootUri);
+        ServerConnector connector = new ServerConnector(jettyServer);
+        connector.setPort(5800);
+        jettyServer.addConnector(connector);
 
-				ServletContextHandler context = new ServletContextHandler();
-				context.setContextPath("/");
-				context.setBaseResource(Resource.newResource(webRootUri));
-				context.setWelcomeFiles(new String[] { "index.html" });
-				context.getMimeTypes().addMimeMapping("txt","text/plain;charset=utf-8");
-				jettyServer.setHandler(context);
-	        
-				jettyServer.start();
-				jettyServer.join();
-				System.out.println("Started web server on port 5800");
-			} catch (Exception e) {
-				System.out.println("Exception " + e.getMessage() + " starting web server on port 5800");
-				e.printStackTrace();
-			}
+        ResourceHandler resource_handler = new ResourceHandler();
+        resource_handler.setDirectoriesListed(true);
+        resource_handler.setWelcomeFiles(new String[]{ "index.html" });
+
+        resource_handler.setResourceBase("/home/lvuser/webroot");
+        
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] { resource_handler, new DefaultHandler() });
+        jettyServer.setHandler(handlers);
+        try {
+			jettyServer.start();
+			jettyServer.join();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+
+		
 	}
+	
 
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
