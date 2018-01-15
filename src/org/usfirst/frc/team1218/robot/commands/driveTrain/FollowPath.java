@@ -99,6 +99,7 @@ public class FollowPath extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	System.out.println("starting FollowPath command");
+    	setPath(Robot.path,false);
     	processThread.startPeriodic(dtSeconds / 2.0);
     }
 
@@ -110,6 +111,7 @@ public class FollowPath extends Command {
     protected boolean isFinished() {
         if (done) {
         	System.out.println("finished FollowPath command");
+        	done = false;
         	return true;
         } else {
         	return false;

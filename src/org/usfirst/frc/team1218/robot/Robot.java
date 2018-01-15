@@ -33,8 +33,9 @@ public class Robot extends TimedRobot {
 	public static DriveTrain driveTrain;
 
 	Command m_autonomousCommand;
-	FollowPath followPathCmd = new FollowPath();
+	FollowPath followPathCmd;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
+	public static Path path;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -42,8 +43,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		m_oi = new OI();
 		driveTrain = new DriveTrain(RobotMap.leftMotorControllerIds,RobotMap.rightMotorControllerIds,RobotMap.leftInverted,RobotMap.rightInverted,RobotMap.shifterPort);
+		m_oi = new OI();
 		followPathCmd = new FollowPath();
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
@@ -56,6 +57,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		
 		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
 		config.dt = .1;			// the time in seconds between each generated segment
 		config.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
@@ -65,9 +67,11 @@ public class Robot extends TimedRobot {
 		WaypointSequence ws = new WaypointSequence(10);
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
         ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
-        followPathCmd.setPath(PathGenerator.makePath(ws, config,
-                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);
-        m_oi.followPathBtn.whenPressed(followPathCmd);
+        path = PathGenerator.makePath(ws, config,
+                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft");
+        /*followPathCmd.setPath(PathGenerator.makePath(ws, config,
+                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);*/
+        m_oi.followPathBtn.whenPressed(new FollowPath());
 	}
 
 	@Override

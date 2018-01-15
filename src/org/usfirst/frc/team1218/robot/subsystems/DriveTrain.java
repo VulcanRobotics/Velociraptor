@@ -140,7 +140,7 @@ public class DriveTrain extends Subsystem {
 	
 
     public void initDefaultCommand() {
-        setDefaultCommand(new DriveDefault());
+       setDefaultCommand(new DriveDefault());
     }
     
     public void processMotionProfileBuffer() {
