@@ -11,6 +11,7 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Segment;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -20,19 +21,17 @@ import edu.wpi.first.wpilibj.command.Command;
 public class FollowPath extends Command {
 
 	private Notifier processThread;
-	private boolean useTalonMPMode, running, done, runBACKWARDS;
+	private boolean useTalonMPMode, runBACKWARDS;
+	private AtomicBoolean running = new AtomicBoolean(false);
+	private AtomicBoolean done = new AtomicBoolean(false);
 	private AtomicBoolean interrupt = new AtomicBoolean(false);
 	private ArrayList<Segment> leftVelPts, rightVelPts;
 	private double dtSeconds;
 	
 	private class PointExecutor implements Runnable {
 		private long startTime;
-		private boolean firstTime;
+		private boolean firstTime = true;
 		private int step = 0;
-		
-		public PointExecutor() {
-			firstTime = true;
-		}
 
 		private Segment invertSegment(Segment s) {
 			return new Segment(-s.pos, -s.vel, -s.acc, -s.jerk, s.heading, s.dt, s.x, s.y);
@@ -40,15 +39,17 @@ public class FollowPath extends Command {
 		
 		public void run() {
 	    	if (firstTime) {
+	    		System.out.println("Notifier Initalized");
 	    		firstTime = false;
 	    		startTime = System.currentTimeMillis();
-	    		running = true;
-	    		done = false;
+	    		running.set(true);
+	    		done.set(false);
 	    	}
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));
 	    	//System.out.print("step: " + step);
 	    	try {
 	    		if (interrupt.get() == true) throw new Exception("Interrupting profile");
+	    		if (DriverStation.getInstance().isDisabled()) throw new Exception("Robot Disabled");
 	    		if (runBACKWARDS){
 	    			Robot.driveTrain.setVelocity(DriveTrain.ftPerSecToEncVel(rightVelPts.get(step).vel), 
 	    										DriveTrain.ftPerSecToEncVel(leftVelPts.get(step).vel));	
@@ -59,8 +60,8 @@ public class FollowPath extends Command {
 	    	} catch (Exception e) {
 	    		System.out.println("PointExecutor caught exception " + e.getMessage() + ", stopping Notifier");
 	    		processThread.stop();
-	    		running = false;
-	    		done = true;
+	    		running.set(false);
+	    		done.set(true);
 	    		firstTime = true;
 	    	}
 		}
@@ -72,12 +73,12 @@ public class FollowPath extends Command {
 		leftVelPts = new ArrayList<Segment>();
 		rightVelPts = new ArrayList<Segment>();
     	processThread = new Notifier(new PointExecutor());
-    	running = false;
-    	done = false;
+    	running.set(false);
+    	done.set(false);
     }
  
 	public void setPath(Path p, boolean useTalonMPMode) {
-    	if (running) {
+    	if (running.get()) {
     		System.out.println("FollowPath:  setPath() called while already running, ignoring");
     		return;
     	}
@@ -99,6 +100,7 @@ public class FollowPath extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	System.out.println("starting FollowPath command");
+    	done.set(false);
     	setPath(Robot.path,false);
     	processThread.startPeriodic(dtSeconds / 2.0);
     }
@@ -109,9 +111,8 @@ public class FollowPath extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (done) {
+        if (done.get()) {
         	System.out.println("finished FollowPath command");
-        	done = false;
         	return true;
         } else {
         	return false;
@@ -125,7 +126,7 @@ public class FollowPath extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	if (running) {
+    	if (running.get()) {
     		interrupt.set(true);
     		System.out.println("Interrupting FollowPath");
     	}
