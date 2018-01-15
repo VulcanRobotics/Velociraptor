@@ -12,7 +12,14 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
+
+import com.team254.lib.trajectory.Path;
+import com.team254.lib.trajectory.PathGenerator;
+import com.team254.lib.trajectory.TrajectoryGenerator;
+import com.team254.lib.trajectory.WaypointSequence;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,6 +33,7 @@ public class Robot extends TimedRobot {
 	public static DriveTrain driveTrain;
 
 	Command m_autonomousCommand;
+	FollowPath followPathCmd = new FollowPath();
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
 	/**
@@ -36,6 +44,7 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		m_oi = new OI();
 		driveTrain = new DriveTrain(RobotMap.leftMotorControllerIds,RobotMap.rightMotorControllerIds,RobotMap.leftInverted,RobotMap.rightInverted,RobotMap.shifterPort);
+		followPathCmd = new FollowPath();
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 	}
@@ -47,7 +56,18 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
+		config.dt = .1;			// the time in seconds between each generated segment
+		config.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		config.max_jerk = 30.0;	// maximum jerk (derivative of acceleration), ft/s
+		config.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 
+		WaypointSequence ws = new WaypointSequence(10);
+        ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
+        followPathCmd.setPath(PathGenerator.makePath(ws, config,
+                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);
+        m_oi.followPathBtn.whenPressed(followPathCmd);
 	}
 
 	@Override

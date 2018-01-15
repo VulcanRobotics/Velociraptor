@@ -8,6 +8,8 @@
 package org.usfirst.frc.team1218.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -43,9 +45,11 @@ public class OI{
 	// button.whenReleased(new ExampleCommand());
 	
 	public Joystick driver;
+	public Button followPathBtn; 
 	
 	public OI() {
 		driver = new Joystick(0);
+		followPathBtn = new JoystickButton(driver, 1);
 	}
 	
 }

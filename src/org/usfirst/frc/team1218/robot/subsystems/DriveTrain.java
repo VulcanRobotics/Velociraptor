@@ -3,6 +3,7 @@ package org.usfirst.frc.team1218.robot.subsystems;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -22,7 +23,21 @@ public class DriveTrain extends Subsystem {
 	static final double[] leftLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1460.0};
 	static final double[] rightLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1400.0};
 	
-	static final int MaxSpeed = 1300;
+	public static final int MaxSpeed = 1400;		// encoder ticks per 100ms
+	public static final double wheelDiameterInches = 4.0;
+	public static final int encTicksPerRev = 2000;
+	public static final double trackWidthInches = 28.0;
+	
+	/**
+	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
+	 * @param ftPerSec robot velocity in ft/sec
+	 */
+	public static int ftPerSecToEncVel(double ftPerSec) {
+		// (ftPerSec / ftPerRev) = revPerSec
+		// revPerSec * ticksPerRev = ticksPerSec
+		// ticksPerSec / 10 = ticksPer100ms = encVel
+		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * encTicksPerRev) / 10.0);
+	}
 	
 	TalonSRX[] leftMotorControllers = new TalonSRX[3];
 	TalonSRX[] rightMotorControllers = new TalonSRX[3];
@@ -74,6 +89,12 @@ public class DriveTrain extends Subsystem {
 		shifter = new Solenoid(shifterPort);
 	}
 	
+	/**
+	 * turns on velocity closed-loop. sets target velocity for left and right.
+	 * @param leftVelocity in encoder counts per 100ms
+	 * @param rightVelocity in encoder counts per 100ms
+	 */
+	
 	public void setPower(double leftPower, double rightPower) {
 		leftPower = clampPower(leftPower);
 		rightPower = clampPower(rightPower);
@@ -82,14 +103,23 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	/**
-	 * turns on velocity closed-loop. sets target velocity for left and right.
+	 * drives using velocity closed-loop, with target velocity as encoder counts per 100ms.
 	 * @param leftVelocity in encoder counts per 100ms
 	 * @param rightVelocity in encoder counts per 100ms
 	 */
 	public void setVelocity(int leftVelocity, int rightVelocity) {
 		leftMotorControllers[0].set(ControlMode.Velocity, leftVelocity);
 		rightMotorControllers[0].set(ControlMode.Velocity, rightVelocity);
+	}
 
+	/**
+	 * drives using velocity closed-loop, with target velocity as % output.
+	 * @param leftPower in % output, -1.0 to 1.0
+	 * @param rightPower in % output, -1.0 to 1.0 
+	 */
+	public void setVelocity(double leftPower, double rightPower) {
+		leftMotorControllers[0].set(ControlMode.Velocity, leftPower*MaxSpeed);
+		rightMotorControllers[0].set(ControlMode.Velocity, rightPower*MaxSpeed);
 	}
 	
 	protected double clampPower(double power) {
@@ -111,6 +141,11 @@ public class DriveTrain extends Subsystem {
 
     public void initDefaultCommand() {
         setDefaultCommand(new DriveDefault());
+    }
+    
+    public void processMotionProfileBuffer() {
+    	leftMotorControllers[0].processMotionProfileBuffer();
+    	rightMotorControllers[0].processMotionProfileBuffer();
     }
 }
 
