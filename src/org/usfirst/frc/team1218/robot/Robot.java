@@ -79,9 +79,9 @@ public class Robot extends TimedRobot {
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setWelcomeFiles(new String[]{ "index.html" });
-
-        resource_handler.setResourceBase("/home/lvuser/webroot");
+        resource_handler.setWelcomeFiles(new String[]{ "webroot/index.html" });
+        
+        resource_handler.setResourceBase("/home/lvuser");
         
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { resource_handler, new DefaultHandler() });

@@ -6,6 +6,11 @@ PathContainer encapsulates the Path, startingPose, and whether or not the Path i
 DrivePathAction(PathContainer p)
 	- Drive.setWantDrivePath(Path, isReversed)
 		- sets Talons to speed control mode, and creates PathFollower to follow the path
+			- PathFollower encapsulates an AdaptivePurePursuit for steering, and ProfileFollower for velocity
+				- PathFollower.update returns a Twist2d command, which Kinematics.inverseKinematics converts to left and 
+				right drive velocity setpoints
+
+so talons run just in velocity mode; PathFollower uses distances to adjust velocities based on how well profile is tracking
 		
 			 
 

@@ -23,14 +23,13 @@ public class FollowPath extends Command {
 
 	private Notifier processThread;
 	private boolean useTalonMPMode, runBACKWARDS;
-	private enum FollowerState { Waiting, Running, Interrupting, Done };
+	private enum FollowerState { Waiting, Starting, Running, Interrupting, Done };
 	private AtomicReference<FollowerState> state = new AtomicReference<FollowerState>(FollowerState.Waiting);
 	private ArrayList<Segment> leftVelPts, rightVelPts;
 	private double dtSeconds;
 	
 	private class PointExecutor implements Runnable {
 		private long startTime;
-		private boolean firstTime = true;
 		private int step = 0;
 
 		private Segment invertSegment(Segment s) {
@@ -38,11 +37,9 @@ public class FollowPath extends Command {
 		}
 		
 		public void run() {
-	    	if (firstTime) {
+	    	if (state.compareAndSet(FollowerState.Starting, FollowerState.Running)) {
 	    		System.out.println("Notifier Initalized");
-	    		firstTime = false;
 	    		startTime = System.currentTimeMillis();
-	    		state.set(FollowerState.Running);
 	    	}
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));
 	    	//System.out.print("step: " + step);
@@ -60,7 +57,6 @@ public class FollowPath extends Command {
 	    		System.out.println("PointExecutor caught exception " + e.getMessage() + ", stopping Notifier");
 	    		processThread.stop();
 	    		state.set(FollowerState.Done);
-	    		firstTime = true;
 	    	}
 		}
 	}
@@ -74,7 +70,7 @@ public class FollowPath extends Command {
 	}
  
 	public void setPath(Path p, boolean useTalonMPMode) {
-    	if (state.get() == FollowerState.Running || state.get() == FollowerState.Interrupting) {
+    	if (state.get() != FollowerState.Waiting) {
     		System.out.println("FollowPath:  setPath() called while already running, ignoring");
     		return;
     	}
@@ -95,12 +91,12 @@ public class FollowPath extends Command {
 	
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Running)) {
+    	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Starting)) {
         	System.out.println("starting FollowPath command");
     		processThread.startPeriodic(dtSeconds / 2.0);
     	} else {
     		System.out.println("FollowPath.initialize() exepcted WAITING but found " + state.get());
-    		System.out.println("\tcannot set RUNNING");
+    		System.out.println("\tcannot set STARTING");
     	}
     }
 
