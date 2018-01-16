@@ -57,6 +57,19 @@ public class Robot extends TimedRobot {
 		driveTrain = new DriveTrain(RobotMap.leftMotorControllerIds,RobotMap.rightMotorControllerIds,RobotMap.leftInverted,RobotMap.rightInverted,RobotMap.shifterPort);
 		m_oi = new OI();
 		followPathCmd = new FollowPath();
+		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
+		config.dt = .1;			// the time in seconds between each generated segment
+		config.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		config.max_jerk = 30.0;	// maximum jerk (derivative of acceleration), ft/s
+		config.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+
+		WaypointSequence ws = new WaypointSequence(10);
+        ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
+        followPathCmd.setPath(PathGenerator.makePath(ws, config,
+                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);
+        m_oi.followPathBtn.whenPressed(followPathCmd);
+
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		Server jettyServer = new Server(5800);
@@ -93,20 +106,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		
-		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
-		config.dt = .1;			// the time in seconds between each generated segment
-		config.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
-		config.max_jerk = 30.0;	// maximum jerk (derivative of acceleration), ft/s
-		config.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
-
-		WaypointSequence ws = new WaypointSequence(10);
-        ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
-        path = PathGenerator.makePath(ws, config,
-                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft");
-        /*followPathCmd.setPath(PathGenerator.makePath(ws, config,
-                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);*/
-        m_oi.followPathBtn.whenPressed(new FollowPath());
 	}
 
 	@Override

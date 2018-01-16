@@ -2,6 +2,7 @@ package org.usfirst.frc.team1218.robot.commands.driveTrain;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.usfirst.frc.team1218.robot.Robot;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
@@ -22,9 +23,8 @@ public class FollowPath extends Command {
 
 	private Notifier processThread;
 	private boolean useTalonMPMode, runBACKWARDS;
-	private AtomicBoolean running = new AtomicBoolean(false);
-	private AtomicBoolean done = new AtomicBoolean(false);
-	private AtomicBoolean interrupt = new AtomicBoolean(false);
+	private enum FollowerState { Waiting, Running, Interrupting, Done };
+	private AtomicReference<FollowerState> state = new AtomicReference<FollowerState>(FollowerState.Waiting);
 	private ArrayList<Segment> leftVelPts, rightVelPts;
 	private double dtSeconds;
 	
@@ -42,13 +42,12 @@ public class FollowPath extends Command {
 	    		System.out.println("Notifier Initalized");
 	    		firstTime = false;
 	    		startTime = System.currentTimeMillis();
-	    		running.set(true);
-	    		done.set(false);
+	    		state.set(FollowerState.Running);
 	    	}
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));
 	    	//System.out.print("step: " + step);
 	    	try {
-	    		if (interrupt.get() == true) throw new Exception("Interrupting profile");
+	    		if (state.get() == FollowerState.Interrupting) throw new Exception("Interrupting profile");
 	    		if (DriverStation.getInstance().isDisabled()) throw new Exception("Robot Disabled");
 	    		if (runBACKWARDS){
 	    			Robot.driveTrain.setVelocity(DriveTrain.ftPerSecToEncVel(rightVelPts.get(step).vel), 
@@ -60,8 +59,7 @@ public class FollowPath extends Command {
 	    	} catch (Exception e) {
 	    		System.out.println("PointExecutor caught exception " + e.getMessage() + ", stopping Notifier");
 	    		processThread.stop();
-	    		running.set(false);
-	    		done.set(true);
+	    		state.set(FollowerState.Done);
 	    		firstTime = true;
 	    	}
 		}
@@ -73,12 +71,10 @@ public class FollowPath extends Command {
 		leftVelPts = new ArrayList<Segment>();
 		rightVelPts = new ArrayList<Segment>();
     	processThread = new Notifier(new PointExecutor());
-    	running.set(false);
-    	done.set(false);
-    }
+	}
  
 	public void setPath(Path p, boolean useTalonMPMode) {
-    	if (running.get()) {
+    	if (state.get() == FollowerState.Running || state.get() == FollowerState.Interrupting) {
     		System.out.println("FollowPath:  setPath() called while already running, ignoring");
     		return;
     	}
@@ -99,10 +95,13 @@ public class FollowPath extends Command {
 	
     // Called just before this Command runs the first time
     protected void initialize() {
-    	System.out.println("starting FollowPath command");
-    	done.set(false);
-    	setPath(Robot.path,false);
-    	processThread.startPeriodic(dtSeconds / 2.0);
+    	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Running)) {
+        	System.out.println("starting FollowPath command");
+    		processThread.startPeriodic(dtSeconds / 2.0);
+    	} else {
+    		System.out.println("FollowPath.initialize() exepcted WAITING but found " + state.get());
+    		System.out.println("\tcannot set RUNNING");
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -111,7 +110,7 @@ public class FollowPath extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (done.get()) {
+        if (state.get() == FollowerState.Done) {
         	System.out.println("finished FollowPath command");
         	return true;
         } else {
@@ -121,14 +120,20 @@ public class FollowPath extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	if (!state.compareAndSet(FollowerState.Done, FollowerState.Waiting)) {
+    		System.out.println("FollowPath.end() expected state DONE but found state " + state.get());
+    		System.out.println("\tcannot set WAITING");
+    	}
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	if (running.get()) {
-    		interrupt.set(true);
+    	if (state.compareAndSet(FollowerState.Running, FollowerState.Interrupting)) {
     		System.out.println("Interrupting FollowPath");
+    	} else {
+    		System.out.println("FollowPath.interrupted() expected RUNNING but found " + state.get());
+    		System.out.println("\tcannot set INTERRUPTING");
     	}
     }
 }
