@@ -93,6 +93,7 @@ public class FollowPath extends Command {
     protected void initialize() {
     	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Starting)) {
         	System.out.println("starting FollowPath command");
+        	Robot.driveTrain.startLogging();
     		processThread.startPeriodic(dtSeconds / 2.0);
     	} else {
     		System.out.println("FollowPath.initialize() exepcted WAITING but found " + state.get());
@@ -120,6 +121,7 @@ public class FollowPath extends Command {
     		System.out.println("FollowPath.end() expected state DONE but found state " + state.get());
     		System.out.println("\tcannot set WAITING");
     	}
+    	Robot.driveTrain.stopLogging();
     }
 
     // Called when another command which requires one or more of the same
@@ -131,6 +133,7 @@ public class FollowPath extends Command {
     		System.out.println("FollowPath.interrupted() expected RUNNING but found " + state.get());
     		System.out.println("\tcannot set INTERRUPTING");
     	}
+    	Robot.driveTrain.stopLogging();
     }
 }
 

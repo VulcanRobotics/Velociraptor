@@ -1,11 +1,10 @@
 package org.usfirst.frc.team1218.robot.subsystems;
 
+import org.usfirst.frc.team1218.robot.LoggableSRX;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -39,17 +38,17 @@ public class DriveTrain extends Subsystem {
 		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * encTicksPerRev) / 10.0);
 	}
 	
-	TalonSRX[] leftMotorControllers = new TalonSRX[3];
-	TalonSRX[] rightMotorControllers = new TalonSRX[3];
+	LoggableSRX[] leftMotorControllers = new LoggableSRX[3];
+	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
 	
 	public DriveTrain(int[] leftMotorControllerIds, int[] rightMotorControllerIds, boolean invertLeft, boolean invertRight,int shifterPort) {
 		for(int i = 0; i < 3; i++) {
-			leftMotorControllers[i] = new TalonSRX(leftMotorControllerIds[i]);
+			leftMotorControllers[i] = new LoggableSRX(leftMotorControllerIds[i]);
 			leftMotorControllers[i].setInverted(invertLeft);
 			leftMotorControllers[i].enableVoltageCompensation(true);
 			
-			rightMotorControllers[i] = new TalonSRX(rightMotorControllerIds[i]);
+			rightMotorControllers[i] = new LoggableSRX(rightMotorControllerIds[i]);
 			rightMotorControllers[i].setInverted(invertRight);
 			rightMotorControllers[i].enableVoltageCompensation(true);
 		}
@@ -126,16 +125,22 @@ public class DriveTrain extends Subsystem {
 		return Math.max(-1.0, Math.min(1.0, power));
 	}
 	
+	public void startLogging() {
+		leftMotorControllers[0].startLogging();
+		rightMotorControllers[0].startLogging();
+	}
+	
+	public void stopLogging() {
+		leftMotorControllers[0].stopLogging();
+		rightMotorControllers[0].stopLogging();
+	}
+	
 	public void periodicTasks() {
 		//publish left and right encoder Position to Dashboard.
 		SmartDashboard.putString("DB/String 0", "Pl:" + leftMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
-		SmartDashboard.putString("DB/String 5", "El:" + leftMotorControllers[0].getClosedLoopError(0));
-		SmartDashboard.putString("DB/String 6", "Er:" + rightMotorControllers[0].getClosedLoopError(0));
-		SmartDashboard.putString("DB/String 7", "Pl:" + leftMotorControllers[0].getMotorOutputVoltage());
-		SmartDashboard.putString("DB/String 8", "Pr:" + rightMotorControllers[0].getMotorOutputVoltage());
 	}
 	
 
