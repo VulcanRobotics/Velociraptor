@@ -7,6 +7,16 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class IdentifyPlateAssignment extends Command {
+	
+	
+    public enum Plate {
+    	LEFT,
+    	RIGHT
+	}
+    static Plate ourSwitch; 
+    static Plate scale; 
+    static Plate theirSwitch; 
+
 
     public IdentifyPlateAssignment() {
         // Use requires() here to declare subsystem dependencies
@@ -23,22 +33,32 @@ public class IdentifyPlateAssignment extends Command {
     	
     		String gameData;
     		gameData = DriverStation.getInstance().getGameSpecificMessage();
-    		
-    	    public enum Plate {
-    	    		
-    		}
-    	    
+    		//a string of 3 characters 'L'or'R', closest first from alliance station
+
     		if(gameData.charAt(0) == 'L') {
-    			
+    			ourSwitch = Plate.LEFT;
     		} else {
-    			
+    			ourSwitch = Plate.RIGHT;
     		}
+    		
+    		if(gameData.charAt(1) == 'L') {
+    			scale = Plate.LEFT;
+    		} else {
+    			scale = Plate.RIGHT;
+    		}
+    		
+    		if(gameData.charAt(2) == 'L') {
+    			theirSwitch = Plate.LEFT;
+    		} else {
+    			theirSwitch = Plate.RIGHT;
+    		}
+    	
     	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     // Called once after isFinished returns true
