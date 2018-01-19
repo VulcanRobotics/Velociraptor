@@ -39,6 +39,7 @@ public class FollowPath extends Command {
 		public void run() {
 	    	if (state.compareAndSet(FollowerState.Starting, FollowerState.Running)) {
 	    		System.out.println("Notifier Initalized");
+	    		Robot.driveTrain.startLogging();
 	    		startTime = System.currentTimeMillis();
 	    	}
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));
@@ -56,6 +57,7 @@ public class FollowPath extends Command {
 	    	} catch (Exception e) {
 	    		System.out.println("PointExecutor caught exception " + e.getMessage() + ", stopping Notifier");
 	    		processThread.stop();
+	    		Robot.driveTrain.stopLogging();
 	    		state.set(FollowerState.Done);
 	    	}
 		}
@@ -93,7 +95,6 @@ public class FollowPath extends Command {
     protected void initialize() {
     	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Starting)) {
         	System.out.println("starting FollowPath command");
-        	Robot.driveTrain.startLogging();
     		processThread.startPeriodic(dtSeconds / 2.0);
     	} else {
     		System.out.println("FollowPath.initialize() exepcted WAITING but found " + state.get());
@@ -107,7 +108,7 @@ public class FollowPath extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (state.get() == FollowerState.Done) {
+        if (state.compareAndSet(FollowerState.Done, FollowerState.Waiting)) {
         	System.out.println("finished FollowPath command");
         	return true;
         } else {
@@ -117,11 +118,6 @@ public class FollowPath extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	if (!state.compareAndSet(FollowerState.Done, FollowerState.Waiting)) {
-    		System.out.println("FollowPath.end() expected state DONE but found state " + state.get());
-    		System.out.println("\tcannot set WAITING");
-    	}
-    	Robot.driveTrain.stopLogging();
     }
 
     // Called when another command which requires one or more of the same
