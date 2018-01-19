@@ -73,7 +73,6 @@ public class LoggableSRX extends TalonSRX {
 			File logfile = new File("/home/lvuser/log/talonSRX/" + deviceName + ".json");
 			logfile.createNewFile();
 			log = new BufferedWriter(new FileWriter(logfile));
-			log.write("Error,Setpoint,Velocity\n");
 			loggerTimer.scheduleAtFixedRate(new LoggerTask(this), 0, 20);
 			System.out.println("Starting Logging on " + deviceName);
 			return true;
