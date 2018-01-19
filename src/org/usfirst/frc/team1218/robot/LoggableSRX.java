@@ -19,20 +19,26 @@ public class LoggableSRX extends TalonSRX {
 	protected AtomicBoolean endFlag = new AtomicBoolean(false);;
 	
 	private class LoggerTask extends TimerTask {
+		long startTime;
 		Json data;
 		LoggableSRX srx;
 		public LoggerTask(LoggableSRX srx) {
 			this.srx = srx;
 			data = Json.object();
+			data.set("timeStamp", Json.array());
 			data.set("error", Json.array());
 			data.set("setpoint", Json.array());
 			data.set("velocity", Json.array());
+			data.set("position", Json.array());
+			startTime = System.currentTimeMillis();
 		}
 		@Override
 		public void run() {
+			data.at("timeStamp").add(System.currentTimeMillis() - startTime);
 			data.at("error").add(srx.getClosedLoopError(0));
 			data.at("setpoint").add(srx.getClosedLoopTarget(0));
 			data.at("velocity").add(srx.getSelectedSensorVelocity(0));
+			data.at("position").add(srx.getSelectedSensorPosition(0));
 			if(endFlag.get() == true) {
 				endFlag.set(false);
 				try {
