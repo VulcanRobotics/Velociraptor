@@ -41,6 +41,7 @@ public class DriveTrain extends Subsystem {
 	LoggableSRX[] leftMotorControllers = new LoggableSRX[3];
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
+	AHRS navx;
 	
 	public DriveTrain(int[] leftMotorControllerIds, int[] rightMotorControllerIds, boolean invertLeft, boolean invertRight,int shifterPort) {
 		for(int i = 0; i < 3; i++) {
