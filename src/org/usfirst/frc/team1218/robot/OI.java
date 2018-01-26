@@ -46,10 +46,12 @@ public class OI{
 	
 	public Joystick driver;
 	public Button followPathBtn; 
+	public Button shiftBtn;
 	
 	public OI() {
 		driver = new Joystick(0);
-		followPathBtn = new JoystickButton(driver, 1);
+		followPathBtn = new JoystickButton(driver, 2);
+		shiftBtn = new JoystickButton(driver,1);
 	}
 	
 }

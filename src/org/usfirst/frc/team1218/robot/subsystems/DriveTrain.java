@@ -19,8 +19,8 @@ public class DriveTrain extends Subsystem {
 	public static final int kd = 2;
 	public static final int kf = 3;
 	//low gear pid constants
-	static final double[] leftLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1460.0};
-	static final double[] rightLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1400.0};
+	static final double[] leftLowGearConstants = {1.05,0,0,0.75};
+	static final double[] rightLowGearConstants = {1.05,0,0,0.75};
 	
 	public static final int MaxSpeed = 1400;		// encoder ticks per 100ms
 	public static final double wheelDiameterInches = 4.0;
@@ -47,10 +47,12 @@ public class DriveTrain extends Subsystem {
 			leftMotorControllers[i] = new LoggableSRX(leftMotorControllerIds[i]);
 			leftMotorControllers[i].setInverted(invertLeft);
 			leftMotorControllers[i].enableVoltageCompensation(true);
+			leftMotorControllers[i].configOpenloopRamp(0.25, 0);
 			
 			rightMotorControllers[i] = new LoggableSRX(rightMotorControllerIds[i]);
 			rightMotorControllers[i].setInverted(invertRight);
 			rightMotorControllers[i].enableVoltageCompensation(true);
+			rightMotorControllers[i].configOpenloopRamp(0.25, 0);
 		}
 		for(int i = 1; i < 3; i++) {
 			leftMotorControllers[i].set(ControlMode.Follower, leftMotorControllerIds[0]);
@@ -133,6 +135,10 @@ public class DriveTrain extends Subsystem {
 	public void stopLogging() {
 		leftMotorControllers[0].stopLogging();
 		rightMotorControllers[0].stopLogging();
+	}
+	
+	public void shift(boolean shift) {
+		shifter.set(shift);
 	}
 	
 	public void periodicTasks() {
