@@ -30,6 +30,7 @@ public class LoggableSRX extends TalonSRX {
 			data.set("setpoint", Json.array());
 			data.set("velocity", Json.array());
 			data.set("position", Json.array());
+			data.set("vOut", Json.array());
 			startTime = System.currentTimeMillis();
 		}
 		@Override
@@ -39,6 +40,7 @@ public class LoggableSRX extends TalonSRX {
 			data.at("setpoint").add(srx.getClosedLoopTarget(0));
 			data.at("velocity").add(srx.getSelectedSensorVelocity(0));
 			data.at("position").add(srx.getSelectedSensorPosition(0));
+			data.at("vOut").add(srx.getMotorOutputVoltage());
 			if(endFlag.get() == true) {
 				endFlag.set(false);
 				try {
