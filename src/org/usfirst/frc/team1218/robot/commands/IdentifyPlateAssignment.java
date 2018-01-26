@@ -13,9 +13,9 @@ public class IdentifyPlateAssignment extends Command {
     	LEFT,
     	RIGHT
 	}
-    static Plate ourSwitch; 
-    static Plate scale; 
-    static Plate theirSwitch; 
+    public static Plate ourSwitch; 
+    public static Plate scale; 
+    public static Plate theirSwitch; 
 
 
     public IdentifyPlateAssignment() {
