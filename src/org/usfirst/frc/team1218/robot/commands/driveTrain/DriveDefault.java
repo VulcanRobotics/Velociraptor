@@ -23,6 +23,7 @@ public class DriveDefault extends Command {
     		double leftPower = -Robot.m_oi.driver.getY() + Math.pow(Robot.m_oi.driver.getX(),3);
     		double rightPower = -Robot.m_oi.driver.getY() - Math.pow(Robot.m_oi.driver.getX(),3);
     		Robot.driveTrain.setPower(leftPower, rightPower);
+    		Robot.driveTrain.shift(Robot.m_oi.shiftBtn.get());
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -37,5 +38,6 @@ public class DriveDefault extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    		System.out.println("Interrupting DriveDefault....");
     }
 }

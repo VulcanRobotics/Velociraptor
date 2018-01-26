@@ -1,10 +1,11 @@
 package org.usfirst.frc.team1218.robot.subsystems;
 
+import org.usfirst.frc.team1218.robot.LoggableSRX;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -19,30 +20,50 @@ public class DriveTrain extends Subsystem {
 	public static final int kd = 2;
 	public static final int kf = 3;
 	//low gear pid constants
-	static final double[] leftLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1460.0};
-	static final double[] rightLowGearConstants = {0.001*1023.0/60,0,0,1023.0/1400.0};
+	static final double[] leftLowGearConstants = {1.05,0,0,0.75};
+	static final double[] rightLowGearConstants = {1.05,0,0,0.75};
 	
-	static final int MaxSpeed = 1300;
+	public static final int MaxSpeed = 1400;		// encoder ticks per 100ms
+	public static final double wheelDiameterInches = 4.0;
+	public static final int encTicksPerRev = 2000;
+	public static final double trackWidthInches = 28.0;
 	
-	TalonSRX[] leftMotorControllers = new TalonSRX[3];
-	TalonSRX[] rightMotorControllers = new TalonSRX[3];
+	/**
+	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
+	 * @param ftPerSec robot velocity in ft/sec
+	 */
+	public static int ftPerSecToEncVel(double ftPerSec) {
+		// (ftPerSec / ftPerRev) = revPerSec
+		// revPerSec * ticksPerRev = ticksPerSec
+		// ticksPerSec / 10 = ticksPer100ms = encVel
+		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * encTicksPerRev) / 10.0);
+	}
+	
+	LoggableSRX[] leftMotorControllers = new LoggableSRX[3];
+	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
+	AHRS navx;
 	
 	public DriveTrain(int[] leftMotorControllerIds, int[] rightMotorControllerIds, boolean invertLeft, boolean invertRight,int shifterPort) {
 		for(int i = 0; i < 3; i++) {
-			leftMotorControllers[i] = new TalonSRX(leftMotorControllerIds[i]);
+			leftMotorControllers[i] = new LoggableSRX(leftMotorControllerIds[i]);
 			leftMotorControllers[i].setInverted(invertLeft);
 			leftMotorControllers[i].enableVoltageCompensation(true);
+			leftMotorControllers[i].configOpenloopRamp(0.25, 0);
 			
-			rightMotorControllers[i] = new TalonSRX(rightMotorControllerIds[i]);
+			rightMotorControllers[i] = new LoggableSRX(rightMotorControllerIds[i]);
 			rightMotorControllers[i].setInverted(invertRight);
 			rightMotorControllers[i].enableVoltageCompensation(true);
+			rightMotorControllers[i].configOpenloopRamp(0.25, 0);
 		}
 		for(int i = 1; i < 3; i++) {
 			leftMotorControllers[i].set(ControlMode.Follower, leftMotorControllerIds[0]);
 			
 			rightMotorControllers[i].set(ControlMode.Follower, rightMotorControllerIds[0]);
 		}
+		
+		navx = new AHRS(I2C.Port.kMXP);
+		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
 		//configSelectedFeedbackSensor(feedbackDevice,loop#,timeout)
@@ -74,6 +95,12 @@ public class DriveTrain extends Subsystem {
 		shifter = new Solenoid(shifterPort);
 	}
 	
+	/**
+	 * turns on velocity closed-loop. sets target velocity for left and right.
+	 * @param leftVelocity in encoder counts per 100ms
+	 * @param rightVelocity in encoder counts per 100ms
+	 */
+	
 	public void setPower(double leftPower, double rightPower) {
 		leftPower = clampPower(leftPower);
 		rightPower = clampPower(rightPower);
@@ -82,18 +109,45 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	/**
-	 * turns on velocity closed-loop. sets target velocity for left and right.
+	 * drives using velocity closed-loop, with target velocity as encoder counts per 100ms.
 	 * @param leftVelocity in encoder counts per 100ms
 	 * @param rightVelocity in encoder counts per 100ms
 	 */
 	public void setVelocity(int leftVelocity, int rightVelocity) {
 		leftMotorControllers[0].set(ControlMode.Velocity, leftVelocity);
 		rightMotorControllers[0].set(ControlMode.Velocity, rightVelocity);
+	}
 
+	/**
+	 * drives using velocity closed-loop, with target velocity as % output.
+	 * @param leftPower in % output, -1.0 to 1.0
+	 * @param rightPower in % output, -1.0 to 1.0 
+	 */
+	public void setVelocity(double leftPower, double rightPower) {
+		leftMotorControllers[0].set(ControlMode.Velocity, leftPower*MaxSpeed);
+		rightMotorControllers[0].set(ControlMode.Velocity, rightPower*MaxSpeed);
 	}
 	
 	protected double clampPower(double power) {
 		return Math.max(-1.0, Math.min(1.0, power));
+	}
+	
+	public void startLogging() {
+		leftMotorControllers[0].startLogging();
+		rightMotorControllers[0].startLogging();
+	}
+	
+	public void stopLogging() {
+		leftMotorControllers[0].stopLogging();
+		rightMotorControllers[0].stopLogging();
+	}
+	
+	public void shift(boolean shift) {
+		shifter.set(shift);
+	}
+	
+	public double getHeading() {
+		return navx.getAngle();
 	}
 	
 	public void periodicTasks() {
@@ -102,15 +156,17 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
-		SmartDashboard.putString("DB/String 5", "El:" + leftMotorControllers[0].getClosedLoopError(0));
-		SmartDashboard.putString("DB/String 6", "Er:" + rightMotorControllers[0].getClosedLoopError(0));
-		SmartDashboard.putString("DB/String 7", "Pl:" + leftMotorControllers[0].getMotorOutputVoltage());
-		SmartDashboard.putString("DB/String 8", "Pr:" + rightMotorControllers[0].getMotorOutputVoltage());
+		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 	}
 	
 
     public void initDefaultCommand() {
-        setDefaultCommand(new DriveDefault());
+       setDefaultCommand(new DriveDefault());
+    }
+    
+    public void processMotionProfileBuffer() {
+    	leftMotorControllers[0].processMotionProfileBuffer();
+    	rightMotorControllers[0].processMotionProfileBuffer();
     }
 }
 
