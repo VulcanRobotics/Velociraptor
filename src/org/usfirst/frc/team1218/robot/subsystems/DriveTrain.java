@@ -5,6 +5,7 @@ import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -60,6 +61,9 @@ public class DriveTrain extends Subsystem {
 			
 			rightMotorControllers[i].set(ControlMode.Follower, rightMotorControllerIds[0]);
 		}
+		
+		navx = new AHRS(I2C.Port.kMXP);
+		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
 		//configSelectedFeedbackSensor(feedbackDevice,loop#,timeout)
@@ -142,12 +146,17 @@ public class DriveTrain extends Subsystem {
 		shifter.set(shift);
 	}
 	
+	public double getHeading() {
+		return navx.getAngle();
+	}
+	
 	public void periodicTasks() {
 		//publish left and right encoder Position to Dashboard.
 		SmartDashboard.putString("DB/String 0", "Pl:" + leftMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
+		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 	}
 	
 
