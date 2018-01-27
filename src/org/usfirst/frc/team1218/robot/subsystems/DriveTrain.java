@@ -41,6 +41,10 @@ public class DriveTrain extends Subsystem {
 		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * encTicksPerRev) / 10.0);
 	}
 	
+	public static double radiansToInches(double angleInRadians) {
+		return ((trackWidthInches / 2.0) * angleInRadians);
+	}
+	
 	LoggableSRX[] leftMotorControllers = new LoggableSRX[3];
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
