@@ -21,6 +21,6 @@ public class TogglePTO extends InstantCommand{
 			Robot.driveTrain.setBrake(NeutralMode.Brake);
 			Robot.driveTrain.engagePto(true);
 		}
-		System.out.println("Logging on Drive Train set to:" + !enablePto);
+		System.out.println("PTO Enable set to:" + !enablePto);
 	}
 }
