@@ -5,6 +5,7 @@ import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -44,7 +45,10 @@ public class DriveTrain extends Subsystem {
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
 	AHRS navx;
+	boolean enableLogging = false;
 	
+	
+
 	public DriveTrain(int[] leftMotorControllerIds, int[] rightMotorControllerIds, boolean invertLeft, boolean invertRight,int shifterPort) {
 		for(int i = 0; i < 3; i++) {
 			leftMotorControllers[i] = new LoggableSRX(leftMotorControllerIds[i]);
@@ -119,10 +123,15 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].set(ControlMode.Velocity, rightVelocity);
 	}
 
+	public void setBrake(NeutralMode mode) {
+		for(int i = 0; i < leftMotorControllers.length;i++) {
+			leftMotorControllers[i].setNeutralMode(mode);
+			rightMotorControllers[i].setNeutralMode(mode);
+		}
+	}
 	/**
 	 * drives using velocity closed-loop, with target velocity as % output.
 	 * @param leftPower in % output, -1.0 to 1.0
-	 * @param rightPower in % output, -1.0 to 1.0 
 	 */
 	public void setVelocity(double leftPower, double rightPower) {
 		leftMotorControllers[0].set(ControlMode.Velocity, leftPower*MaxSpeed);
@@ -134,13 +143,23 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void startLogging() {
-		leftMotorControllers[0].startLogging();
-		rightMotorControllers[0].startLogging();
+		if (enableLogging) {
+			leftMotorControllers[0].startLogging();
+			rightMotorControllers[0].startLogging();
+		}
 	}
 	
 	public void stopLogging() {
 		leftMotorControllers[0].stopLogging();
 		rightMotorControllers[0].stopLogging();
+	}
+	
+	public boolean isLoggingEnabled() {
+		return enableLogging;
+	}
+
+	public void setEnableLogging(boolean enableLogging) {
+		this.enableLogging = enableLogging;
 	}
 	
 	public void shift(boolean shift) {
