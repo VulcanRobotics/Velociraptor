@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.net.URI;
-import java.net.URL;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -22,8 +20,6 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.util.resource.Resource;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 
@@ -67,7 +63,7 @@ public class Robot extends TimedRobot {
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
         ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
         followPathCmd.setPath(PathGenerator.makePath(ws, config,
-                driveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);
+                DriveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);
         m_oi.followPathBtn.whenPressed(followPathCmd);
 
 		// chooser.addObject("My Auto", new MyAutoCommand());

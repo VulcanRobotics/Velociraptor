@@ -48,6 +48,7 @@ public class DriveTrain extends Subsystem {
 	LoggableSRX[] leftMotorControllers = new LoggableSRX[3];
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
+	Solenoid pto;
 	AHRS navx;
 	boolean enableLogging = true;
 	boolean isLogging = false;
@@ -103,6 +104,8 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].configPeakOutputReverse(-1, 0);
 		
 		shifter = new Solenoid(shifterPort);
+		pto = new Solenoid(5);
+		engagePto(false);
 	}
 	
 	/**
@@ -177,6 +180,13 @@ public class DriveTrain extends Subsystem {
 		shifter.set(shift);
 	}
 	
+	public void engagePto(boolean engage) {
+		pto.set(!engage);
+	}
+	
+	public boolean isPtoEngaged() {
+		return !pto.get();
+	}
 	public double getHeading() {
 		return navx.getAngle();
 	}
