@@ -45,7 +45,7 @@ public class DriveTrain extends Subsystem {
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
 	AHRS navx;
-	boolean enableLogging = false;
+	boolean enableLogging = true;
 	boolean isLogging = false;
 	
 	

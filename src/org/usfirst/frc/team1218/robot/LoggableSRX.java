@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import mjson.Json;
@@ -36,8 +37,13 @@ public class LoggableSRX extends TalonSRX {
 		@Override
 		public void run() {
 			data.at("timeStamp").add(System.currentTimeMillis() - startTime);
-			data.at("error").add(srx.getClosedLoopError(0));
-			data.at("setpoint").add(srx.getClosedLoopTarget(0));
+			if(srx.getControlMode() == ControlMode.Velocity) {
+				data.at("error").add(srx.getClosedLoopError(0));
+				data.at("setpoint").add(srx.getClosedLoopTarget(0));
+			}else {
+				data.at("error").add(0);
+				data.at("setpoint").add(0);
+			}
 			data.at("velocity").add(srx.getSelectedSensorVelocity(0));
 			data.at("position").add(srx.getSelectedSensorPosition(0));
 			data.at("vOut").add(srx.getMotorOutputVoltage());

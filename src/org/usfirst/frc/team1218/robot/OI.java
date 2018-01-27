@@ -8,6 +8,7 @@
 package org.usfirst.frc.team1218.robot;
 
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleLogging;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleLoggingEnabled;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;

@@ -4,17 +4,13 @@ import org.usfirst.frc.team1218.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class ToggleLogging extends InstantCommand{
-	
-	public ToggleLogging() {
-		super();
-		requires(Robot.driveTrain);
-	}
+public class ToggleLogging extends InstantCommand {
 	@Override
 	public void execute() {
-		boolean enableLogging = Robot.driveTrain.isLoggingEnabled();
-		enableLogging = !enableLogging;
-		Robot.driveTrain.setEnableLogging(enableLogging);
-		System.out.println("Logging on Drive Train set to:" + enableLogging);
+		if(Robot.driveTrain.isLogging()) {
+			Robot.driveTrain.stopLogging();
+		}else {
+			Robot.driveTrain.startLogging();
+		}
 	}
 }
