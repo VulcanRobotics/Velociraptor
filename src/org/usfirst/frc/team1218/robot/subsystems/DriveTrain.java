@@ -46,6 +46,7 @@ public class DriveTrain extends Subsystem {
 	Solenoid shifter;
 	AHRS navx;
 	boolean enableLogging = false;
+	boolean isLogging = false;
 	
 	
 
@@ -144,14 +145,20 @@ public class DriveTrain extends Subsystem {
 	
 	public void startLogging() {
 		if (enableLogging) {
+			isLogging = true;
 			leftMotorControllers[0].startLogging();
 			rightMotorControllers[0].startLogging();
 		}
 	}
 	
 	public void stopLogging() {
+		isLogging = false;
 		leftMotorControllers[0].stopLogging();
 		rightMotorControllers[0].stopLogging();
+	}
+	
+	public boolean isLogging() {
+		return isLogging;
 	}
 	
 	public boolean isLoggingEnabled() {
