@@ -11,5 +11,6 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="jetty-all-9.4.8.v20171121-uber.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/jetty-all-9.4.8.v20171121-uber.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

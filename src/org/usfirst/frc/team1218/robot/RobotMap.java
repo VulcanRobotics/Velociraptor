@@ -21,6 +21,9 @@ public class RobotMap {
 	public static final boolean rightInverted = true;
 	public static final int shifterPort = 4;
 	
+	public static final int[] intakeMotorIds = {4,11};
+	public static final int[] elevatorMotorIds = {3,12};
+	
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;

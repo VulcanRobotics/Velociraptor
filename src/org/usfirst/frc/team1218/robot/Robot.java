@@ -22,6 +22,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team1218.robot.subsystems.Elevator;
 
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
@@ -38,6 +39,7 @@ import com.team254.lib.trajectory.WaypointSequence;
 public class Robot extends TimedRobot {
 	public static OI m_oi;
 	public static DriveTrain driveTrain;
+	public static Elevator elevator;
 
 	Command m_autonomousCommand;
 	FollowPath followPathCmd;
@@ -51,6 +53,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		driveTrain = new DriveTrain(RobotMap.leftMotorControllerIds,RobotMap.rightMotorControllerIds,RobotMap.leftInverted,RobotMap.rightInverted,RobotMap.shifterPort);
+		elevator = new Elevator();
 		m_oi = new OI();
 		followPathCmd = new FollowPath();
 		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
