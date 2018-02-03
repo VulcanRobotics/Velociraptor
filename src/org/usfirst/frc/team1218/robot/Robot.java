@@ -179,6 +179,7 @@ public class Robot extends TimedRobot {
 	
 	public void periodicTasks() {
 		driveTrain.periodicTasks();
+		elevator.periodicTasks();
 		
 	}
 }
