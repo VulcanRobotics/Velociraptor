@@ -7,7 +7,7 @@
 
 package org.usfirst.frc.team1218.robot;
 
-import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleLogging;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -61,7 +61,7 @@ public class OI{
 		followPathBtn = new JoystickButton(driver, 2);
 		shiftBtn = new JoystickButton(driver,1);
 		loggingBtn = new JoystickButton(driver,3);
-		loggingBtn.whenActive(new ToggleLogging());
+		loggingBtn.whenActive(new ToggleDriveTrainLogging());
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
 		intakeBtn = new JoystickButton(operator,2);

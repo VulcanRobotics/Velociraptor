@@ -4,7 +4,7 @@ import org.usfirst.frc.team1218.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class ToggleLogging extends InstantCommand {
+public class ToggleDriveTrainLogging extends InstantCommand {
 	@Override
 	public void execute() {
 		if(Robot.driveTrain.isLogging()) {
