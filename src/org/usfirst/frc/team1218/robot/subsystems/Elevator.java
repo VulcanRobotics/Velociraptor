@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1218.robot.subsystems;
 
-import org.usfirst.frc.team1218.robot.LoggableSRX;
+import org.team1218.lib.ctrlSystemLogging.LoggableSRX;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
 
