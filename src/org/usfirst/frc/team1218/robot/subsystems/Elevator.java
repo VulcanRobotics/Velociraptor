@@ -19,6 +19,7 @@ public class Elevator extends Subsystem {
 	static final boolean invertIntake = false;
 
 	boolean intakeStatus = false;
+	boolean isLogging = false;
 	LoggableSRX[] elevatorMotors = new LoggableSRX[2];
 	TalonSRX[] intakeMotors = new TalonSRX[2];
 	Solenoid intakeSolenoid;
@@ -50,10 +51,16 @@ public class Elevator extends Subsystem {
 	
 	public void startLogging() {
 		elevatorMotors[0].startLogging();
+		isLogging = true;
+	}
+	
+	public boolean isLogging() {
+		return isLogging;
 	}
 	
 	public void stopLogging() {
 		elevatorMotors[0].stopLogging();
+		isLogging = false;
 	}
 	
 	public void setElevatorPower(double elevatorPower) {
