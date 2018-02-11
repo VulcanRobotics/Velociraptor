@@ -104,7 +104,7 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].configPeakOutputReverse(-1, 0);
 		
 		shifter = new Solenoid(shifterPort);
-		pto = new Solenoid(5);
+		pto = new Solenoid(1);
 		engagePto(false);
 	}
 	

@@ -44,8 +44,8 @@ public class Elevator extends Subsystem {
 		elevatorMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		elevatorMotors[0].setSensorPhase(false);
 		
-		intakeSolenoid = new Solenoid(0);
-		armSolenoid = new Solenoid(1);
+		intakeSolenoid = new Solenoid(3);
+		armSolenoid = new Solenoid(2);
 		
 	}
 	

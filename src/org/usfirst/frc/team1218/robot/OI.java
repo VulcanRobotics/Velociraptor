@@ -54,6 +54,10 @@ public class OI{
 	public Button loggingBtn;
 	public Button ptoBtn;
 	public Button intakeBtn;
+	public Button intakeArmBtn;
+	public Button outtakeBtn;
+	public Button armUpBtn;
+	public Button armDownBtn;
 	
 	public OI() {
 		driver = new Joystick(0);
@@ -65,6 +69,10 @@ public class OI{
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
 		intakeBtn = new JoystickButton(operator,2);
+		intakeArmBtn = new JoystickButton(operator,1);
+		outtakeBtn = new JoystickButton(operator,3);
+		armUpBtn = new JoystickButton(operator,6);
+		armDownBtn = new JoystickButton(operator,4);
 	}
 	
 }
