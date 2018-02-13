@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1218.robot.commands.driveTrain;
 
+import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -8,10 +11,14 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnToAngle extends Command {
 
 	double encoderTicksToTurn;
+	double radiansToInches;
 	
     public TurnToAngle(double angleInRadians) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	
+    	requires(Robot.driveTrain);
+    	 
     }
 
     // Called just before this Command runs the first time
@@ -19,7 +26,24 @@ public class TurnToAngle extends Command {
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
+    protected void execute(double angleInRadians) {
+    	
+    double inchesToTurn = DriveTrain.radiansToInches(angleInRadians);
+    double encoderTicksToTurn = ((DriveTrain.wheelDiameterInches*(Math.PI))/DriveTrain.encTicksPerRev);
+    if(angleInRadians > 0) {
+	    	double leftPower = 0.5;
+	    	double rightPower = -0.5;
+	    	Robot.driveTrain.setPower(leftPower, rightPower);
+	    	Robot.driveTrain.shift(Robot.m_oi.shiftBtn.get());
+	    	//Drive for encoderTicksToTurn
+    }else {
+	    	double leftPower = -0.5;
+	    	double rightPower = 0.5;
+	    	Robot.driveTrain.setPower(leftPower, rightPower);
+	    	Robot.driveTrain.shift(Robot.m_oi.shiftBtn.get());
+	    	//Drive for encoderTicksToTurn
+    }
+	
     }
 
     // Make this return true when this Command no longer needs to run execute()
