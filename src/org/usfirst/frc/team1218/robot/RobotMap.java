@@ -7,6 +7,9 @@
 
 package org.usfirst.frc.team1218.robot;
 
+import java.io.FileInputStream;
+import java.util.Properties;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -15,14 +18,25 @@ package org.usfirst.frc.team1218.robot;
  */
 public class RobotMap {
 	
-	public static final int[] leftMotorControllerIds = {1,0,2};
-	public static final int[] rightMotorControllerIds = {14,13,15};
-	public static final boolean leftInverted = false;
-	public static final boolean rightInverted = true;
-	public static final int shifterPort = 0;
+	public static int[] leftMotorControllerIds = {1,0,2};
+	public static int[] rightMotorControllerIds = {14,13,15};
+	public static boolean leftInverted = false;
+	public static boolean rightInverted = true;
+	public static int shifterPort = 0;
 	
-	public static final int[] intakeMotorIds = {4,11};
-	public static final int[] elevatorMotorIds = {3,12};
+	public static int[] intakeMotorIds = {4,11};
+	public static int[] elevatorMotorIds = {3,12};
+	
+	
+	public static void loadProperties() {
+		Properties props = new Properties();
+		try {
+			FileInputStream propsFile = new FileInputStream("/home/lvuser/robot.properties");
+			props.load(propsFile);
+		} catch (Exception e) {}
+	}
+	
+	
 	
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
