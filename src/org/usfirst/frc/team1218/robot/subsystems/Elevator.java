@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Elevator extends Subsystem {
 	
 	static final boolean invertElevator = true;
-	static final boolean invertIntake = false;
+	static final boolean[] invertIntake = {true,false};
 
 	boolean intakeStatus = false;
 	boolean isLogging = false;
@@ -32,9 +32,10 @@ public class Elevator extends Subsystem {
 			elevatorMotors[i].enableVoltageCompensation(true);
 			
 			intakeMotors[i] = new TalonSRX(RobotMap.intakeMotorIds[i]);
-			intakeMotors[i].setInverted(invertIntake);
+			intakeMotors[i].setInverted(invertIntake[i]);
 			intakeMotors[i].enableVoltageCompensation(true);
 		}
+		
 		
 		for(int i = 1; i < 2; i++) {
 			elevatorMotors[i].set(ControlMode.Follower, RobotMap.elevatorMotorIds[0]);
