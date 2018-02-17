@@ -19,7 +19,7 @@ public class ElevatorDefault extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.elevator.setElevatorPower(-Robot.m_oi.operator.getY());
+    		Robot.elevator.setElevatorPower(Robot.m_oi.operator.getY());
     		if(Robot.m_oi.intakeBtn.get()) {
     			Robot.elevator.setIntakePower(1);
     		}else if(Robot.m_oi.outtakeBtn.get()){
