@@ -5,6 +5,7 @@ import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -46,7 +47,9 @@ public class Elevator extends Subsystem {
 		
 		elevatorMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		elevatorMotors[0].setSensorPhase(false);
-		elevatorMotors[0].configReverseLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.elevatorMotorIds[1], 0);
+		elevatorMotors[0].configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+		elevatorMotors[0].configForwardSoftLimitThreshold(275000, 0);
+		elevatorMotors[0].configForwardSoftLimitEnable(true, 0);
 		
 		intakeSolenoid = new Solenoid(3);
 		armSolenoid = new Solenoid(2);
@@ -78,11 +81,16 @@ public class Elevator extends Subsystem {
 		intakeSolenoid.set(intakeState);
 	}
 	public void armSolenoidEngage(boolean armState) {
-		armSolenoid.set(armState);
+		armSolenoid.set(!armState);
 	}
 	
 	public void periodicTasks() {
 		SmartDashboard.putString("DB/String 5", "Pe:" + elevatorMotors[0].getSelectedSensorPosition(0));
+		Faults f = new Faults();
+		elevatorMotors[0].getFaults(f);
+		if(f.ReverseLimitSwitch == true) {
+			elevatorMotors[0].setSelectedSensorPosition(0, 0, 0);
+		}
 	}
 	
 	@Override

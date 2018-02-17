@@ -23,7 +23,7 @@ public class ElevatorDefault extends Command {
     		if(Robot.m_oi.intakeBtn.get()) {
     			Robot.elevator.setIntakePower(1);
     		}else if(Robot.m_oi.outtakeBtn.get()){
-    			Robot.elevator.setIntakePower(-1);
+    			Robot.elevator.setIntakePower(-0.70);
     		}else {
     			Robot.elevator.setIntakePower(0);
     		}
