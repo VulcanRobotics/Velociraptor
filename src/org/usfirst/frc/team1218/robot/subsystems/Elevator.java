@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends Subsystem {
 	
-	static final boolean invertElevator = true;
+	static final boolean invertElevator = false;
 	static final boolean[] invertIntake = {true,false};
 
 	boolean intakeStatus = false;
