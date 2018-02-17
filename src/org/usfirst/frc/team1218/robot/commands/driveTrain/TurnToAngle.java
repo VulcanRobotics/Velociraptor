@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1218.robot.commands.driveTrain;
 
 import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -29,7 +30,7 @@ public class TurnToAngle extends Command {
     protected void execute(double angleInRadians) {
     	
     double inchesToTurn = DriveTrain.radiansToInches(angleInRadians);
-    double encoderTicksToTurn = ((DriveTrain.wheelDiameterInches*(Math.PI))/DriveTrain.encTicksPerRev);
+    double encoderTicksToTurn = ((DriveTrain.wheelDiameterInches*(Math.PI))/RobotMap.encTicksPerRev);
     if(angleInRadians > 0) {
 	    	double leftPower = 0.5;
 	    	double rightPower = -0.5;
