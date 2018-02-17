@@ -21,9 +21,9 @@ public class ElevatorDefault extends Command {
     protected void execute() {
     		Robot.elevator.setElevatorPower(-Robot.m_oi.operator.getY());
     		if(Robot.m_oi.intakeBtn.get()) {
-    			Robot.elevator.setIntakePower(0.75);
+    			Robot.elevator.setIntakePower(1);
     		}else if(Robot.m_oi.outtakeBtn.get()){
-    			Robot.elevator.setIntakePower(-0.75);
+    			Robot.elevator.setIntakePower(-1);
     		}else {
     			Robot.elevator.setIntakePower(0);
     		}
