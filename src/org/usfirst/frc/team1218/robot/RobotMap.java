@@ -31,7 +31,7 @@ public class RobotMap {
 	public static int shifterPort, ptoPort, intakePort, armPort;
 	
 	public static int[] intakeMotorIds;				// {4,11};
-	public static boolean[] intakeMotorInvert; 		// {true,false};
+	public static boolean[] intakeMotorInvert = new boolean[2]; 		// {true,false};
 	public static int[] elevatorMotorIds;			//{3,12};
 	public static boolean elevatorMotorInvert; 		// true;
 	public static double[] elevatorPIDF;
@@ -76,7 +76,8 @@ public class RobotMap {
 			intakePort = Integer.parseInt(props.getProperty("intakePort"));
 			System.out.println("RobotMap: properties loaded!");
 		} catch (Exception e) {
-			System.out.println("RobotMap: Failed to load robot properties!");
+			System.out.println("RobotMap: Failed to load robot properties! " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
