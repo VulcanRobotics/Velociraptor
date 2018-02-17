@@ -52,7 +52,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		driveTrain = new DriveTrain(RobotMap.leftMotorControllerIds,RobotMap.rightMotorControllerIds,RobotMap.leftInverted,RobotMap.rightInverted,RobotMap.shifterPort);
+		RobotMap.loadProperties();
+		driveTrain = new DriveTrain();
 		elevator = new Elevator();
 		m_oi = new OI();
 		followPathCmd = new FollowPath();
@@ -66,7 +67,7 @@ public class Robot extends TimedRobot {
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
         ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
         followPathCmd.setPath(PathGenerator.makePath(ws, config,
-                DriveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);
+                RobotMap.trackWidthInches / 12.0, "Test Drive 5ft"),false);
         m_oi.followPathBtn.whenPressed(followPathCmd);
 
 		// chooser.addObject("My Auto", new MyAutoCommand());
