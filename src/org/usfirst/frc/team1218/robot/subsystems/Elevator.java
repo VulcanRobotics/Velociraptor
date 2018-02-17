@@ -6,6 +6,8 @@ import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -44,6 +46,7 @@ public class Elevator extends Subsystem {
 		
 		elevatorMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		elevatorMotors[0].setSensorPhase(false);
+		elevatorMotors[0].configReverseLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.elevatorMotorIds[1], 0);
 		
 		intakeSolenoid = new Solenoid(3);
 		armSolenoid = new Solenoid(2);
