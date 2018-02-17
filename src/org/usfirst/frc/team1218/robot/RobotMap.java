@@ -39,6 +39,7 @@ public class RobotMap {
 	
 	public static void loadProperties() {
 		Properties props = new Properties();
+		System.out.println("RobotMap: loading properties");
 		try {
 			FileInputStream propsFile = new FileInputStream("/home/lvuser/robot.properties");
 			props.load(propsFile);		
@@ -73,9 +74,9 @@ public class RobotMap {
 			ptoPort = Integer.parseInt(props.getProperty("ptoPort"));
 			armPort = Integer.parseInt(props.getProperty("armPort"));
 			intakePort = Integer.parseInt(props.getProperty("intakePort"));
-		
+			System.out.println("RobotMap: properties loaded!");
 		} catch (Exception e) {
-			System.out.println("Failed to load robot properties!");
+			System.out.println("RobotMap: Failed to load robot properties!");
 		}
 	}
 	
