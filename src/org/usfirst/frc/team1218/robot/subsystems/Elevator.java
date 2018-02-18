@@ -33,6 +33,7 @@ public class Elevator extends Subsystem {
 	TalonSRX[] intakeMotors = new TalonSRX[2];
 	Solenoid intakeSolenoid;
 	Solenoid armSolenoid;
+	Faults elevatorFaults = new Faults();
 	
 	private Notifier processMPBuffer = new Notifier(new Runnable() {
 
@@ -99,6 +100,13 @@ public class Elevator extends Subsystem {
 	public void setElevatorPower(double elevatorPower) {
 		elevatorMotors[0].set(ControlMode.PercentOutput, elevatorPower);
 	}
+	
+	// use Motion Magic to move a specified number of encoder ticks
+	public void move(int ticksToMove) {
+		int newPos = elevatorMotors[0].getSelectedSensorPosition(0) + ticksToMove;
+		elevatorMotors[0].set(ControlMode.MotionMagic, newPos);
+	}
+	
 	public void setIntakePower(double intakePower) {
 		intakeMotors[0].set(ControlMode.PercentOutput, intakePower);
 	}
@@ -112,9 +120,8 @@ public class Elevator extends Subsystem {
 	
 	public void periodicTasks() {
 		SmartDashboard.putString("DB/String 5", "Pe:" + elevatorMotors[0].getSelectedSensorPosition(0));
-		Faults f = new Faults();
-		elevatorMotors[0].getFaults(f);
-		if(f.ReverseLimitSwitch == true) {
+		elevatorMotors[0].getFaults(elevatorFaults);
+		if(elevatorFaults.ReverseLimitSwitch == true) {
 			elevatorMotors[0].setSelectedSensorPosition(0, 0, 0);
 		}
 	}
