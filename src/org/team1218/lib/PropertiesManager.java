@@ -13,6 +13,7 @@ public class PropertiesManager {
 	
 	public PropertiesManager(File file) {
 		this.propertiesFile = file;
+		properties = new Properties();
 	}
 	
 	public PropertiesManager(String path) {

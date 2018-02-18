@@ -40,15 +40,14 @@ public class RobotMap {
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
 	
 	public static void loadProperties() {
-		Properties props = new Properties();
 		PropertiesManager pm = new PropertiesManager("/home/lvuser/robot.properties");
 		System.out.println("RobotMap: loading properties");
 		pm.load();		
 
 		leftMotorControllerIds = pm.getInts("leftMotorControllerIds", new int[] {0,1,2});
 		rightMotorControllerIds = pm.getInts("rightMotorControllerIds",new int[] {14,13,15});
-		leftInverted = pm.getBoolean("leftInverted",false);
-		rightInverted = pm.getBoolean("rightInverted",true);
+		leftInverted = pm.getBoolean("leftDriveInverted",false);
+		rightInverted = pm.getBoolean("rightDriveInverted",true);
 		leftLowGearPIDF = pm.getDoubles("leftLowGearPIDF",new double[] {1.1,0.0,10,0.79});
 		rightLowGearPIDF = pm.getDoubles("rightLowGearPIDF", new double[] {1.05,0,50,0.79});
 		leftHighGearPIDF = pm.getDoubles("leftHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
