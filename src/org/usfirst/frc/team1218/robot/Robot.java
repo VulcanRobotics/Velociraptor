@@ -7,6 +7,10 @@
 
 package org.usfirst.frc.team1218.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -40,7 +44,8 @@ public class Robot extends TimedRobot {
 	public static OI m_oi;
 	public static DriveTrain driveTrain;
 	public static Elevator elevator;
-
+	private static UsbCamera jevois;
+	
 	Command m_autonomousCommand;
 	FollowPath followPathCmd;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -68,6 +73,13 @@ public class Robot extends TimedRobot {
         followPathCmd.setPath(PathGenerator.makePath(ws, config,
                 DriveTrain.trackWidthInches / 12.0, "Test Drive 5ft"),false);
         m_oi.followPathBtn.whenPressed(followPathCmd);
+
+        jevois = CameraServer.getInstance().startAutomaticCapture();
+        jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
+		VideoMode vm = jevois.getVideoMode();
+		System.out.println("jevois pixel: " + vm.pixelFormat);
+		System.out.println("jevois res: " + vm.width + "x" + vm.height);
+		System.out.println("jevois fps: " + vm.fps);
 
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
