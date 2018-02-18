@@ -11,6 +11,8 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import org.team1218.lib.PropertiesManager;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -39,46 +41,37 @@ public class RobotMap {
 	
 	public static void loadProperties() {
 		Properties props = new Properties();
+		PropertiesManager pm = new PropertiesManager("/home/lvuser/robot.properties");
 		System.out.println("RobotMap: loading properties");
-		try {
-			FileInputStream propsFile = new FileInputStream("/home/lvuser/robot.properties");
-			props.load(propsFile);		
+		pm.load();		
 
-			leftMotorControllerIds = Stream.of(props.getProperty("leftMotorControllerIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			rightMotorControllerIds = Stream.of(props.getProperty("rightMotorControllerIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			leftInverted = Boolean.parseBoolean(props.getProperty("leftInverted"));
-			rightInverted = Boolean.parseBoolean(props.getProperty("rightInverted"));
-			leftLowGearPIDF = Stream.of(props.getProperty("leftLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			rightLowGearPIDF = Stream.of(props.getProperty("rightLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			leftHighGearPIDF = Stream.of(props.getProperty("leftHighGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			rightHighGearPIDF = Stream.of(props.getProperty("rightHighGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			lowGearMaxSpeed = Integer.parseInt(props.getProperty("lowGearMaxSpeed"));
-			highGearMaxSpeed = Integer.parseInt(props.getProperty("highGearMaxSpeed"));
-			encTicksPerRev = Integer.parseInt(props.getProperty("encTicksPerRev"));
-			trackWidthInches = Double.parseDouble(props.getProperty("trackWidthInches"));
+		leftMotorControllerIds = pm.getInts("leftMotorControllerIds", new int[] {0,1,2});
+		rightMotorControllerIds = pm.getInts("rightMotorControllerIds",new int[] {14,13,15});
+		leftInverted = pm.getBoolean("leftInverted",false);
+		rightInverted = pm.getBoolean("rightInverted",true);
+		leftLowGearPIDF = pm.getDoubles("leftLowGearPIDF",new double[] {1.1,0.0,10,0.79});
+		rightLowGearPIDF = pm.getDoubles("rightLowGearPIDF", new double[] {1.05,0,50,0.79});
+		leftHighGearPIDF = pm.getDoubles("leftHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
+		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});;
+		lowGearMaxSpeed = pm.getInt("lowGearMaxSpeed");
+		highGearMaxSpeed = pm.getInt("highGearMaxSpeed");
+		encTicksPerRev = pm.getInt("encTicksPerRev");
+		trackWidthInches = pm.getDouble("trackWidthInches");
 			
-			intakeMotorIds = Stream.of(props.getProperty("intakeMotorIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			int i = 0;
-			for (String s : props.getProperty("intakeMotorInvert").split(",")) {
-				intakeMotorInvert[i] = Boolean.parseBoolean(s);
-				i++;
-			}
+		intakeMotorIds = pm.getInts("intakeMotorIds", new int[] {4,11});
+		intakeMotorInvert = pm.getBooleans("intakeMotorInvert");
 			
-			elevatorMotorIds = Stream.of(props.getProperty("elevatorMotorIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			elevatorMotorInvert = Boolean.parseBoolean(props.getProperty("elevatorMotorInvert"));
-			elevatorPIDF = Stream.of(props.getProperty("elevatorPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();			
-			elevatorCruiseVelocity = Integer.parseInt(props.getProperty("elevatorCruiseVelocity"));
-			elevatorAcceleration = Integer.parseInt(props.getProperty("elevatorAcceleration"));
+		elevatorMotorIds = pm.getInts("elevatorMotorIds", new int[] {3,12});
+		elevatorMotorInvert = pm.getBoolean("elevatorMotorInvert",false);
+		elevatorPIDF = pm.getDoubles("elevatorPIDF", new double[] {0.0,0.0,0.0,0.0});			
+		elevatorCruiseVelocity = pm.getInt("elevatorCruiseVelocity");
+		elevatorAcceleration = pm.getInt("elevatorAcceleration");
 			
-			shifterPort = Integer.parseInt(props.getProperty("shifterPort"));
-			ptoPort = Integer.parseInt(props.getProperty("ptoPort"));
-			armPort = Integer.parseInt(props.getProperty("armPort"));
-			intakePort = Integer.parseInt(props.getProperty("intakePort"));
-			System.out.println("RobotMap: properties loaded!");
-		} catch (Exception e) {
-			System.out.println("RobotMap: Failed to load robot properties! " + e.getMessage());
-			e.printStackTrace();
-		}
+		shifterPort = pm.getInt("shifterPort");
+		ptoPort = pm.getInt("ptoPort");
+		armPort = pm.getInt("armPort");
+		intakePort = pm.getInt("intakePort");
+		System.out.println("RobotMap: properties loaded!");
 	}
 	
 	
