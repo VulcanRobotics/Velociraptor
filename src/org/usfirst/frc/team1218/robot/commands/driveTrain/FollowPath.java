@@ -45,6 +45,7 @@ public class FollowPath extends Command {
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));
 	    	//System.out.print("step: " + step);
 	    	try {
+	    		//Robot.driveTrain.shift(true);
 	    		if (state.get() == FollowerState.Interrupting) throw new Exception("Interrupting profile");
 	    		if (DriverStation.getInstance().isDisabled()) throw new Exception("Robot Disabled");
 	    		if (runBACKWARDS){

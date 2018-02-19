@@ -24,6 +24,8 @@ public class RobotMap {
 	public static boolean leftInverted;			// false;
 	public static boolean rightInverted;		// true;
 
+	public static boolean useCamera;
+	
 	public static double[] leftLowGearPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF;
 	public static int lowGearMaxSpeed, highGearMaxSpeed, encTicksPerRev;
 	public static double trackWidthInches;
@@ -56,6 +58,8 @@ public class RobotMap {
 			highGearMaxSpeed = Integer.parseInt(props.getProperty("highGearMaxSpeed"));
 			encTicksPerRev = Integer.parseInt(props.getProperty("encTicksPerRev"));
 			trackWidthInches = Double.parseDouble(props.getProperty("trackWidthInches"));
+			
+			useCamera = Boolean.parseBoolean(props.getProperty("useCamera"));
 			
 			intakeMotorIds = Stream.of(props.getProperty("intakeMotorIds").split(",")).mapToInt(Integer::parseInt).toArray();
 			int i = 0;
