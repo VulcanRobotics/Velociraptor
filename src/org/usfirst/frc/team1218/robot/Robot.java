@@ -70,9 +70,7 @@ public class Robot extends TimedRobot {
 
 		WaypointSequence ws = new WaypointSequence(10);
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(13.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(18.0,4.0,Math.toRadians(300)));
-        ws.addWaypoint(new WaypointSequence.Waypoint(21.0,4.0, Math.toRadians(300)));
+        ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 5.0, 0.0));
         followPathCmd.setPath(PathGenerator.makePath(ws, config,
                 RobotMap.trackWidthInches / 12.0, "Test Drive 5ft"),false);
         m_oi.followPathBtn.whenPressed(followPathCmd);
@@ -105,7 +103,7 @@ public class Robot extends TimedRobot {
 			jettyServer.join();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+//			e1.printStackTrace();
 		}
 
 		
