@@ -87,6 +87,10 @@ public class Elevator extends Subsystem {
 		System.out.println("Elevator Kf: " + RobotMap.elevatorPIDF[3]);
 	}
 	
+	public int getMotionMagicErr() {
+		return elevatorMotors[0].getClosedLoopError(0);
+	}
+	
 	public void startLogging() {
 		elevatorMotors[0].startLogging();
 		isLogging = true;
