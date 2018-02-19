@@ -107,6 +107,8 @@ public class DriveTrain extends Subsystem {
 		shifter = new Solenoid(RobotMap.shifterPort);
 		pto = new Solenoid(RobotMap.ptoPort);
 		engagePto(false);
+		System.out.println("DriveTrain: leftInverted="+leftMotorControllers[0].getInverted());
+		System.out.println("DriveTrain: rightInverted="+rightMotorControllers[0].getInverted());
 	}
 	
 	/**

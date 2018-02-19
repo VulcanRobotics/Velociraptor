@@ -71,16 +71,17 @@ public class Elevator extends Subsystem {
 		elevatorMotors[0].config_kP(0, RobotMap.elevatorPIDF[0], 0);
 		elevatorMotors[0].config_kI(0, RobotMap.elevatorPIDF[1], 0);
 		elevatorMotors[0].config_kD(0, RobotMap.elevatorPIDF[2], 0);
-		elevatorMotors[0].config_kF(0, RobotMap.elevatorPIDF[2], 0);
+		elevatorMotors[0].config_kF(0, RobotMap.elevatorPIDF[3], 0);
 		
 		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10, 0);
 		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 10, 0);
 		
 		elevatorMotors[0].configMotionCruiseVelocity(RobotMap.elevatorCruiseVelocity, 0);
+		elevatorMotors[0].configMotionAcceleration(RobotMap.elevatorAcceleration, 0);
 		
 		intakeSolenoid = new Solenoid(RobotMap.intakePort);
 		armSolenoid = new Solenoid(RobotMap.armPort);
-		
+		System.out.println("Elevator Kf: " + RobotMap.elevatorPIDF[3]);
 	}
 	
 	public void startLogging() {
@@ -105,6 +106,11 @@ public class Elevator extends Subsystem {
 	public void move(int ticksToMove) {
 		int newPos = elevatorMotors[0].getSelectedSensorPosition(0) + ticksToMove;
 		elevatorMotors[0].set(ControlMode.MotionMagic, newPos);
+	}
+	
+	public void moveTo(int position) {
+		System.out.println("moving to " + position);
+		elevatorMotors[0].set(ControlMode.MotionMagic, position);
 	}
 	
 	public void setIntakePower(double intakePower) {

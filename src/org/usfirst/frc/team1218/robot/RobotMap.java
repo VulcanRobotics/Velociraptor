@@ -46,8 +46,8 @@ public class RobotMap {
 
 			leftMotorControllerIds = Stream.of(props.getProperty("leftMotorControllerIds").split(",")).mapToInt(Integer::parseInt).toArray();
 			rightMotorControllerIds = Stream.of(props.getProperty("rightMotorControllerIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			leftInverted = Boolean.parseBoolean(props.getProperty("leftInverted"));
-			rightInverted = Boolean.parseBoolean(props.getProperty("rightInverted"));
+			leftInverted = Boolean.parseBoolean(props.getProperty("leftDriveInverted"));
+			rightInverted = Boolean.parseBoolean(props.getProperty("rightDriveInverted"));
 			leftLowGearPIDF = Stream.of(props.getProperty("leftLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
 			rightLowGearPIDF = Stream.of(props.getProperty("rightLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
 			leftHighGearPIDF = Stream.of(props.getProperty("leftHighGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();

@@ -58,6 +58,7 @@ public class OI{
 	public Button outtakeBtn;
 	public Button armUpBtn;
 	public Button armDownBtn;
+	public Button elevatorTestBtn;
 	
 	public OI() {
 		driver = new Joystick(0);
@@ -73,6 +74,7 @@ public class OI{
 		outtakeBtn = new JoystickButton(operator,3);
 		armUpBtn = new JoystickButton(operator,6);
 		armDownBtn = new JoystickButton(operator,4);
+		elevatorTestBtn = new JoystickButton(operator, 9);
 	}
 	
 }
