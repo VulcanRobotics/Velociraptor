@@ -65,23 +65,26 @@ public class Robot extends TimedRobot {
 		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
 		config.dt = .1;			// the time in seconds between each generated segment
 		config.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
-		config.max_jerk = 30.0;	// maximum jerk (derivative of acceleration), ft/s
+		config.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		config.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 
 		WaypointSequence ws = new WaypointSequence(10);
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 5.0, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(3.0,0.0,0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 6.0, 0.0));
         followPathCmd.setPath(PathGenerator.makePath(ws, config,
-                RobotMap.trackWidthInches / 12.0, "Test Drive 5ft"),false);
+                RobotMap.trackWidthInches / 6.0, "Test Drive 5ft"),false);
         m_oi.followPathBtn.whenPressed(followPathCmd);
 
-        jevois = CameraServer.getInstance().startAutomaticCapture();
-        jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
-		VideoMode vm = jevois.getVideoMode();
-		System.out.println("jevois pixel: " + vm.pixelFormat);
-		System.out.println("jevois res: " + vm.width + "x" + vm.height);
-		System.out.println("jevois fps: " + vm.fps);
-
+        if (RobotMap.useCamera) {
+        	jevois = CameraServer.getInstance().startAutomaticCapture();
+        	jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
+        	VideoMode vm = jevois.getVideoMode();
+        	System.out.println("jevois pixel: " + vm.pixelFormat);
+        	System.out.println("jevois res: " + vm.width + "x" + vm.height);
+        	System.out.println("jevois fps: " + vm.fps);
+        } 
+        
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		Server jettyServer = new Server(5800);
