@@ -32,6 +32,7 @@ public class FollowPath extends Command {
 		private long startTime;
 		private int step = 0;
 
+		@SuppressWarnings("unused")
 		private Segment invertSegment(Segment s) {
 			return new Segment(-s.pos, -s.vel, -s.acc, -s.jerk, s.heading, s.dt, s.x, s.y);
 		}
@@ -40,6 +41,7 @@ public class FollowPath extends Command {
 	    	if (state.compareAndSet(FollowerState.Starting, FollowerState.Running)) {
 	    		System.out.println("Notifier Initalized");
 	    		Robot.driveTrain.startLogging();
+	    		Robot.driveTrain.setPathFollowing(true);
 	    		startTime = System.currentTimeMillis();
 	    	}
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));

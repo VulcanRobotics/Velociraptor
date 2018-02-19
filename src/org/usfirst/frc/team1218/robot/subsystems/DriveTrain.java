@@ -18,33 +18,29 @@ import edu.wpi.first.wpilibj.I2C;
  *
  */
 public class DriveTrain extends Subsystem {
-//	public static final int kp = 0;
-//	public static final int ki = 1;
-//	public static final int kd = 2;
-//	public static final int kf = 3;
-	//low gear pid constants
-//	static final double[] leftLowGearConstants = {1.05,0,0,0.75};
-//	static final double[] rightLowGearConstants = {1.05,0,0,0.75};
 	
-//	public static final int MaxSpeed = 1400;		// encoder ticks per 100ms
 	public static final double wheelDiameterInches = 4.0;
-//	public static final int encTicksPerRev = 2000;
-//	public static final double trackWidthInches = 28.0;
 	
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
 	 * @param ftPerSec robot velocity in ft/sec
 	 */
 	public static int ftPerSecToEncVel(double ftPerSec) {
-		// (ftPerSec / ftPerRev) = revPerSec
-		// revPerSec * ticksPerRev = ticksPerSec
-		// ticksPerSec / 10 = ticksPer100ms = encVel
 		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * RobotMap.encTicksPerRev) / 10.0);
+	}
+	
+	public static double encVelToFTPerSec(int encVel) {
+		return (((encVel*10.0)/RobotMap.encTicksPerRev)*(wheelDiameterInches * Math.PI / 12.0));
+	}
+	
+	public static double encPostoFt(int encPos) {
+		return (((double)encPos/RobotMap.encTicksPerRev)*(wheelDiameterInches * Math.PI / 12.0));
 	}
 	
 	public static double radiansToInches(double angleInRadians) {
 		return ((RobotMap.trackWidthInches / 2.0) * angleInRadians);
 	}
+	
 	
 	LoggableSRX[] leftMotorControllers = new LoggableSRX[3];
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
@@ -53,8 +49,7 @@ public class DriveTrain extends Subsystem {
 	AHRS navx;
 	boolean enableLogging = true;
 	boolean isLogging = false;
-	
-	
+	boolean isPathFollowing = false;
 
 	public DriveTrain() {
 		for(int i = 0; i < 3; i++) {
@@ -84,15 +79,7 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0, 0);
 		rightMotorControllers[0].setSensorPhase(true);
 		//load pid constants
-		leftMotorControllers[0].config_kP(0, RobotMap.leftLowGearPIDF[0], 10);
-		leftMotorControllers[0].config_kI(0, RobotMap.leftLowGearPIDF[1], 10);
-		leftMotorControllers[0].config_kD(0, RobotMap.leftLowGearPIDF[2], 10);
-		leftMotorControllers[0].config_kF(0, RobotMap.leftLowGearPIDF[3], 10);
-		
-		rightMotorControllers[0].config_kP(0, RobotMap.rightLowGearPIDF[0], 0);
-		rightMotorControllers[0].config_kI(0, RobotMap.rightLowGearPIDF[1], 0);
-		rightMotorControllers[0].config_kD(0, RobotMap.rightLowGearPIDF[2], 0);
-		rightMotorControllers[0].config_kF(0, RobotMap.rightLowGearPIDF[3], 0);
+		loadPIDFConstants(RobotMap.leftLowGearPIDF,RobotMap.rightLowGearPIDF);
 		
 		leftMotorControllers[0].configNominalOutputForward(0, 0);
 		leftMotorControllers[0].configPeakOutputForward(1, 0);
@@ -109,6 +96,18 @@ public class DriveTrain extends Subsystem {
 		engagePto(false);
 		System.out.println("DriveTrain: leftInverted="+leftMotorControllers[0].getInverted());
 		System.out.println("DriveTrain: rightInverted="+rightMotorControllers[0].getInverted());
+	}
+	
+	public void loadPIDFConstants(double[] leftPIDF,double[] rightPIDF) {
+		leftMotorControllers[0].config_kP(0, leftPIDF[0], 0);
+		leftMotorControllers[0].config_kI(0, leftPIDF[1], 0);
+		leftMotorControllers[0].config_kD(0, leftPIDF[2], 0);
+		leftMotorControllers[0].config_kF(0, leftPIDF[3], 0);
+		
+		rightMotorControllers[0].config_kP(0, rightPIDF[0], 0);
+		rightMotorControllers[0].config_kI(0, rightPIDF[1], 0);
+		rightMotorControllers[0].config_kD(0, rightPIDF[2], 0);
+		rightMotorControllers[0].config_kF(0, rightPIDF[3], 0);
 	}
 	
 	/**
@@ -192,6 +191,14 @@ public class DriveTrain extends Subsystem {
 	}
 	public double getHeading() {
 		return navx.getAngle();
+	}
+	
+	public boolean isPathFollowing() {
+		return isPathFollowing;
+	}
+
+	public void setPathFollowing(boolean isPathFollowing) {
+		this.isPathFollowing = isPathFollowing;
 	}
 	
 	public void periodicTasks() {
