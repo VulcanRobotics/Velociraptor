@@ -24,6 +24,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.usfirst.frc.team1218.robot.commands.auton.SwitchAuton;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1218.robot.subsystems.Elevator;
@@ -42,9 +43,9 @@ public class Robot extends TimedRobot {
 	public static DriveTrain driveTrain;
 	public static Elevator elevator;
 	private static UsbCamera jevois;
+	public static FollowPath followPathCmd;
 	
 	Command m_autonomousCommand;
-	FollowPath followPathCmd;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 	public static Path path;
 
@@ -58,10 +59,9 @@ public class Robot extends TimedRobot {
 		RobotMap.makePaths();
 		driveTrain = new DriveTrain();
 		elevator = new Elevator();
-		m_oi = new OI();
 		followPathCmd = new FollowPath();
-		followPathCmd.setPath(RobotMap.leftSwitchPath,false);
-        m_oi.followPathBtn.whenPressed(followPathCmd);
+		m_oi = new OI();
+        m_oi.followPathBtn.whenPressed(new SwitchAuton());
 
         if (RobotMap.useCamera) {
         	jevois = CameraServer.getInstance().startAutomaticCapture();

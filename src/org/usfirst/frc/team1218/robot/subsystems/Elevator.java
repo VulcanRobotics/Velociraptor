@@ -88,7 +88,7 @@ public class Elevator extends Subsystem {
 	}
 	
 	public int getMotionMagicErr() {
-		return elevatorMotors[0].getClosedLoopError(0);
+		return elevatorMotors[0].getClosedLoopTarget(0) - elevatorMotors[0].getSelectedSensorPosition(0);
 	}
 	
 	public void startLogging() {

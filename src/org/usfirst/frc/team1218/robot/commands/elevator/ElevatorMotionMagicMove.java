@@ -18,7 +18,7 @@ public class ElevatorMotionMagicMove extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.elevator.moveTo(position);
+    		Robot.elevator.moveTo(position);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -27,6 +27,7 @@ public class ElevatorMotionMagicMove extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    		System.out.print("Error:" + Robot.elevator.getMotionMagicErr());
         return (Math.abs(Robot.elevator.getMotionMagicErr()) <= 1500);
     }
 

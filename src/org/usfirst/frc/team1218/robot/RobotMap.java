@@ -44,7 +44,7 @@ public class RobotMap {
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
 	
-	public static Path leftSwitchPath;
+	public static Path rightSwitchPath;
 	
 	public static void makePaths() {
 		TrajectoryGenerator.Config driveTrainPathConfig = new TrajectoryGenerator.Config();
@@ -56,9 +56,8 @@ public class RobotMap {
 		
 		WaypointSequence ws = new WaypointSequence(10);
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(3.0,0.0,0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 6.0, 0.0));
-        leftSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftSwitch");
+        ws.addWaypoint(new WaypointSequence.Waypoint(12.0, -4.0, 0.0));
+        rightSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftSwitch");
 	}
 	
 	public static void loadProperties() {

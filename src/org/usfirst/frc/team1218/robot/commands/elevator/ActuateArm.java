@@ -14,6 +14,6 @@ public class ActuateArm extends InstantCommand {
 	
 	@Override
 	protected void execute() {
-		Robot.elevator.intakeSolenoidEngage(up);
+		Robot.elevator.armSolenoidEngage(up);
 	}
 }
