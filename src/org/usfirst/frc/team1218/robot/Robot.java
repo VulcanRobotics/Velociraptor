@@ -29,9 +29,6 @@ import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1218.robot.subsystems.Elevator;
 
 import com.team254.lib.trajectory.Path;
-import com.team254.lib.trajectory.PathGenerator;
-import com.team254.lib.trajectory.TrajectoryGenerator;
-import com.team254.lib.trajectory.WaypointSequence;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -58,22 +55,12 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		RobotMap.loadProperties();
+		RobotMap.makePaths();
 		driveTrain = new DriveTrain();
 		elevator = new Elevator();
 		m_oi = new OI();
 		followPathCmd = new FollowPath();
-		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
-		config.dt = .1;			// the time in seconds between each generated segment
-		config.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
-		config.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
-		config.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
-
-		WaypointSequence ws = new WaypointSequence(10);
-        ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(3.0,0.0,0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 6.0, 0.0));
-        followPathCmd.setPath(PathGenerator.makePath(ws, config,
-                RobotMap.trackWidthInches / 6.0, "Test Drive 5ft"),false);
+		followPathCmd.setPath(RobotMap.leftSwitchPath,false);
         m_oi.followPathBtn.whenPressed(followPathCmd);
 
         if (RobotMap.useCamera) {

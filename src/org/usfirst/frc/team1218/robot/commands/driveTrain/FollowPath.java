@@ -1,13 +1,11 @@
 package org.usfirst.frc.team1218.robot.commands.driveTrain;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.usfirst.frc.team1218.robot.Robot;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Segment;

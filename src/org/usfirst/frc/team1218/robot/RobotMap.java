@@ -11,6 +11,11 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import com.team254.lib.trajectory.Path;
+import com.team254.lib.trajectory.PathGenerator;
+import com.team254.lib.trajectory.TrajectoryGenerator;
+import com.team254.lib.trajectory.WaypointSequence;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -38,6 +43,23 @@ public class RobotMap {
 	public static boolean elevatorMotorInvert; 		// true;
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
+	
+	public static Path leftSwitchPath;
+	
+	public static void makePaths() {
+		TrajectoryGenerator.Config driveTrainPathConfig = new TrajectoryGenerator.Config();
+		driveTrainPathConfig.dt = .1;			// the time in seconds between each generated segment
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		
+		
+		WaypointSequence ws = new WaypointSequence(10);
+        ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(3.0,0.0,0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 6.0, 0.0));
+        leftSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftSwitch");
+	}
 	
 	public static void loadProperties() {
 		Properties props = new Properties();
