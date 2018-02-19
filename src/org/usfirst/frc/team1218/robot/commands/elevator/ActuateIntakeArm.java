@@ -4,11 +4,11 @@ import org.usfirst.frc.team1218.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class actuateIntakeArm extends InstantCommand {
+public class ActuateIntakeArm extends InstantCommand {
 	
 	boolean open;
 	
-	public actuateIntakeArm(boolean open) {
+	public ActuateIntakeArm(boolean open) {
 		this.open = open;
 	}
 	
