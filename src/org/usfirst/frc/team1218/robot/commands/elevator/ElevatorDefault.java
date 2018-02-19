@@ -24,7 +24,7 @@ public class ElevatorDefault extends Command {
     			if(!Robot.elevator.isLogging()) {
     				Robot.elevator.startLogging();
     			}
-    			Robot.elevator.moveTo(100000);
+    			Robot.elevator.moveTo(220000);
     		} else {
     			if (Robot.elevator.isLogging()) Robot.elevator.stopLogging();
     			Robot.elevator.setElevatorPower(Robot.m_oi.operator.getY());
