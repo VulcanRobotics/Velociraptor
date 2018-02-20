@@ -1,13 +1,17 @@
 package org.usfirst.frc.team1218.robot.subsystems;
-
 import org.team1218.lib.ctrlSystemLogging.LoggableSRX;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.DriveDefault;
 
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motion.SetValueMotionProfile;
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
+import com.team254.lib.trajectory.Path;
+import com.team254.lib.trajectory.Trajectory;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -29,6 +33,10 @@ public class DriveTrain extends Subsystem {
 		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * RobotMap.encTicksPerRev) / 10.0);
 	}
 	
+	public static int ftToEncPos(double ft) {
+		return (int)((ft/(wheelDiameterInches * Math.PI / 12.0))*RobotMap.encTicksPerRev);
+	}
+	
 	public static double encVelToFTPerSec(int encVel) {
 		return (((encVel*10.0)/RobotMap.encTicksPerRev)*(wheelDiameterInches * Math.PI / 12.0));
 	}
@@ -41,12 +49,15 @@ public class DriveTrain extends Subsystem {
 		return ((RobotMap.trackWidthInches / 2.0) * angleInRadians);
 	}
 	
-	
 	LoggableSRX[] leftMotorControllers = new LoggableSRX[3];
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
 	Solenoid pto;
 	AHRS navx;
+	
+	MotionProfileStatus leftStat = new MotionProfileStatus();
+	MotionProfileStatus rightStat = new MotionProfileStatus();
+	
 	boolean enableLogging = true;
 	boolean isLogging = false;
 	boolean isPathFollowing = false;
@@ -201,6 +212,75 @@ public class DriveTrain extends Subsystem {
 		this.isPathFollowing = isPathFollowing;
 	}
 	
+	public void setPath(Path path, double period) {
+		//clear any outstanding motion profile points
+		leftMotorControllers[0].clearMotionProfileTrajectories();
+		rightMotorControllers[0].clearMotionProfileTrajectories();
+		
+		//set period
+		leftMotorControllers[0].configMotionProfileTrajectoryPeriod((int) period*1000, 0);
+		rightMotorControllers[0].configMotionProfileTrajectoryPeriod((int) period*1000, 0);
+		
+		Trajectory leftTrajectory, rightTrajectory;
+		leftTrajectory = path.getLeftWheelTrajectory();
+		rightTrajectory = path.getRightWheelTrajectory();
+		
+		//point variable
+		TrajectoryPoint point = new TrajectoryPoint();
+		
+		for(int i = 0; i < leftTrajectory.getNumSegments(); i++) {
+			point.position = ftToEncPos(leftTrajectory.getSegment(i).pos);
+			point.velocity = ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			point.headingDeg = 0;
+			point.profileSlotSelect0 = 0;
+			point.profileSlotSelect1 = 0;
+			point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
+			if(i == 0) {
+				point.zeroPos = true;
+			}else {
+				point.zeroPos = false;
+			}
+			if(i == leftTrajectory.getNumSegments() -1) {
+				point.isLastPoint = true;
+			}else {
+				point.isLastPoint = false;
+			}
+			
+			leftMotorControllers[0].pushMotionProfileTrajectory(point);
+		}
+		
+		for(int i = 0; i < rightTrajectory.getNumSegments(); i++) {
+			point.position = ftToEncPos(rightTrajectory.getSegment(i).pos);
+			point.velocity = ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);
+			point.headingDeg = 0;
+			point.profileSlotSelect0 = 0;
+			point.profileSlotSelect1 = 0;
+			point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
+			if(i == 0) {
+				point.zeroPos = true;
+			}else {
+				point.zeroPos = false;
+			}
+			if(i == rightTrajectory.getNumSegments() -1) {
+				point.isLastPoint = true;
+			}else {
+				point.isLastPoint = false;
+			}
+			
+			rightMotorControllers[0].pushMotionProfileTrajectory(point);
+		}	
+		
+	}
+	
+	public void startPath() {
+		leftMotorControllers[0].set(ControlMode.MotionProfile,SetValueMotionProfile.Enable.value);
+		rightMotorControllers[0].set(ControlMode.MotionProfile,SetValueMotionProfile.Enable.value);
+		if(enableLogging) {
+			startLogging();
+		}
+		isPathFollowing = true;
+	}
+	
 	public void periodicTasks() {
 		//publish left and right encoder Position to Dashboard.
 		SmartDashboard.putString("DB/String 0", "Pl:" + leftMotorControllers[0].getSelectedSensorPosition(0));
@@ -208,6 +288,19 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 4", "H" + getHeading());
+		
+		if(isPathFollowing == true) {
+			leftMotorControllers[0].getMotionProfileStatus(leftStat);
+			rightMotorControllers[0].getMotionProfileStatus(rightStat);
+			if(leftStat.isLast && rightStat.isLast) {
+				isPathFollowing = false;
+				leftMotorControllers[0].set(ControlMode.MotionProfile,SetValueMotionProfile.Hold.value);
+				rightMotorControllers[0].set(ControlMode.MotionProfile,SetValueMotionProfile.Hold.value);
+				if(isLogging) {
+					stopLogging();
+				}
+			}
+		}
 	}
 	
 
@@ -216,8 +309,8 @@ public class DriveTrain extends Subsystem {
     }
     
     public void processMotionProfileBuffer() {
-    	leftMotorControllers[0].processMotionProfileBuffer();
-    	rightMotorControllers[0].processMotionProfileBuffer();
+    		leftMotorControllers[0].processMotionProfileBuffer();
+    		rightMotorControllers[0].processMotionProfileBuffer();
     }
 }
 
