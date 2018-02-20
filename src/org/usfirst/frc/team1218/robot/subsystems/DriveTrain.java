@@ -139,6 +139,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].setNeutralMode(mode);
 		}
 	}
+	
 	/**
 	 * drives using velocity closed-loop, with target velocity as % output.
 	 * @param leftPower in % output, -1.0 to 1.0
@@ -218,6 +219,11 @@ public class DriveTrain extends Subsystem {
     public void processMotionProfileBuffer() {
     	leftMotorControllers[0].processMotionProfileBuffer();
     	rightMotorControllers[0].processMotionProfileBuffer();
+    }
+    
+    public void configOpenLoopRampRate(double seconds) {
+    	leftMotorControllers[0].configOpenloopRamp(seconds, 0);
+    	rightMotorControllers[0].configOpenloopRamp(seconds, 0);
     }
 }
 
