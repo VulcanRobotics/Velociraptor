@@ -44,7 +44,7 @@ public class RobotMap {
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
 	
-	public static Path rightSwitchPath;
+	public static Path rightSwitchPath, leftStartleftScalePath;
 	
 	public static void makePaths() {
 		TrajectoryGenerator.Config driveTrainPathConfig = new TrajectoryGenerator.Config();
@@ -55,9 +55,17 @@ public class RobotMap {
 		
 		
 		WaypointSequence ws = new WaypointSequence(10);
+		/* right SWitch path with center start */
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(12.0, -4.0, 0.0));
-        rightSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftSwitch");
+        ws.addWaypoint(new WaypointSequence.Waypoint(2.0, 0.0, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(11.5, -3.0, Math.toRadians(-10.0)));
+        rightSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "rightSwitch");
+        
+		/* testing start left, left scale path */
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(14.0,-1.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(24.0,-2.5,Math.toRadians(-25.0)));
+		leftStartleftScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftStartleftScale");
 	}
 	
 	public static void loadProperties() {
