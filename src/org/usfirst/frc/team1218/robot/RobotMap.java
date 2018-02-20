@@ -61,10 +61,12 @@ public class RobotMap {
         ws.addWaypoint(new WaypointSequence.Waypoint(11.5, -3.0, Math.toRadians(-10.0)));
         rightSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "rightSwitch");
         
+        ws = new WaypointSequence(10);
+        
 		/* testing start left, left scale path */
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(14.0,-1.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(24.0,-2.5,Math.toRadians(-25.0)));
+		ws.addWaypoint(new WaypointSequence.Waypoint(22.0,-2.0,Math.toRadians(-12.0)));
 		leftStartleftScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftStartleftScale");
 	}
 	

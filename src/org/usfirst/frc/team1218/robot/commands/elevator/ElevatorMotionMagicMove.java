@@ -27,7 +27,6 @@ public class ElevatorMotionMagicMove extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    		System.out.print("Error:" + Robot.elevator.getMotionMagicErr());
         return (Math.abs(Robot.elevator.getMotionMagicErr()) <= 1500);
     }
 

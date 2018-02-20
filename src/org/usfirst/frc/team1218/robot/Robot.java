@@ -24,6 +24,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.usfirst.frc.team1218.robot.commands.auton.ScaleAutonSide;
 import org.usfirst.frc.team1218.robot.commands.auton.SwitchAuton;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
