@@ -53,6 +53,9 @@ public class Elevator extends Subsystem {
 			elevatorMotors[i] = new LoggableSRX(RobotMap.elevatorMotorIds[i]);
 			elevatorMotors[i].setInverted(RobotMap.elevatorMotorInvert);
 			elevatorMotors[i].enableVoltageCompensation(true);
+			elevatorMotors[i].configContinuousCurrentLimit(15, 0);
+			elevatorMotors[i].configPeakCurrentLimit(30, 0);
+			elevatorMotors[i].configPeakCurrentDuration(250, 0);
 			
 			intakeMotors[i] = new TalonSRX(RobotMap.intakeMotorIds[i]);
 			intakeMotors[i].setInverted(RobotMap.intakeMotorInvert[i]);
@@ -68,7 +71,8 @@ public class Elevator extends Subsystem {
 		elevatorMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		elevatorMotors[0].setSensorPhase(false);
 		elevatorMotors[0].configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-		elevatorMotors[0].configForwardSoftLimitThreshold(275000, 0);
+		elevatorMotors[0].configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+		elevatorMotors[0].configForwardSoftLimitThreshold(290000, 0);
 		elevatorMotors[0].configForwardSoftLimitEnable(true, 0);
 		
 		elevatorMotors[0].config_kP(0, RobotMap.elevatorPIDF[0], 0);

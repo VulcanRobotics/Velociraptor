@@ -27,6 +27,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.usfirst.frc.team1218.robot.commands.auton.ScaleAutonSide;
 import org.usfirst.frc.team1218.robot.commands.auton.SwitchAuton;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1218.robot.subsystems.Elevator;
 
@@ -61,8 +62,9 @@ public class Robot extends TimedRobot {
 		driveTrain = new DriveTrain();
 		elevator = new Elevator();
 		followPathCmd = new FollowPath();
+		followPathCmd.setPath(RobotMap.tuningTestPath, false);
 		m_oi = new OI();
-        m_oi.followPathBtn.whenPressed(new SwitchAuton());
+        m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.tuningTestPath));
 
         if (RobotMap.useCamera) {
         	jevois = CameraServer.getInstance().startAutomaticCapture();
