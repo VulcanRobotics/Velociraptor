@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1218.robot.commands.elevator;
 
 import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -20,9 +21,10 @@ public class ElevatorDefaultMotionMagic extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double position = Robot.m_oi.operator.getY() * 290000;
+    	double position = Robot.elevator.getCurrentPosition() + (Robot.m_oi.operator.getY() * (RobotMap.elevatorCruiseVelocity / 5.0));
     	if (position < 0) position = 0;
-
+    	if (position > 290000) position = 290000;
+    	
     	Robot.elevator.moveTo((int)position);
     	
 		if(Robot.m_oi.intakeBtn.get()) {

@@ -37,8 +37,7 @@ public class Elevator extends Subsystem {
 	Solenoid intakeSolenoid;
 	Solenoid armSolenoid;
 	Faults elevatorFaults = new Faults();
-	private AtomicInteger motionMagicPos = new AtomicInteger(0);
-	
+		
 	private Notifier processMPBuffer = new Notifier(new Runnable() {
 
 		@Override
@@ -114,17 +113,8 @@ public class Elevator extends Subsystem {
 		elevatorMotors[0].set(ControlMode.PercentOutput, elevatorPower);
 	}
 	
-	public void executeMotionMagicMove() {
-		System.out.println("Elevator.executeMotionMagicMove to pos: " + motionMagicPos);
-		elevatorMotors[0].set(ControlMode.MotionMagic, motionMagicPos.get());
-	}
-
-	public void setMotionMagicPosition(int newPos) {
-		motionMagicPos.set(newPos);
-	}
-	
-	public int getMotionMagicPosition() {
-		return motionMagicPos.get();
+	public int getCurrentPosition() {
+		return elevatorMotors[0].getSelectedSensorPosition(0);
 	}
 	
 	public void moveTo(int position) {
