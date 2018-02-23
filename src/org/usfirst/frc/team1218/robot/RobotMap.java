@@ -31,7 +31,7 @@ public class RobotMap {
 
 	public static boolean useCamera;
 	
-	public static double[] leftLowGearPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF;
+	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF;
 	public static int lowGearMaxSpeed, highGearMaxSpeed, encTicksPerRev;
 	public static double trackWidthInches;
 	
@@ -44,13 +44,13 @@ public class RobotMap {
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
 	
-	public static Path rightSwitchPath, leftStartleftScalePath;
+	public static Path rightSwitchPath, leftStartleftScalePath, tuningTestPath;
 	
 	public static void makePaths() {
 		TrajectoryGenerator.Config driveTrainPathConfig = new TrajectoryGenerator.Config();
 		driveTrainPathConfig.dt = .1;			// the time in seconds between each generated segment
-		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
-		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_acc = 14.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		
 		
@@ -68,6 +68,13 @@ public class RobotMap {
 		ws.addWaypoint(new WaypointSequence.Waypoint(14.0,-1.0,0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(22.0,-2.0,Math.toRadians(-12.0)));
 		leftStartleftScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftStartleftScale");
+		
+		ws = new WaypointSequence(10);
+		
+		/*tuning test stright line*/
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
+		tuningTestPath = PathGenerator.makePath(ws, driveTrainPathConfig, RobotMap.trackWidthInches,"Tuning Test Path");
 	}
 	
 	public static void loadProperties() {
@@ -83,6 +90,8 @@ public class RobotMap {
 			rightInverted = Boolean.parseBoolean(props.getProperty("rightDriveInverted"));
 			leftLowGearPIDF = Stream.of(props.getProperty("leftLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
 			rightLowGearPIDF = Stream.of(props.getProperty("rightLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
+			leftLowGearTalonMPPIDF = Stream.of(props.getProperty("leftLowGearTalonMPPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
+			rightLowGearTalonMPPIDF = Stream.of(props.getProperty("rightLowGearTalonMPPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
 			leftHighGearPIDF = Stream.of(props.getProperty("leftHighGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
 			rightHighGearPIDF = Stream.of(props.getProperty("rightHighGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
 			lowGearMaxSpeed = Integer.parseInt(props.getProperty("lowGearMaxSpeed"));

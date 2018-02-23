@@ -9,6 +9,7 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.kauailabs.navx.frc.AHRS;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
@@ -156,6 +157,9 @@ public class DriveTrain extends Subsystem {
 	 * @param leftPower in % output, -1.0 to 1.0
 	 */
 	public void setVelocity(double leftPower, double rightPower) {
+		if(leftMotorControllers[0].getControlMode() != ControlMode.Velocity || rightMotorControllers[0].getControlMode() != ControlMode.Velocity) {
+			loadPIDFConstants(RobotMap.leftLowGearPIDF,RobotMap.rightLowGearPIDF);
+		}
 		leftMotorControllers[0].set(ControlMode.Velocity, leftPower*RobotMap.lowGearMaxSpeed);
 		rightMotorControllers[0].set(ControlMode.Velocity, rightPower*RobotMap.lowGearMaxSpeed);
 	}
@@ -219,8 +223,8 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].clearMotionProfileTrajectories();
 		
 		//set period
-		leftMotorControllers[0].configMotionProfileTrajectoryPeriod((int) period*1000, 0);
-		rightMotorControllers[0].configMotionProfileTrajectoryPeriod((int) period*1000, 0);
+		leftMotorControllers[0].configMotionProfileTrajectoryPeriod(0, 0);
+		rightMotorControllers[0].configMotionProfileTrajectoryPeriod(0, 0);
 		
 		Trajectory leftTrajectory, rightTrajectory;
 		leftTrajectory = path.getLeftWheelTrajectory();
@@ -232,10 +236,13 @@ public class DriveTrain extends Subsystem {
 		for(int i = 0; i < leftTrajectory.getNumSegments(); i++) {
 			point.position = ftToEncPos(leftTrajectory.getSegment(i).pos);
 			point.velocity = ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			System.out.println("left Point " + i + "origPos: " + leftTrajectory.getSegment(i).pos + 
+								" origVel: " + leftTrajectory.getSegment(i).vel + " pos: " + point.position + 
+								" vel: " + point.velocity);
 			point.headingDeg = 0;
 			point.profileSlotSelect0 = 0;
 			point.profileSlotSelect1 = 0;
-			point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
+			point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_100ms;
 			if(i == 0) {
 				point.zeroPos = true;
 			}else {
@@ -256,7 +263,7 @@ public class DriveTrain extends Subsystem {
 			point.headingDeg = 0;
 			point.profileSlotSelect0 = 0;
 			point.profileSlotSelect1 = 0;
-			point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
+			point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_100ms;
 			if(i == 0) {
 				point.zeroPos = true;
 			}else {
@@ -274,6 +281,11 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void startPath() {
+		//loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
+		leftMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
+		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
+		leftMotorControllers[0].changeMotionControlFramePeriod(5);
+		rightMotorControllers[0].changeMotionControlFramePeriod(5);
 		leftMotorControllers[0].set(ControlMode.MotionProfile,SetValueMotionProfile.Enable.value);
 		rightMotorControllers[0].set(ControlMode.MotionProfile,SetValueMotionProfile.Enable.value);
 		if(enableLogging) {
@@ -293,6 +305,13 @@ public class DriveTrain extends Subsystem {
 		if(isPathFollowing == true) {
 			leftMotorControllers[0].getMotionProfileStatus(leftStat);
 			rightMotorControllers[0].getMotionProfileStatus(rightStat);
+			System.out.println("T-points remaining left  : top: " + leftStat.topBufferCnt + " bottom: " + leftStat.btmBufferCnt);
+			System.out.println("T-points remaining right : top: " + rightStat.topBufferCnt + " bottom: " + rightStat.btmBufferCnt);
+			if(leftStat.hasUnderrun || rightStat.hasUnderrun) {
+				System.out.println("Has Underrun: left:" + leftStat.hasUnderrun + " right:" + rightStat.hasUnderrun);
+				leftMotorControllers[0].clearMotionProfileHasUnderrun(0);
+				rightMotorControllers[0].clearMotionProfileHasUnderrun(0);
+			}
 			if(leftStat.isLast && rightStat.isLast) {
 				isPathFollowing = false;
 				leftMotorControllers[0].set(ControlMode.MotionProfile,SetValueMotionProfile.Hold.value);

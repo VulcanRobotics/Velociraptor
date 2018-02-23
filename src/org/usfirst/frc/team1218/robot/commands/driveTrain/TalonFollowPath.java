@@ -13,7 +13,8 @@ public class TalonFollowPath extends Command {
 	
 	Path path;
 	int counter = 0;
-	static final int delay = 1;
+	static final int delay = 0;
+	long startTime = 0;
 	
     public TalonFollowPath(Path path) {
         requires(Robot.driveTrain);
@@ -22,18 +23,23 @@ public class TalonFollowPath extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    		Robot.driveTrain.setPath(path, 1);
-    		Robot.driveTrain.processMotionProfileBuffer();
+    	System.out.println("TalonPathFollower: Setting " + path.getName() + ".");
+    	counter = 0;
+    	Robot.driveTrain.setPath(path, 0.1);
+    	Robot.driveTrain.processMotionProfileBuffer();
     	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		if(counter == delay) {
-    			Robot.driveTrain.startPath();
-    		}
-    		counter ++;
-    		Robot.driveTrain.processMotionProfileBuffer();
+    	//delay a little to make sure motion profiles is streamed in.
+    	if(counter == delay) {
+    		System.out.println("TalonPathFollower: Starting " + path.getName() + ".");
+    		Robot.driveTrain.startPath();
+    		startTime = System.currentTimeMillis();
+    	}
+    	counter ++;
+    	Robot.driveTrain.processMotionProfileBuffer();
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -43,10 +49,12 @@ public class TalonFollowPath extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("TalonPathFollower: Completed " + path.getName() + "in " + (System.currentTimeMillis()-startTime) + "milliseconds.");
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	System.out.println("TalonPathFollower: Interrupted " + path.getName() + ", ran for " + (System.currentTimeMillis()-startTime) + "milliseconds.");
     }
 }
