@@ -11,7 +11,8 @@ import mjson.Json;
  * collects drive train characterization data as per Oblarg's paper
  */
 public class CharacterizeDriveTrain extends Command {
-
+	
+	private int savedRampRate = 0;
     public CharacterizeDriveTrain() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);

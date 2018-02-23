@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.team1218.lib.ctrlSystemLogging.LoggableSRX;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMagic;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
@@ -43,7 +44,7 @@ public class Elevator extends Subsystem {
 		@Override
 		public void run() {
 			elevatorMotors[0].processMotionProfileBuffer();
-			
+	
 		}
 		
 	});
@@ -153,7 +154,7 @@ public class Elevator extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new ElevatorDefault());
+		setDefaultCommand(new ElevatorDefaultMotionMagic());
 		
 	}
 
