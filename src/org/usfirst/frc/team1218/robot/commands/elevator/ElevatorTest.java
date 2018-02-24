@@ -13,7 +13,7 @@ public class ElevatorTest extends CommandGroup {
 
     public ElevatorTest() {
     	 	addSequential(new ActuateArm(true));
-        addSequential(new ElevatorMotionMagicMove(65000));
+        addSequential(new ElevatorMotionMagicMove(500));
         addSequential(new TimedCommand(0.25));
         addSequential(new ShootPowerCube());
         //      addSequential(new Command2());

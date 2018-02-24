@@ -37,7 +37,7 @@ public class LoggableSRX extends TalonSRX {
 		@Override
 		public void run() {
 			data.at("timeStamp").add(System.currentTimeMillis() - startTime);
-			if(srx.getControlMode() == ControlMode.Velocity) {
+			if(srx.getControlMode() == ControlMode.Velocity || srx.getControlMode() == ControlMode.MotionMagic) {
 				data.at("error").add(srx.getClosedLoopError(0));
 				data.at("setpoint").add(srx.getClosedLoopTarget(0));
 			}else if(srx.getControlMode() == ControlMode.MotionProfile){

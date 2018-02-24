@@ -66,6 +66,9 @@ public abstract class Elevator extends Subsystem {
 	public void periodicTasks() {
 		SmartDashboard.putString("DB/String 5", "Pe:" + elevatorMotors[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 6", "Ve:" + elevatorMotors[0].getSelectedSensorVelocity(0));
+		if(elevatorMotors[0].getControlMode() == ControlMode.MotionMagic) {
+			SmartDashboard.putString("DB/String 7", "Te:" + elevatorMotors[0].getClosedLoopTarget(0));
+		}
 		elevatorMotors[0].getFaults(elevatorFaults);
 	}
 

@@ -10,7 +10,9 @@ package org.usfirst.frc.team1218.robot;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.CharacterizeDriveTrain;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorTest;
+import org.usfirst.frc.team1218.robot.commands.elevator.ToggleElevatorLogging;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -53,7 +55,7 @@ public class OI{
 	public Joystick operator;
 	public Button followPathBtn; 
 	public Button shiftBtn;
-	public Button loggingBtn;
+	public Button driveTrainLoggingBtn;
 	public Button ptoBtn;
 	public Button intakeBtn;
 	public Button intakeArmBtn;
@@ -61,14 +63,15 @@ public class OI{
 	public Button armUpBtn;
 	public Button armDownBtn;
 	public Button elevatorCommandTestBtn;
+	public Button elevatorLoggingBtn;
 	
 	public OI() {
 		driver = new Joystick(0);
 		operator = new Joystick(1);
 		followPathBtn = new JoystickButton(driver, 2);
 		shiftBtn = new JoystickButton(driver,1);
-		loggingBtn = new JoystickButton(driver,3);
-		loggingBtn.whenActive(new ToggleDriveTrainLogging());
+		driveTrainLoggingBtn = new JoystickButton(driver,3);
+		driveTrainLoggingBtn.whenActive(new ToggleDriveTrainLogging());
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
 		intakeBtn = new JoystickButton(operator,2);
@@ -76,9 +79,11 @@ public class OI{
 		outtakeBtn = new JoystickButton(operator,3);
 		armUpBtn = new JoystickButton(operator,6);
 		armDownBtn = new JoystickButton(operator,4);
-		new JoystickButton(operator, 9).whileHeld(new CharacterizeDriveTrain());
+		new JoystickButton(driver, 6).whileHeld(new CharacterizeDriveTrain());
 		elevatorCommandTestBtn = new JoystickButton(operator,11);
-		elevatorCommandTestBtn.whenPressed(new ElevatorTest());
+		elevatorCommandTestBtn.whenPressed(new ElevatorMotionMagicMove(500));
+		elevatorLoggingBtn = new JoystickButton(operator,7);
+		elevatorLoggingBtn.whenPressed(new ToggleElevatorLogging());
 		
 	}
 	

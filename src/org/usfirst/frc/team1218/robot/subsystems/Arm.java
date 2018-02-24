@@ -24,6 +24,9 @@ public class Arm extends Subsystem {
 		for(int i = 1; i < intakeMotors.length; i++) {
 			intakeMotors[i].set(ControlMode.Follower, RobotMap.intakeMotorIds[0]);
 		}
+		
+		armSolenoid = new Solenoid(RobotMap.armPort);
+		intakeSolenoid = new Solenoid(RobotMap.intakePort);
 	}
 	
 	public void setIntakePower(double intakePower) {

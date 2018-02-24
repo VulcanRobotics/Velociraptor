@@ -8,11 +8,11 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 
 public class ElevatorPot extends Elevator {
 	
-	public static final int elevatorReverseLimit = 10;
-	public static final int elevatorForwardLimit = 1020;
-	public static final int elevatorCruiserVelocity = 50;
-	public static final int elevatorAcceleration = 100;
-	public static final double[] elevatorPIDF = {0.0,0.0,0.0,0.0};
+	public static final int elevatorReverseLimit = 185;
+	public static final int elevatorForwardLimit = 900;
+	public static final int elevatorCruiseVelocity = 35;
+	public static final int elevatorAcceleration = 70;
+	public static final double[] elevatorPIDF = {7.5,0.0,55,29.229};
 	
 	public ElevatorPot() {
 		super();
@@ -29,11 +29,18 @@ public class ElevatorPot extends Elevator {
 		elevatorMotors[0].config_kD(0, elevatorPIDF[2], 0);
 		elevatorMotors[0].config_kF(0, elevatorPIDF[3], 0);
 		
+		elevatorMotors[0].configNominalOutputForward(0, 0);
+		elevatorMotors[0].configNominalOutputReverse(0, 0);
+		elevatorMotors[0].configPeakOutputForward(1, 0);
+		elevatorMotors[0].configPeakOutputReverse(-1, 0);
+		elevatorMotors[0].configAllowableClosedloopError(3, 0, 0);
+		
+		
 		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10, 0);
 		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 10, 0);
 		
-		elevatorMotors[0].configMotionCruiseVelocity(RobotMap.elevatorCruiseVelocity, 0);
-		elevatorMotors[0].configMotionAcceleration(RobotMap.elevatorAcceleration, 0);
+		elevatorMotors[0].configMotionCruiseVelocity(elevatorCruiseVelocity, 0);
+		elevatorMotors[0].configMotionAcceleration(elevatorAcceleration, 0);
 		
 	}
 	
