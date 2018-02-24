@@ -11,10 +11,13 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import org.team1218.lib.PropertiesManager;
+
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.TrajectoryGenerator;
 import com.team254.lib.trajectory.WaypointSequence;
+
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -31,7 +34,7 @@ public class RobotMap {
 
 	public static boolean useCamera;
 	
-	public static double[] leftLowGearPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF;
+	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF;
 	public static int lowGearMaxSpeed, highGearMaxSpeed, encTicksPerRev;
 	public static double trackWidthInches;
 	
@@ -44,13 +47,13 @@ public class RobotMap {
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
 	
-	public static Path rightSwitchPath, leftStartleftScalePath;
+	public static Path rightSwitchPath, leftStartleftScalePath, tuningTestPath;
 	
 	public static void makePaths() {
 		TrajectoryGenerator.Config driveTrainPathConfig = new TrajectoryGenerator.Config();
 		driveTrainPathConfig.dt = .1;			// the time in seconds between each generated segment
-		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
-		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_acc = 14.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		
 		
@@ -68,52 +71,49 @@ public class RobotMap {
 		ws.addWaypoint(new WaypointSequence.Waypoint(14.0,-1.0,0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(22.0,-2.0,Math.toRadians(-12.0)));
 		leftStartleftScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftStartleftScale");
+		
+		ws = new WaypointSequence(10);
+		
+		/*tuning test stright line*/
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
+		tuningTestPath = PathGenerator.makePath(ws, driveTrainPathConfig, RobotMap.trackWidthInches,"Tuning Test Path");
 	}
 	
 	public static void loadProperties() {
-		Properties props = new Properties();
+		PropertiesManager pm = new PropertiesManager("/home/lvuser/robot.properties");
 		System.out.println("RobotMap: loading properties");
-		try {
-			FileInputStream propsFile = new FileInputStream("/home/lvuser/robot.properties");
-			props.load(propsFile);		
+		pm.load();		
 
-			leftMotorControllerIds = Stream.of(props.getProperty("leftMotorControllerIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			rightMotorControllerIds = Stream.of(props.getProperty("rightMotorControllerIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			leftInverted = Boolean.parseBoolean(props.getProperty("leftDriveInverted"));
-			rightInverted = Boolean.parseBoolean(props.getProperty("rightDriveInverted"));
-			leftLowGearPIDF = Stream.of(props.getProperty("leftLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			rightLowGearPIDF = Stream.of(props.getProperty("rightLowGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			leftHighGearPIDF = Stream.of(props.getProperty("leftHighGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			rightHighGearPIDF = Stream.of(props.getProperty("rightHighGearPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();
-			lowGearMaxSpeed = Integer.parseInt(props.getProperty("lowGearMaxSpeed"));
-			highGearMaxSpeed = Integer.parseInt(props.getProperty("highGearMaxSpeed"));
-			encTicksPerRev = Integer.parseInt(props.getProperty("encTicksPerRev"));
-			trackWidthInches = Double.parseDouble(props.getProperty("trackWidthInches"));
+		leftMotorControllerIds = pm.getInts("leftMotorControllerIds", new int[] {0,1,2});
+		rightMotorControllerIds = pm.getInts("rightMotorControllerIds",new int[] {14,13,15});
+		leftInverted = pm.getBoolean("leftDriveInverted",false);
+		rightInverted = pm.getBoolean("rightDriveInverted",true);
+		leftLowGearPIDF = pm.getDoubles("leftLowGearPIDF",new double[] {1.1,0.0,10,0.79});
+		rightLowGearPIDF = pm.getDoubles("rightLowGearPIDF", new double[] {1.05,0,50,0.79});
+		leftHighGearPIDF = pm.getDoubles("leftHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
+		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});;
+		lowGearMaxSpeed = pm.getInt("lowGearMaxSpeed");
+		highGearMaxSpeed = pm.getInt("highGearMaxSpeed");
+		encTicksPerRev = pm.getInt("encTicksPerRev");
+		trackWidthInches = pm.getDouble("trackWidthInches");
 			
-			useCamera = Boolean.parseBoolean(props.getProperty("useCamera"));
+		intakeMotorIds = pm.getInts("intakeMotorIds", new int[] {4,11});
+		intakeMotorInvert = pm.getBooleans("intakeMotorInvert");
 			
-			intakeMotorIds = Stream.of(props.getProperty("intakeMotorIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			int i = 0;
-			for (String s : props.getProperty("intakeMotorInvert").split(",")) {
-				intakeMotorInvert[i] = Boolean.parseBoolean(s);
-				i++;
-			}
+		useCamera = pm.getBoolean("useCamera");
 			
-			elevatorMotorIds = Stream.of(props.getProperty("elevatorMotorIds").split(",")).mapToInt(Integer::parseInt).toArray();
-			elevatorMotorInvert = Boolean.parseBoolean(props.getProperty("elevatorMotorInvert"));
-			elevatorPIDF = Stream.of(props.getProperty("elevatorPIDF").split(",")).mapToDouble(Double::parseDouble).toArray();			
-			elevatorCruiseVelocity = Integer.parseInt(props.getProperty("elevatorCruiseVelocity"));
-			elevatorAcceleration = Integer.parseInt(props.getProperty("elevatorAcceleration"));
+		elevatorMotorIds = pm.getInts("elevatorMotorIds", new int[] {3,12});
+		elevatorMotorInvert = pm.getBoolean("elevatorMotorInvert",false);
+		elevatorPIDF = pm.getDoubles("elevatorPIDF", new double[] {0.0,0.0,0.0,0.0});			
+		elevatorCruiseVelocity = pm.getInt("elevatorCruiseVelocity");
+		elevatorAcceleration = pm.getInt("elevatorAcceleration");
 			
-			shifterPort = Integer.parseInt(props.getProperty("shifterPort"));
-			ptoPort = Integer.parseInt(props.getProperty("ptoPort"));
-			armPort = Integer.parseInt(props.getProperty("armPort"));
-			intakePort = Integer.parseInt(props.getProperty("intakePort"));
-			System.out.println("RobotMap: properties loaded!");
-		} catch (Exception e) {
-			System.out.println("RobotMap: Failed to load robot properties! " + e.getMessage());
-			e.printStackTrace();
-		}
+		shifterPort = pm.getInt("shifterPort");
+		ptoPort = pm.getInt("ptoPort");
+		armPort = pm.getInt("armPort");
+		intakePort = pm.getInt("intakePort");
+		System.out.println("RobotMap: properties loaded!");
 	}
 	
 	

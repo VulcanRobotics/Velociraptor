@@ -20,15 +20,9 @@ public class ElevatorDefault extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		if (Robot.m_oi.elevatorTestBtn.get()) {
-    			if(!Robot.elevator.isLogging()) {
-    				Robot.elevator.startLogging();
-    			}
-    			Robot.elevator.moveTo(220000);
-    		} else {
-    			if (Robot.elevator.isLogging()) Robot.elevator.stopLogging();
-    			Robot.elevator.setElevatorPower(Robot.m_oi.operator.getY());
-    		}
+    		
+    		Robot.elevator.setElevatorPower(Robot.m_oi.operator.getY());
+    		
     		
     		if(Robot.m_oi.intakeBtn.get()) {
     			Robot.elevator.setIntakePower(1);

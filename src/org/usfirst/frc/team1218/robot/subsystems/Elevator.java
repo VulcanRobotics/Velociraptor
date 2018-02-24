@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.team1218.lib.ctrlSystemLogging.LoggableSRX;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMagic;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
@@ -36,14 +37,13 @@ public class Elevator extends Subsystem {
 	Solenoid intakeSolenoid;
 	Solenoid armSolenoid;
 	Faults elevatorFaults = new Faults();
-	private AtomicInteger motionMagicPos = new AtomicInteger(0);
-	
+		
 	private Notifier processMPBuffer = new Notifier(new Runnable() {
 
 		@Override
 		public void run() {
 			elevatorMotors[0].processMotionProfileBuffer();
-			
+	
 		}
 		
 	});
@@ -53,6 +53,9 @@ public class Elevator extends Subsystem {
 			elevatorMotors[i] = new LoggableSRX(RobotMap.elevatorMotorIds[i]);
 			elevatorMotors[i].setInverted(RobotMap.elevatorMotorInvert);
 			elevatorMotors[i].enableVoltageCompensation(true);
+			elevatorMotors[i].configContinuousCurrentLimit(15, 0);
+			elevatorMotors[i].configPeakCurrentLimit(30, 0);
+			elevatorMotors[i].configPeakCurrentDuration(250, 0);
 			
 			intakeMotors[i] = new TalonSRX(RobotMap.intakeMotorIds[i]);
 			intakeMotors[i].setInverted(RobotMap.intakeMotorInvert[i]);
@@ -68,7 +71,8 @@ public class Elevator extends Subsystem {
 		elevatorMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		elevatorMotors[0].setSensorPhase(false);
 		elevatorMotors[0].configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-		elevatorMotors[0].configForwardSoftLimitThreshold(275000, 0);
+		elevatorMotors[0].configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+		elevatorMotors[0].configForwardSoftLimitThreshold(290000, 0);
 		elevatorMotors[0].configForwardSoftLimitEnable(true, 0);
 		
 		elevatorMotors[0].config_kP(0, RobotMap.elevatorPIDF[0], 0);
@@ -109,17 +113,8 @@ public class Elevator extends Subsystem {
 		elevatorMotors[0].set(ControlMode.PercentOutput, elevatorPower);
 	}
 	
-	public void executeMotionMagicMove() {
-		System.out.println("Elevator.executeMotionMagicMove to pos: " + motionMagicPos);
-		elevatorMotors[0].set(ControlMode.MotionMagic, motionMagicPos.get());
-	}
-
-	public void setMotionMagicPosition(int newPos) {
-		motionMagicPos.set(newPos);
-	}
-	
-	public int getMotionMagicPosition() {
-		return motionMagicPos.get();
+	public int getCurrentPosition() {
+		return elevatorMotors[0].getSelectedSensorPosition(0);
 	}
 	
 	public void moveTo(int position) {
@@ -149,7 +144,7 @@ public class Elevator extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new ElevatorDefault());
+		setDefaultCommand(new ElevatorDefaultMotionMagic());
 		
 	}
 
