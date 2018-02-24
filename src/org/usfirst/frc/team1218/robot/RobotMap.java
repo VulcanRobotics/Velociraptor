@@ -7,10 +7,6 @@
 
 package org.usfirst.frc.team1218.robot;
 
-import java.io.FileInputStream;
-import java.util.Properties;
-import java.util.stream.Stream;
-
 import org.team1218.lib.PropertiesManager;
 
 import com.team254.lib.trajectory.Path;
@@ -33,6 +29,7 @@ public class RobotMap {
 	public static boolean rightInverted;		// true;
 
 	public static boolean useCamera;
+	public static boolean useEncElevator;
 	
 	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF;
 	public static int lowGearMaxSpeed, highGearMaxSpeed, encTicksPerRev;
@@ -41,11 +38,12 @@ public class RobotMap {
 	public static int shifterPort, ptoPort, intakePort, armPort;
 	
 	public static int[] intakeMotorIds;				// {4,11};
-	public static boolean[] intakeMotorInvert = new boolean[2]; 		// {true,false};
+	public static boolean[] intakeMotorInvert; 		// {true,false};
 	public static int[] elevatorMotorIds;			//{3,12};
 	public static boolean elevatorMotorInvert; 		// true;
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
+	public static int elevatorReverseLimit, elevatorForwardLimit;
 	
 	public static Path rightSwitchPath, leftStartleftScalePath, tuningTestPath;
 	
@@ -101,14 +99,26 @@ public class RobotMap {
 		intakeMotorIds = pm.getInts("intakeMotorIds", new int[] {4,11});
 		intakeMotorInvert = pm.getBooleans("intakeMotorInvert");
 			
-		useCamera = pm.getBoolean("useCamera");
+		useCamera = pm.getBoolean("useCamera",true);
+		useEncElevator = pm.getBoolean("useEncElevator",false);
 			
 		elevatorMotorIds = pm.getInts("elevatorMotorIds", new int[] {3,12});
 		elevatorMotorInvert = pm.getBoolean("elevatorMotorInvert",false);
-		elevatorPIDF = pm.getDoubles("elevatorPIDF", new double[] {0.0,0.0,0.0,0.0});			
-		elevatorCruiseVelocity = pm.getInt("elevatorCruiseVelocity");
-		elevatorAcceleration = pm.getInt("elevatorAcceleration");
-			
+		
+		if(useEncElevator) {
+			elevatorPIDF = pm.getDoubles("elevatorEncPIDF", new double[] {0.0,0.0,0.0,0.0});			
+			elevatorCruiseVelocity = pm.getInt("elevatorEncCruiseVelocity");
+			elevatorAcceleration = pm.getInt("elevatorEncAcceleration");
+			elevatorForwardLimit = pm.getInt("elevatorEncForwardLimit",295000);
+			elevatorReverseLimit = 0;
+		}else {
+			elevatorPIDF = pm.getDoubles("elevatorPotPIDF", new double[] {7.5,0.0,55.0,29.228});
+			elevatorCruiseVelocity = pm.getInt("elevatorPotCruiseVelocity",35);
+			elevatorAcceleration = pm.getInt("elevatorPotAcceleration",70);
+			elevatorForwardLimit = pm.getInt("elevatorPotForwardLimit",900);
+			elevatorReverseLimit = pm.getInt("elevatorPotReverseLimit",185);
+		}
+		
 		shifterPort = pm.getInt("shifterPort");
 		ptoPort = pm.getInt("ptoPort");
 		armPort = pm.getInt("armPort");

@@ -66,7 +66,11 @@ public class Robot extends TimedRobot {
 		RobotMap.loadProperties();
 		RobotMap.makePaths();
 		driveTrain = new DriveTrain();
-		elevator = new ElevatorPot();
+		if(RobotMap.useEncElevator) {
+			elevator = new ElevatorEnc();
+		}else {
+			elevator = new ElevatorPot();
+		}
 		arm = new Arm();
 		//followPathCmd = new FollowPath();
 		//followPathCmd.setPath(RobotMap.tuningTestPath, false);

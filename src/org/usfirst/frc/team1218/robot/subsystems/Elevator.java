@@ -7,6 +7,7 @@ import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMag
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,6 +17,7 @@ public abstract class Elevator extends Subsystem {
 	boolean isLogging = false;
 	protected LoggableSRX[] elevatorMotors = new LoggableSRX[2];
 	Faults elevatorFaults = new Faults();
+	double elevatorPIDF[];
 
 	public Elevator() {
 		for(int i = 0; i < 2; i ++) {
@@ -32,6 +34,23 @@ public abstract class Elevator extends Subsystem {
 		for(int i = 1; i < 2; i++) {
 			elevatorMotors[i].set(ControlMode.Follower, RobotMap.elevatorMotorIds[0]);
 		}
+		
+		elevatorMotors[0].config_kP(0, RobotMap.elevatorPIDF[0], 0);
+		elevatorMotors[0].config_kI(0, RobotMap.elevatorPIDF[1], 0);
+		elevatorMotors[0].config_kD(0, RobotMap.elevatorPIDF[2], 0);
+		elevatorMotors[0].config_kF(0, RobotMap.elevatorPIDF[3], 0);
+		
+		elevatorMotors[0].configNominalOutputForward(0, 0);
+		elevatorMotors[0].configNominalOutputReverse(0, 0);
+		elevatorMotors[0].configPeakOutputForward(1, 0);
+		elevatorMotors[0].configPeakOutputReverse(-1, 0);
+		elevatorMotors[0].configAllowableClosedloopError(3, 0, 0);
+		
+		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10, 0);
+		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 10, 0);
+		
+		elevatorMotors[0].configMotionCruiseVelocity(RobotMap.elevatorCruiseVelocity, 0);
+		elevatorMotors[0].configMotionAcceleration(RobotMap.elevatorAcceleration, 0);
 	}
 	
 	public int getMotionMagicErr() {
