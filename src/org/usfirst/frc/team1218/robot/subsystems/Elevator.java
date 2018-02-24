@@ -69,6 +69,11 @@ public abstract class Elevator extends Subsystem {
 		elevatorMotors[0].set(ControlMode.MotionMagic, position);
 	}
 
+	public void setMotionMagicSpeeds(int cruise) {
+		elevatorMotors[0].configMotionCruiseVelocity(cruise, 0);
+		elevatorMotors[0].configMotionAcceleration(cruise*2, 0);
+	}
+	
 	public void periodicTasks() {
 		SmartDashboard.putString("DB/String 5", "Pe:" + elevatorMotors[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 6", "Ve:" + elevatorMotors[0].getSelectedSensorVelocity(0));

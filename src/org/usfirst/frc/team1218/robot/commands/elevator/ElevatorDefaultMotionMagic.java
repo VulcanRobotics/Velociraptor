@@ -21,10 +21,15 @@ public class ElevatorDefaultMotionMagic extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double position = Robot.elevator.getCurrentPosition() + (Robot.m_oi.operator.getY() * (RobotMap.elevatorCruiseVelocity / 5.0));
-    	if (position < 0) position = 0;
-    	if (position > 290000) position = 290000;
+    	double js = Robot.m_oi.operator.getY();
+    	double position = Robot.elevator.getTargetPosition();
+    	if (Math.abs(js) >= .05) {
+    		position += js * (35.0 / 2.0);
+    	}
+    	if (position < 185) position = 185;
+    	if (position > 900) position = 900;
     	
+    	Robot.elevator.setMotionMagicSpeeds((int)Math.abs(js) * 35);
     	Robot.elevator.moveTo((int)position);
 
     }

@@ -44,8 +44,4 @@ public class ElevatorPot extends Elevator {
 		
 	}
 	
-	@Override
-	protected void initDefaultCommand(){
-		setDefaultCommand(new ElevatorDefault());
-	}
 }
