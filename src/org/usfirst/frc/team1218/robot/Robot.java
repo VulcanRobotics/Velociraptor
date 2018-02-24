@@ -32,6 +32,7 @@ import org.usfirst.frc.team1218.robot.subsystems.Arm;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1218.robot.subsystems.Elevator;
 import org.usfirst.frc.team1218.robot.subsystems.ElevatorEnc;
+import org.usfirst.frc.team1218.robot.subsystems.ElevatorPot;
 
 import com.team254.lib.trajectory.Path;
 
@@ -65,7 +66,7 @@ public class Robot extends TimedRobot {
 		RobotMap.loadProperties();
 		RobotMap.makePaths();
 		driveTrain = new DriveTrain();
-		elevator = new ElevatorEnc();
+		elevator = new ElevatorPot();
 		arm = new Arm();
 		followPathCmd = new FollowPath();
 		followPathCmd.setPath(RobotMap.tuningTestPath, false);

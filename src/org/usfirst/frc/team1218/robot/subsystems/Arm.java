@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1218.robot.subsystems;
 
 import org.usfirst.frc.team1218.robot.RobotMap;
+import org.usfirst.frc.team1218.robot.commands.arm.ArmDefault;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -38,7 +39,7 @@ public class Arm extends Subsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		// TODO Auto-generated method stub
+		setDefaultCommand(new ArmDefault());
 
 	}
 
