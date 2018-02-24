@@ -61,8 +61,8 @@ public class Robot extends TimedRobot {
 		RobotMap.makePaths();
 		driveTrain = new DriveTrain();
 		elevator = new Elevator();
-		followPathCmd = new FollowPath();
-		followPathCmd.setPath(RobotMap.tuningTestPath, false);
+		//followPathCmd = new FollowPath();
+		//followPathCmd.setPath(RobotMap.tuningTestPath, false);
 		m_oi = new OI();
         m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.tuningTestPath));
 

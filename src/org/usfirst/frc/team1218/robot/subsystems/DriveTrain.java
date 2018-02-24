@@ -67,13 +67,18 @@ public class DriveTrain extends Subsystem {
 		for(int i = 0; i < 3; i++) {
 			leftMotorControllers[i] = new LoggableSRX(RobotMap.leftMotorControllerIds[i]);
 			leftMotorControllers[i].setInverted(RobotMap.leftInverted);
+			leftMotorControllers[i].configVoltageCompSaturation(12.0, 0);
 			leftMotorControllers[i].enableVoltageCompensation(true);
 			leftMotorControllers[i].configOpenloopRamp(0.25, 0);
 			
 			rightMotorControllers[i] = new LoggableSRX(RobotMap.rightMotorControllerIds[i]);
 			rightMotorControllers[i].setInverted(RobotMap.rightInverted);
+			rightMotorControllers[i].configVoltageCompSaturation(12.0, 0);
 			rightMotorControllers[i].enableVoltageCompensation(true);
 			rightMotorControllers[i].configOpenloopRamp(0.25, 0);
+			
+			leftMotorControllers[i].setNeutralMode(NeutralMode.Coast);
+			rightMotorControllers[i].setNeutralMode(NeutralMode.Coast);
 		}
 		for(int i = 1; i < 3; i++) {
 			leftMotorControllers[i].set(ControlMode.Follower, RobotMap.leftMotorControllerIds[0]);
@@ -121,13 +126,7 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].config_kD(0, rightPIDF[2], 0);
 		rightMotorControllers[0].config_kF(0, rightPIDF[3], 0);
 	}
-	
-	/**
-	 * turns on velocity closed-loop. sets target velocity for left and right.
-	 * @param leftVelocity in encoder counts per 100ms
-	 * @param rightVelocity in encoder counts per 100ms
-	 */
-	
+		
 	public void setPower(double leftPower, double rightPower) {
 		leftPower = clampPower(leftPower);
 		rightPower = clampPower(rightPower);
@@ -150,6 +149,11 @@ public class DriveTrain extends Subsystem {
 			leftMotorControllers[i].setNeutralMode(mode);
 			rightMotorControllers[i].setNeutralMode(mode);
 		}
+	}
+	
+	public void zeroPos() {
+		leftMotorControllers[0].setSelectedSensorPosition(0, 0, 0);
+		rightMotorControllers[0].setSelectedSensorPosition(0, 0, 0);
 	}
 	
 	/**
@@ -282,6 +286,7 @@ public class DriveTrain extends Subsystem {
 	
 	public void startPath() {
 		//loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
+		setBrake(NeutralMode.Coast);
 		leftMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
 		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
 		leftMotorControllers[0].changeMotionControlFramePeriod(5);

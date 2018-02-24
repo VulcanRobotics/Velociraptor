@@ -52,6 +52,7 @@ public class Elevator extends Subsystem {
 		for(int i = 0; i < 2; i ++) {
 			elevatorMotors[i] = new LoggableSRX(RobotMap.elevatorMotorIds[i]);
 			elevatorMotors[i].setInverted(RobotMap.elevatorMotorInvert);
+			elevatorMotors[i].configVoltageCompSaturation(12.0, 0);
 			elevatorMotors[i].enableVoltageCompensation(true);
 			elevatorMotors[i].configContinuousCurrentLimit(15, 0);
 			elevatorMotors[i].configPeakCurrentLimit(30, 0);
@@ -59,6 +60,7 @@ public class Elevator extends Subsystem {
 			
 			intakeMotors[i] = new TalonSRX(RobotMap.intakeMotorIds[i]);
 			intakeMotors[i].setInverted(RobotMap.intakeMotorInvert[i]);
+			intakeMotors[i].configVoltageCompSaturation(12.0, 0);
 			intakeMotors[i].enableVoltageCompensation(true);
 		}
 		
@@ -117,6 +119,10 @@ public class Elevator extends Subsystem {
 		return elevatorMotors[0].getSelectedSensorPosition(0);
 	}
 	
+	public int getTargetPosition() {
+		return elevatorMotors[0].getClosedLoopTarget(0);
+	}
+	
 	public void moveTo(int position) {
 		System.out.println("moving to " + position);
 		elevatorMotors[0].set(ControlMode.MotionMagic, position);
@@ -144,7 +150,7 @@ public class Elevator extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new ElevatorDefaultMotionMagic());
+		setDefaultCommand(new ElevatorDefault());
 		
 	}
 

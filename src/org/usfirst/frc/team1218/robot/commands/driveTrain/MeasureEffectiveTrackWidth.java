@@ -1,19 +1,15 @@
 package org.usfirst.frc.team1218.robot.commands.driveTrain;
 
-import java.io.BufferedWriter;
-
 import org.usfirst.frc.team1218.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import mjson.Json;
 
 /**
- * collects drive train characterization data as per Oblarg's paper
+ *
  */
-public class CharacterizeDriveTrain extends Command {
-	
-	private int savedRampRate = 0;
-    public CharacterizeDriveTrain() {
+public class MeasureEffectiveTrackWidth extends Command {
+
+    public MeasureEffectiveTrackWidth() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
@@ -21,14 +17,14 @@ public class CharacterizeDriveTrain extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	System.out.println("Starting CharacterizeDriveTrain()");
-    	Robot.driveTrain.configOpenLoopRampRate(120);
+    	Robot.driveTrain.zeroPos();
     	Robot.driveTrain.startLogging();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.driveTrain.setPower(1.0, 1.0);
+    	double pwr = Robot.m_oi.driver.getY();
+    	Robot.driveTrain.setPower(pwr, -pwr);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -38,15 +34,12 @@ public class CharacterizeDriveTrain extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("Ending CharacterizeDriveTrain()");
     	Robot.driveTrain.stopLogging();
-    	Robot.driveTrain.configOpenLoopRampRate(0);
-    	Robot.driveTrain.setPower(0.0, 0.0);
+    	Robot.driveTrain.setPower(0, 0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	end();
     }
 }

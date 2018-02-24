@@ -71,12 +71,13 @@ public class OI{
 		loggingBtn.whenActive(new ToggleDriveTrainLogging());
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
+		new JoystickButton(driver, 6).whileHeld(new CharacterizeDriveTrain());
 		intakeBtn = new JoystickButton(operator,2);
 		intakeArmBtn = new JoystickButton(operator,1);
 		outtakeBtn = new JoystickButton(operator,3);
 		armUpBtn = new JoystickButton(operator,6);
 		armDownBtn = new JoystickButton(operator,4);
-		new JoystickButton(operator, 9).whileHeld(new CharacterizeDriveTrain());
+//		new JoystickButton(operator, 9).whileHeld(new CharacterizeDriveTrain());
 		elevatorCommandTestBtn = new JoystickButton(operator,11);
 		elevatorCommandTestBtn.whenPressed(new ElevatorTest());
 		
