@@ -6,7 +6,6 @@ import org.usfirst.frc.team1218.robot.RobotMap;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
 
 
 import edu.wpi.first.wpilibj.Notifier;
@@ -35,19 +34,8 @@ public class ElevatorEnc extends Elevator {
 		elevatorMotors[0].setSensorPhase(false);
 		elevatorMotors[0].configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 		elevatorMotors[0].configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-		elevatorMotors[0].configForwardSoftLimitThreshold(290000, 0);
+		elevatorMotors[0].configForwardSoftLimitThreshold(RobotMap.elevatorForwardLimit, 0);
 		elevatorMotors[0].configForwardSoftLimitEnable(true, 0);
-		
-		elevatorMotors[0].config_kP(0, RobotMap.elevatorPIDF[0], 0);
-		elevatorMotors[0].config_kI(0, RobotMap.elevatorPIDF[1], 0);
-		elevatorMotors[0].config_kD(0, RobotMap.elevatorPIDF[2], 0);
-		elevatorMotors[0].config_kF(0, RobotMap.elevatorPIDF[3], 0);
-		
-		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10, 0);
-		elevatorMotors[0].setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 10, 0);
-		
-		elevatorMotors[0].configMotionCruiseVelocity(RobotMap.elevatorCruiseVelocity, 0);
-		elevatorMotors[0].configMotionAcceleration(RobotMap.elevatorAcceleration, 0);
 	}
 	
 	@Override

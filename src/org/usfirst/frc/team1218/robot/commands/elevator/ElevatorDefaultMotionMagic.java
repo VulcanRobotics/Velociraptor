@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
+@Deprecated
 public class ElevatorDefaultMotionMagic extends Command {
 
     public ElevatorDefaultMotionMagic() {
@@ -24,12 +25,12 @@ public class ElevatorDefaultMotionMagic extends Command {
     	double js = Robot.m_oi.operator.getY();
     	double position = Robot.elevator.getTargetPosition();
     	if (Math.abs(js) >= .05) {
-    		position += js * (35.0 / 2.0);
+    		position += js * (RobotMap.elevatorCruiseVelocity / 2.0);
     	}
-    	if (position < 185) position = 185;
-    	if (position > 900) position = 900;
+    	if (position < RobotMap.elevatorReverseLimit) position = RobotMap.elevatorReverseLimit;
+    	if (position > RobotMap.elevatorForwardLimit) position = RobotMap.elevatorForwardLimit;
     	
-    	Robot.elevator.setMotionMagicSpeeds((int)Math.abs(js) * 35);
+    	Robot.elevator.setMotionMagicSpeeds((int)Math.abs(js) * RobotMap.elevatorCruiseVelocity);
     	Robot.elevator.moveTo((int)position);
 
     }
