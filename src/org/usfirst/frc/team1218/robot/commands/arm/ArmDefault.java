@@ -1,32 +1,40 @@
-package org.usfirst.frc.team1218.robot.commands.elevator;
+package org.usfirst.frc.team1218.robot.commands.arm;
 
 import org.usfirst.frc.team1218.robot.Robot;
-import org.usfirst.frc.team1218.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class ElevatorDefaultMotionMagic extends Command {
+public class ArmDefault extends Command {
 
-    public ElevatorDefaultMotionMagic() {
-    	requires(Robot.elevator);
+    public ArmDefault() {
+        requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double position = Robot.elevator.getCurrentPosition() + (Robot.m_oi.operator.getY() * (RobotMap.elevatorCruiseVelocity / 5.0));
-    	if (position < 0) position = 0;
-    	if (position > 290000) position = 290000;
-    	
-    	Robot.elevator.moveTo((int)position);
-
+    	if(Robot.m_oi.intakeBtn.get()) {
+			Robot.arm.setIntakePower(1);
+		}else if(Robot.m_oi.outtakeBtn.get()){
+			Robot.arm.setIntakePower(-0.70);
+		}else {
+			Robot.arm.setIntakePower(0);
+		}
+		
+		
+		Robot.arm.intakeSolenoidEngage(Robot.m_oi.intakeArmBtn.get());
+		
+		if(Robot.m_oi.armUpBtn.get()) {
+			Robot.arm.armSolenoidEngage(true);
+		}else if(Robot.m_oi.armDownBtn.get()) {
+			Robot.arm.armSolenoidEngage(false);
+		}
     }
 
     // Make this return true when this Command no longer needs to run execute()

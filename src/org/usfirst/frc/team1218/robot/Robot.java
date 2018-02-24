@@ -28,8 +28,10 @@ import org.usfirst.frc.team1218.robot.commands.auton.ScaleAutonSide;
 import org.usfirst.frc.team1218.robot.commands.auton.SwitchAuton;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
+import org.usfirst.frc.team1218.robot.subsystems.Arm;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1218.robot.subsystems.Elevator;
+import org.usfirst.frc.team1218.robot.subsystems.ElevatorEnc;
 
 import com.team254.lib.trajectory.Path;
 
@@ -44,6 +46,9 @@ public class Robot extends TimedRobot {
 	public static OI m_oi;
 	public static DriveTrain driveTrain;
 	public static Elevator elevator;
+	public static Arm arm;
+	
+	
 	private static UsbCamera jevois;
 	public static FollowPath followPathCmd;
 	
@@ -60,7 +65,8 @@ public class Robot extends TimedRobot {
 		RobotMap.loadProperties();
 		RobotMap.makePaths();
 		driveTrain = new DriveTrain();
-		elevator = new Elevator();
+		elevator = new ElevatorEnc();
+		arm = new Arm();
 		followPathCmd = new FollowPath();
 		followPathCmd.setPath(RobotMap.tuningTestPath, false);
 		m_oi = new OI();

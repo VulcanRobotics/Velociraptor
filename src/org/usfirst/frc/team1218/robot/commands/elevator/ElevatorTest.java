@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1218.robot.commands.elevator;
 
+import org.usfirst.frc.team1218.robot.commands.arm.ActuateArm;
+import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
