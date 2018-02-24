@@ -22,7 +22,7 @@ public class QuasiStaticTest extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	System.out.println("Starting CharacterizeDriveTrain()");
-    	Robot.driveTrain.configOpenLoopRampRate(120);
+    	Robot.driveTrain.configOpenLoopRampRate(240);
     	Robot.driveTrain.startLogging();
     }
 

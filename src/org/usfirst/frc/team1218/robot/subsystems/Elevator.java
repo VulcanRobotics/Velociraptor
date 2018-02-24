@@ -85,7 +85,7 @@ public abstract class Elevator extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new ElevatorDefaultMotionMagic());
+		setDefaultCommand(new ElevatorDefault());
 		
 	}
 
