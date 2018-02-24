@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1218.robot.commands.elevator;
+package org.usfirst.frc.team1218.robot.commands.arm;
 
 import org.usfirst.frc.team1218.robot.Robot;
 
@@ -14,6 +14,6 @@ public class ActuateIntakeArm extends InstantCommand {
 	
 	@Override
 	protected void execute() {
-		Robot.elevator.intakeSolenoidEngage(open);
+		Robot.arm.intakeSolenoidEngage(open);
 	}
 }

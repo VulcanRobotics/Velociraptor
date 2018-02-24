@@ -2,8 +2,8 @@ package org.usfirst.frc.team1218.robot.commands.auton;
 
 import org.usfirst.frc.team1218.robot.Robot;
 import org.usfirst.frc.team1218.robot.RobotMap;
+import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
-import org.usfirst.frc.team1218.robot.commands.elevator.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
