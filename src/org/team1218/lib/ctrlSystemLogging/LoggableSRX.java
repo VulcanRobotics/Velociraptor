@@ -20,9 +20,12 @@ public class LoggableSRX extends TalonSRX {
 	protected AtomicBoolean endFlag = new AtomicBoolean(false);;
 	
 	private class LoggerTask extends TimerTask {
-		long startTime;
+		long startTime, time, dt;
 		Json data;
 		LoggableSRX srx;
+		int count = 0;
+		double vel, pos, accel;
+		
 		public LoggerTask(LoggableSRX srx) {
 			this.srx = srx;
 			data = Json.object();
@@ -32,11 +35,14 @@ public class LoggableSRX extends TalonSRX {
 			data.set("velocity", Json.array());
 			data.set("position", Json.array());
 			data.set("vOut", Json.array());
+			data.set("acceleration", Json.array());
+			data.set("dt", Json.array());
 			startTime = System.currentTimeMillis();
 		}
 		@Override
-		public void run() {
-			data.at("timeStamp").add(System.currentTimeMillis() - startTime);
+		public void run() {			
+			time = System.currentTimeMillis() - startTime;
+			data.at("timeStamp").add(time);
 			if(srx.getControlMode() == ControlMode.Velocity) {
 				data.at("error").add(srx.getClosedLoopError(0));
 				data.at("setpoint").add(srx.getClosedLoopTarget(0));
@@ -47,9 +53,21 @@ public class LoggableSRX extends TalonSRX {
 				data.at("error").add(0);
 				data.at("setpoint").add(0);
 			}
-			data.at("velocity").add(srx.getSelectedSensorVelocity(0));
-			data.at("position").add(srx.getSelectedSensorPosition(0));
+			
+			vel = srx.getSelectedSensorVelocity(0);
+			pos = srx.getSelectedSensorPosition(0);
+			data.at("velocity").add(vel);
+			data.at("position").add(pos);
 			data.at("vOut").add(srx.getMotorOutputVoltage());
+			if (++count >= 3) {
+				dt = time - data.at("timeStamp").at(count - 3).asLong();
+				accel = (vel - data.at("velocity").at(count - 3).asDouble()) / dt;
+				data.at("acceleration").add(accel);
+				data.at("dt").add(dt);
+			} else {
+				data.at("acceleration").add(0.0);
+				data.at("dt").add(0);
+			}
 			if(endFlag.get() == true) {
 				endFlag.set(false);
 				try {

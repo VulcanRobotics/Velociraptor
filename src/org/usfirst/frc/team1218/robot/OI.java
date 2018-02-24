@@ -7,7 +7,7 @@
 
 package org.usfirst.frc.team1218.robot;
 
-import org.usfirst.frc.team1218.robot.commands.driveTrain.CharacterizeDriveTrain;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.QuasiStaticTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorTest;
@@ -71,7 +71,7 @@ public class OI{
 		loggingBtn.whenActive(new ToggleDriveTrainLogging());
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
-		new JoystickButton(driver, 6).whileHeld(new CharacterizeDriveTrain());
+		new JoystickButton(driver, 6).whileHeld(new QuasiStaticTest());
 		intakeBtn = new JoystickButton(operator,2);
 		intakeArmBtn = new JoystickButton(operator,1);
 		outtakeBtn = new JoystickButton(operator,3);
