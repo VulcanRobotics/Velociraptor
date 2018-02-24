@@ -1,13 +1,12 @@
 package org.usfirst.frc.team1218.robot.commands.driveTrain;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.Trajectory.Segment;
@@ -32,6 +31,7 @@ public class FollowPath extends Command {
 		private long startTime;
 		private int step = 0;
 
+		@SuppressWarnings("unused")
 		private Segment invertSegment(Segment s) {
 			return new Segment(-s.pos, -s.vel, -s.acc, -s.jerk, s.heading, s.dt, s.x, s.y);
 		}
@@ -45,6 +45,7 @@ public class FollowPath extends Command {
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));
 	    	//System.out.print("step: " + step);
 	    	try {
+	    		//Robot.driveTrain.shift(true);
 	    		if (state.get() == FollowerState.Interrupting) throw new Exception("Interrupting profile");
 	    		if (DriverStation.getInstance().isDisabled()) throw new Exception("Robot Disabled");
 	    		if (runBACKWARDS){
@@ -93,6 +94,7 @@ public class FollowPath extends Command {
 	
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearPIDF, RobotMap.rightLowGearPIDF);
     	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Starting)) {
         	System.out.println("starting FollowPath command");
     		processThread.startPeriodic(dtSeconds / 2.0);

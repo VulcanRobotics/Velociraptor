@@ -24,14 +24,14 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.usfirst.frc.team1218.robot.commands.auton.ScaleAutonSide;
+import org.usfirst.frc.team1218.robot.commands.auton.SwitchAuton;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1218.robot.subsystems.Elevator;
 
 import com.team254.lib.trajectory.Path;
-import com.team254.lib.trajectory.PathGenerator;
-import com.team254.lib.trajectory.TrajectoryGenerator;
-import com.team254.lib.trajectory.WaypointSequence;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -45,9 +45,9 @@ public class Robot extends TimedRobot {
 	public static DriveTrain driveTrain;
 	public static Elevator elevator;
 	private static UsbCamera jevois;
+	public static FollowPath followPathCmd;
 	
 	Command m_autonomousCommand;
-	FollowPath followPathCmd;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 	public static Path path;
 
@@ -58,30 +58,23 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		RobotMap.loadProperties();
+		RobotMap.makePaths();
 		driveTrain = new DriveTrain();
 		elevator = new Elevator();
-		m_oi = new OI();
 		followPathCmd = new FollowPath();
-		TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
-		config.dt = .1;			// the time in seconds between each generated segment
-		config.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
-		config.max_jerk = 30.0;	// maximum jerk (derivative of acceleration), ft/s
-		config.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		followPathCmd.setPath(RobotMap.tuningTestPath, false);
+		m_oi = new OI();
+        m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.tuningTestPath));
 
-		WaypointSequence ws = new WaypointSequence(10);
-        ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
-        followPathCmd.setPath(PathGenerator.makePath(ws, config,
-                RobotMap.trackWidthInches / 12.0, "Test Drive 5ft"),false);
-        m_oi.followPathBtn.whenPressed(followPathCmd);
-
-        jevois = CameraServer.getInstance().startAutomaticCapture();
-        jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
-		VideoMode vm = jevois.getVideoMode();
-		System.out.println("jevois pixel: " + vm.pixelFormat);
-		System.out.println("jevois res: " + vm.width + "x" + vm.height);
-		System.out.println("jevois fps: " + vm.fps);
-
+        if (RobotMap.useCamera) {
+        	jevois = CameraServer.getInstance().startAutomaticCapture();
+        	jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
+        	VideoMode vm = jevois.getVideoMode();
+        	System.out.println("jevois pixel: " + vm.pixelFormat);
+        	System.out.println("jevois res: " + vm.width + "x" + vm.height);
+        	System.out.println("jevois fps: " + vm.fps);
+        } 
+        
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		Server jettyServer = new Server(5800);
@@ -103,7 +96,7 @@ public class Robot extends TimedRobot {
 			jettyServer.join();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+//			e1.printStackTrace();
 		}
 
 		
