@@ -22,24 +22,6 @@ public class ElevatorDefault extends Command {
     protected void execute() {
     		
     		Robot.elevator.setElevatorPower(Robot.m_oi.operator.getY());
-    		
-    		
-    		if(Robot.m_oi.intakeBtn.get()) {
-    			Robot.elevator.setIntakePower(1);
-    		}else if(Robot.m_oi.outtakeBtn.get()){
-    			Robot.elevator.setIntakePower(-0.70);
-    		}else {
-    			Robot.elevator.setIntakePower(0);
-    		}
-    		
-    		
-    		Robot.elevator.intakeSolenoidEngage(Robot.m_oi.intakeArmBtn.get());
-    		
-    		if(Robot.m_oi.armUpBtn.get()) {
-    			Robot.elevator.armSolenoidEngage(true);
-    		}else if(Robot.m_oi.armDownBtn.get()) {
-    			Robot.elevator.armSolenoidEngage(false);
-    		}
     }
 
     // Make this return true when this Command no longer needs to run execute()

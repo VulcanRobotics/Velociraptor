@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1218.robot.commands.elevator;
+package org.usfirst.frc.team1218.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.TimedCommand;

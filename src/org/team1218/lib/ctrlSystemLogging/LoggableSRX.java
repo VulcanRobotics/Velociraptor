@@ -40,10 +40,16 @@ public class LoggableSRX extends TalonSRX {
 			startTime = System.currentTimeMillis();
 		}
 		@Override
+<<<<<<< HEAD
 		public void run() {			
 			time = System.currentTimeMillis() - startTime;
 			data.at("timeStamp").add(time);
 			if(srx.getControlMode() == ControlMode.Velocity) {
+=======
+		public void run() {
+			data.at("timeStamp").add(System.currentTimeMillis() - startTime);
+			if(srx.getControlMode() == ControlMode.Velocity || srx.getControlMode() == ControlMode.MotionMagic) {
+>>>>>>> refs/heads/PotBasedElevator
 				data.at("error").add(srx.getClosedLoopError(0));
 				data.at("setpoint").add(srx.getClosedLoopTarget(0));
 			}else if(srx.getControlMode() == ControlMode.MotionProfile){
