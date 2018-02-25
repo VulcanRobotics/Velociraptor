@@ -54,7 +54,7 @@ public class DriveTrain extends Subsystem {
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
 	Solenoid pto;
-	AHRS navx;
+	//AHRS navx;
 	
 	MotionProfileStatus leftStat = new MotionProfileStatus();
 	MotionProfileStatus rightStat = new MotionProfileStatus();
@@ -86,7 +86,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].set(ControlMode.Follower, RobotMap.rightMotorControllerIds[0]);
 		}
 		
-		navx = new AHRS(I2C.Port.kMXP);
+		//navx = new AHRS(I2C.Port.kMXP);
 		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
@@ -96,7 +96,7 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0, 0);
 		rightMotorControllers[0].setSensorPhase(true);
 		//load pid constants
-		loadPIDFConstants(RobotMap.leftLowGearPIDF,RobotMap.rightLowGearPIDF);
+		//loadPIDFConstants(RobotMap.leftLowGearPIDF,RobotMap.rightLowGearPIDF);
 		
 		leftMotorControllers[0].configNominalOutputForward(0, 0);
 		leftMotorControllers[0].configPeakOutputForward(1, 0);
@@ -115,7 +115,7 @@ public class DriveTrain extends Subsystem {
 		System.out.println("DriveTrain: rightInverted="+rightMotorControllers[0].getInverted());
 	}
 	
-	public void loadPIDFConstants(double[] leftPIDF,double[] rightPIDF) {
+	protected void loadPIDFConstants(double[] leftPIDF,double[] rightPIDF) {
 		leftMotorControllers[0].config_kP(0, leftPIDF[0], 0);
 		leftMotorControllers[0].config_kI(0, leftPIDF[1], 0);
 		leftMotorControllers[0].config_kD(0, leftPIDF[2], 0);
@@ -209,9 +209,11 @@ public class DriveTrain extends Subsystem {
 	public boolean isPtoEngaged() {
 		return !pto.get();
 	}
+	/*
 	public double getHeading() {
 		return navx.getAngle();
 	}
+	*/
 	
 	public boolean isPathFollowing() {
 		return isPathFollowing;
@@ -305,7 +307,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
-		SmartDashboard.putString("DB/String 4", "H" + getHeading());
+//		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 		
 		if(isPathFollowing == true) {
 			leftMotorControllers[0].getMotionProfileStatus(leftStat);

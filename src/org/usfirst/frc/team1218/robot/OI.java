@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team1218.robot;
 
+import org.usfirst.frc.team1218.robot.commands.driveTrain.MeasureEffectiveTrackWidth;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.QuasiStaticTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.StepTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
@@ -77,6 +78,7 @@ public class OI{
 		ptoBtn.whenActive(new TogglePTO());
 		new JoystickButton(driver, 6).whileHeld(new QuasiStaticTest());
 		new JoystickButton(driver, 7).whileHeld(new StepTest());
+		new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
 		intakeBtn = new JoystickButton(operator,2);
 		intakeArmBtn = new JoystickButton(operator,1);
 		outtakeBtn = new JoystickButton(operator,3);

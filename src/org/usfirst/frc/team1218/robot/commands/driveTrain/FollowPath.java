@@ -94,7 +94,7 @@ public class FollowPath extends Command {
 	
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearPIDF, RobotMap.rightLowGearPIDF);
+    	//Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearPIDF, RobotMap.rightLowGearPIDF);
     	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Starting)) {
         	System.out.println("starting FollowPath command");
     		processThread.startPeriodic(dtSeconds / 2.0);
