@@ -11,6 +11,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -44,14 +45,28 @@ import com.team254.lib.trajectory.Path;
  * project.
  */
 public class Robot extends TimedRobot {
+	
+	public enum RobotStartingPosition{
+		left,center,right;
+	}
+	
+	public static final int outSwitch = 0, scale = 1, theirSwitch = 2;
+	
+	public enum Plate {
+    		LEFT,
+    		RIGHT
+	}
+	
 	public static OI m_oi;
 	public static DriveTrain driveTrain;
 	public static Elevator elevator;
 	public static Arm arm;
+	public static Plate plateAssignments[] = new Plate[3];
 	
 	
 	private static UsbCamera jevois;
 	public static FollowPath followPathCmd;
+	public static RobotStartingPosition robotStartingPos = RobotStartingPosition.center;
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -144,6 +159,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		m_autonomousCommand = m_chooser.getSelected();
+		identifyPlateAssignment();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -198,5 +214,17 @@ public class Robot extends TimedRobot {
 		driveTrain.periodicTasks();
 		elevator.periodicTasks();
 		
+	}
+	
+	public void identifyPlateAssignment() {
+		String gameData;
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		for(int i = 0; i < 3; i++) {
+			if(gameData.charAt(i) == 'L') {
+				plateAssignments[i] = Plate.LEFT;
+			}else{
+				plateAssignments[i] = Plate.RIGHT;
+			}
+		}
 	}
 }
