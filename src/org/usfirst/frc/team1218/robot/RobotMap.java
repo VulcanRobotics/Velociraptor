@@ -43,7 +43,7 @@ public class RobotMap {
 	public static boolean elevatorMotorInvert; 		// true;
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
-	public static int elevatorReverseLimit, elevatorForwardLimit;
+	public static int elevatorReverseLimit, elevatorForwardLimit, elevatorTraval;
 	
 	public static Path rightSwitchPath, leftStartleftScalePath, tuningTestPath;
 	
@@ -118,6 +118,7 @@ public class RobotMap {
 			elevatorForwardLimit = pm.getInt("elevatorPotForwardLimit",900);
 			elevatorReverseLimit = pm.getInt("elevatorPotReverseLimit",185);
 		}
+		elevatorTraval = elevatorForwardLimit - elevatorReverseLimit;
 		
 		shifterPort = pm.getInt("shifterPort");
 		ptoPort = pm.getInt("ptoPort");
