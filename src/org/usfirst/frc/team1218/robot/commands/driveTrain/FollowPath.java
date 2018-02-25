@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 
 import com.team254.lib.trajectory.Path;
@@ -39,7 +40,6 @@ public class FollowPath extends Command {
 	    	if (state.compareAndSet(FollowerState.Starting, FollowerState.Running)) {
 	    		System.out.println("Notifier Initalized");
 	    		Robot.driveTrain.startLogging();
-	    		Robot.driveTrain.setPathFollowing(true);
 	    		startTime = System.currentTimeMillis();
 	    	}
 	    	step = (int)((System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000));
@@ -94,6 +94,7 @@ public class FollowPath extends Command {
 	
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearPIDF, RobotMap.rightLowGearPIDF);
     	if (state.compareAndSet(FollowerState.Waiting,FollowerState.Starting)) {
         	System.out.println("starting FollowPath command");
     		processThread.startPeriodic(dtSeconds / 2.0);
