@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorDefaultMotionMagicAssisted extends Command {
 	
-	protected static final double deadband = 0.05;
+	protected static final double deadband = 0.1;
 	
 	protected ControlMode controlMode = ControlMode.PercentOutput, lastControlMode = ControlMode.PercentOutput;
 	protected int setpoint = RobotMap.elevatorReverseLimit;
@@ -37,8 +37,8 @@ public class ElevatorDefaultMotionMagicAssisted extends Command {
     			setpoint = Robot.elevator.getCurrentPosition();
     			if(setpoint < RobotMap.elevatorReverseLimit) {
     				setpoint = RobotMap.elevatorReverseLimit;
-    			}else if(setpoint > RobotMap.elevatorForwardLimit - 10) {
-    				setpoint = RobotMap.elevatorForwardLimit - 10;
+    			}else if(setpoint > RobotMap.elevatorForwardLimit - (int)(RobotMap.elevatorTraval*0.01)) {
+    				setpoint = RobotMap.elevatorForwardLimit - (int)(RobotMap.elevatorTraval*0.01);
     			}
     		}
     		

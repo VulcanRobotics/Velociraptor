@@ -4,6 +4,7 @@ import org.team1218.lib.ctrlSystemLogging.LoggableSRX;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMagic;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMagicAssisted;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
@@ -88,7 +89,6 @@ public abstract class Elevator extends Subsystem {
 	}
 	
 	public void moveTo(int position) {
-		System.out.println("moving to " + position);
 		elevatorMotors[0].set(ControlMode.MotionMagic, position);
 	}
 	
@@ -120,7 +120,7 @@ public abstract class Elevator extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new ElevatorDefault());
+		setDefaultCommand(new ElevatorDefaultMotionMagicAssisted());
 		
 	}
 
