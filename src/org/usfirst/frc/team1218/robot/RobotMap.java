@@ -44,6 +44,7 @@ public class RobotMap {
 	public static double[] elevatorPIDF;
 	public static int elevatorCruiseVelocity, elevatorAcceleration;
 	public static int elevatorReverseLimit, elevatorForwardLimit, elevatorTraval;
+	public static double elevatorBottomInches, elevatorTopInches, elevatorTravalInches;
 	
 	public static Path rightSwitchPath, leftStartleftScalePath, tuningTestPath;
 	
@@ -119,6 +120,9 @@ public class RobotMap {
 			elevatorReverseLimit = pm.getInt("elevatorPotReverseLimit",185);
 		}
 		elevatorTraval = elevatorForwardLimit - elevatorReverseLimit;
+		elevatorTopInches = pm.getDouble("elevatorTopInches", 52);
+		elevatorBottomInches = pm.getDouble("elevatorBottomInches", 12);
+		elevatorTravalInches = elevatorTopInches - elevatorBottomInches;
 		
 		shifterPort = pm.getInt("shifterPort");
 		ptoPort = pm.getInt("ptoPort");

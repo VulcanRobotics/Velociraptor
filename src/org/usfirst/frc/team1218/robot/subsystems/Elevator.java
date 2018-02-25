@@ -79,6 +79,10 @@ public abstract class Elevator extends Subsystem {
 		return elevatorMotors[0].getSelectedSensorPosition(0);
 	}
 	
+	public double getCurrentPosistionInches() {
+		return encPosToInches(getCurrentPosition());
+	}
+	
 	public int getTargetPosition() {
 		return elevatorMotors[0].getClosedLoopTarget(0);
 	}
@@ -87,10 +91,22 @@ public abstract class Elevator extends Subsystem {
 		System.out.println("moving to " + position);
 		elevatorMotors[0].set(ControlMode.MotionMagic, position);
 	}
+	
+	public void moveToInches(double position) {
+		moveTo(inchesToEncPos(position));
+	}
 
 	public void setMotionMagicSpeeds(int cruise) {
 		elevatorMotors[0].configMotionCruiseVelocity(cruise, 0);
 		elevatorMotors[0].configMotionAcceleration(cruise*2, 0);
+	}
+	
+	public int inchesToEncPos(double inches) {
+		return (int)((inches - RobotMap.elevatorBottomInches) * (RobotMap.elevatorTraval / RobotMap.elevatorTravalInches)) + RobotMap.elevatorReverseLimit;		
+	}
+	
+	public double encPosToInches(int encPos) {
+		return ((encPos - RobotMap.elevatorReverseLimit) * (RobotMap.elevatorTravalInches / RobotMap.elevatorTraval)) + RobotMap.elevatorBottomInches;
 	}
 	
 	public void periodicTasks() {
