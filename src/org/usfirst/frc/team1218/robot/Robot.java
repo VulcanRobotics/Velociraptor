@@ -219,12 +219,17 @@ public class Robot extends TimedRobot {
 	public void identifyPlateAssignment() {
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		System.out.println("Recived Game Message: " + gameData);
+		System.out.print("Assignment Identified as: ");
 		for(int i = 0; i < 3; i++) {
 			if(gameData.charAt(i) == 'L') {
 				plateAssignments[i] = Plate.LEFT;
+				System.out.print(" [ LEFT ] ");
 			}else{
 				plateAssignments[i] = Plate.RIGHT;
+				System.out.print(" [ RIGHT ] ");
 			}
 		}
+		System.out.println();
 	}
 }
