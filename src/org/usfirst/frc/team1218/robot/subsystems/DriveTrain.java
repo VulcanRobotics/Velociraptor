@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.kauailabs.navx.frc.AHRS;
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
+import com.team254.lib.trajectory.Trajectory.Segment;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -29,7 +30,16 @@ public class DriveTrain extends Subsystem {
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
 	 * @param ftPerSec robot velocity in ft/sec
-	 */
+	 */	
+	protected static double segmentToFFVoltage(Segment s, double Kv, double Ka, double VInter) {
+		double v = Kv * s.vel;
+		if (v < 0) {
+			return (v + (Ka * s.acc) - VInter);
+		} else {
+			return (v + (Ka * s.acc) + VInter);
+		}
+	}
+	
 	public static int ftPerSecToEncVel(double ftPerSec) {
 		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * RobotMap.encTicksPerRev) / 10.0);
 	}
@@ -241,7 +251,8 @@ public class DriveTrain extends Subsystem {
 		
 		for(int i = 0; i < leftTrajectory.getNumSegments(); i++) {
 			point.position = ftToEncPos(leftTrajectory.getSegment(i).pos);
-			point.velocity = ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			point.velocity = segmentToFFVoltage(leftTrajectory.getSegment(i), RobotMap.leftLowGearKv, 
+							RobotMap.leftLowGearKa, RobotMap.leftLowGearVInter); //ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
 			System.out.println("left Point " + i + "origPos: " + leftTrajectory.getSegment(i).pos + 
 								" origVel: " + leftTrajectory.getSegment(i).vel + " pos: " + point.position + 
 								" vel: " + point.velocity);
@@ -265,7 +276,9 @@ public class DriveTrain extends Subsystem {
 		
 		for(int i = 0; i < rightTrajectory.getNumSegments(); i++) {
 			point.position = ftToEncPos(rightTrajectory.getSegment(i).pos);
-			point.velocity = ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);
+			point.velocity = segmentToFFVoltage(rightTrajectory.getSegment(i), RobotMap.rightLowGearKv,
+							RobotMap.rightLowGearKa, RobotMap.rightLowGearVInter);
+					//ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);
 			point.headingDeg = 0;
 			point.profileSlotSelect0 = 0;
 			point.profileSlotSelect1 = 0;
@@ -287,7 +300,7 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void startPath() {
-		//loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
+		loadPIDFConstants(new double[] {0.0,0.0,0.0,1023.0/12.0}, new double[] {0.0,0.0,0.0,1023.0 / 12.0}); //RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
 		setBrake(NeutralMode.Coast);
 		leftMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
 		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);

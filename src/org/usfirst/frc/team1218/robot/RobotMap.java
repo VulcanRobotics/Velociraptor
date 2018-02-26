@@ -32,6 +32,13 @@ public class RobotMap {
 	public static boolean useEncElevator;
 	
 	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF;
+	public static double leftLowGearKv = 0.7458140859603571, 
+						leftLowGearKa = 0.35191285889333246, //0.6971349598549942, 
+						leftLowGearVInter = 0.6961006248023573, 
+						rightLowGearKv = 0.7554817379013181, 
+						rightLowGearKa = 0.3556168844830251, //0.7218365922908011, 
+						rightLowGearVInter = 0.8682917056968071;
+	public static double leftHighGearKv, leftHighGearKa, leftHighGearVInter, rightHighGearKv, rightHighGearKa, rightHighGearVInter;
 	public static int lowGearMaxSpeed, highGearMaxSpeed, encTicksPerRev;
 	public static double trackWidthInches;
 	
