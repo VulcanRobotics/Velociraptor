@@ -32,12 +32,12 @@ public class RobotMap {
 	public static boolean useEncElevator;
 	
 	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF;
-	public static double leftLowGearKv = 0.7458140859603571, 
-						leftLowGearKa = 0.35191285889333246, //0.6971349598549942, 
-						leftLowGearVInter = 0.6961006248023573, 
-						rightLowGearKv = 0.7554817379013181, 
-						rightLowGearKa = 0.3556168844830251, //0.7218365922908011, 
-						rightLowGearVInter = 0.8682917056968071;
+	public static double leftLowGearKv,		// = 0.7458140859603571, 
+						leftLowGearKa,		// = 0.35191285889333246, //0.6971349598549942, 
+						leftLowGearVInter, 	//= 0.6961006248023573, 
+						rightLowGearKv,		// = 0.7554817379013181, 
+						rightLowGearKa,		// = 0.3556168844830251, //0.7218365922908011, 
+						rightLowGearVInter;	// = 0.8682917056968071;
 	public static double leftHighGearKv, leftHighGearKa, leftHighGearVInter, rightHighGearKv, rightHighGearKa, rightHighGearVInter;
 	public static int lowGearMaxSpeed, highGearMaxSpeed, encTicksPerRev;
 	public static double trackWidthInches;
@@ -68,7 +68,7 @@ public class RobotMap {
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
         ws.addWaypoint(new WaypointSequence.Waypoint(2.0, 0.0, 0.0));
         ws.addWaypoint(new WaypointSequence.Waypoint(11.5, -3.0, Math.toRadians(-10.0)));
-        rightSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "rightSwitch");
+        rightSwitchPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "rightSwitch");
         
         ws = new WaypointSequence(10);
         
@@ -76,14 +76,14 @@ public class RobotMap {
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(14.0,-1.0,0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(22.0,-2.0,Math.toRadians(-12.0)));
-		leftStartleftScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches, "leftStartleftScale");
+		leftStartleftScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "leftStartleftScale");
 		
 		ws = new WaypointSequence(10);
 		
 		/*tuning test stright line*/
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));
-		tuningTestPath = PathGenerator.makePath(ws, driveTrainPathConfig, RobotMap.trackWidthInches,"Tuning Test Path");
+		tuningTestPath = PathGenerator.makePath(ws, driveTrainPathConfig, RobotMap.trackWidthInches / 12.0, "Tuning Test Path");
 	}
 	
 	public static void loadProperties() {
@@ -99,6 +99,12 @@ public class RobotMap {
 		rightLowGearPIDF = pm.getDoubles("rightLowGearPIDF", new double[] {1.05,0,50,0.79});
 		leftHighGearPIDF = pm.getDoubles("leftHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
 		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});;
+		leftLowGearKv = pm.getDouble("leftLowGearKv");
+		leftLowGearKa = pm.getDouble("leftLowGearKa");
+		leftLowGearVInter = pm.getDouble("leftLowGearVInter");
+		rightLowGearKv = pm.getDouble("rightLowGearKv");
+		rightLowGearKa = pm.getDouble("rightLowGearKa");
+		rightLowGearVInter = pm.getDouble("rightLowGearVInter");
 		lowGearMaxSpeed = pm.getInt("lowGearMaxSpeed");
 		highGearMaxSpeed = pm.getInt("highGearMaxSpeed");
 		encTicksPerRev = pm.getInt("encTicksPerRev");
@@ -136,6 +142,8 @@ public class RobotMap {
 		armPort = pm.getInt("armPort");
 		intakePort = pm.getInt("intakePort");
 		System.out.println("RobotMap: properties loaded!");
+		System.out.println("lt Kv: " + leftLowGearKv + " lt Ka: " + leftLowGearKa + " lt VInter: " + leftLowGearVInter);
+		System.out.println("rt Kv: " + rightLowGearKv + " rt Ka: " + rightLowGearKa + " rt VInter: " + rightLowGearVInter);
 	}
 	
 	
