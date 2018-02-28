@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
 		//followPathCmd = new FollowPath();
 		//followPathCmd.setPath(RobotMap.tuningTestPath, false);
 		m_oi = new OI();
-        m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.leftStartLeftScalePath));
+        m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.tuningTestPath));
 
         if (RobotMap.useCamera) {
         	try {
@@ -165,8 +165,8 @@ public class Robot extends TimedRobot {
 		identifyPlateAssignment();
 		driveTrain.configMaxOutputVoltage(12.0);
 		
-		//m_autonomousCommand = new SwitchAuton();
-		m_autonomousCommand = new ScaleAutonSide();
+		m_autonomousCommand = new SwitchAuton();
+		//m_autonomousCommand = new ScaleAutonSide();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
