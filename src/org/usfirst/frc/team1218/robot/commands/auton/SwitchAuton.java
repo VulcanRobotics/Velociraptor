@@ -4,7 +4,9 @@ import org.usfirst.frc.team1218.robot.Robot;
 import org.usfirst.frc.team1218.robot.Robot.Plate;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
+import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -15,13 +17,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class SwitchAuton extends CommandGroup {
 
     public SwitchAuton() {
-    		FollowPath pathCmd = Robot.followPathCmd;
-    		//if(Robot.plateAssignments[Robot.outSwitch] == Plate.RIGHT) {
-    			pathCmd.setPath(RobotMap.centerStartRightSwitchPath, false);
-    		//}else {
-    			//TODO: Implement Left Switch;
-    		//}
-    		addParallel(new ElevatorMotionMagicMove(65000));
+    		TalonFollowPath pathCmd;
+    		if(Robot.plateAssignments[Robot.outSwitch] == Plate.RIGHT) {
+    			pathCmd = new TalonFollowPath(RobotMap.centerStartRightSwitchPath);
+    		}else {
+    			pathCmd = new TalonFollowPath(RobotMap.centerStartLeftSwitchPath);
+    		}
+    		addParallel(new ElevatorMotionMagicMove(300));
     		addSequential(pathCmd);
     		addSequential(new DropPowerCube());
         // Add Commands here:

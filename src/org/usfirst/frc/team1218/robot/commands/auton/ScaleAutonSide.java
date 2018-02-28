@@ -5,6 +5,7 @@ import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -15,10 +16,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ScaleAutonSide extends CommandGroup {
 
     public ScaleAutonSide() {
-    		FollowPath pathCmd = Robot.followPathCmd;
-    		pathCmd.setPath(RobotMap.leftStartLeftScalePath, false);
+    		TalonFollowPath pathCmd = new TalonFollowPath(RobotMap.leftStartLeftScalePath);
     		addSequential(pathCmd);
-    		addSequential(new ElevatorMotionMagicMove(245000));
+    		addSequential(new ElevatorMotionMagicMove(900));
     		addSequential(new ShootPowerCube());
     		addSequential(new ElevatorMotionMagicMove(0));
         // Add Commands here:

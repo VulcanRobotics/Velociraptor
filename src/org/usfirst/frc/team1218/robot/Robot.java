@@ -158,8 +158,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_chooser.getSelected();
 		identifyPlateAssignment();
+		driveTrain.configMaxOutputVoltage(12.0);
+		
+		//m_autonomousCommand = new SwitchAuton();
+		m_autonomousCommand = new ScaleAutonSide();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -189,6 +192,7 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		driveTrain.configMaxOutputVoltage(12.0);
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}

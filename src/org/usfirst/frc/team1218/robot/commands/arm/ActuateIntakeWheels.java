@@ -10,6 +10,7 @@ public class ActuateIntakeWheels extends InstantCommand {
 	
 	public ActuateIntakeWheels(double power) {
 		this.power = power;
+		requires(Robot.arm);
 	}
 	
 	@Override

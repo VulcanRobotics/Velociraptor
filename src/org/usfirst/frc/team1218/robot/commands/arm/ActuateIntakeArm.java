@@ -10,6 +10,7 @@ public class ActuateIntakeArm extends InstantCommand {
 	
 	public ActuateIntakeArm(boolean open) {
 		this.open = open;
+		requires(Robot.arm);
 	}
 	
 	@Override

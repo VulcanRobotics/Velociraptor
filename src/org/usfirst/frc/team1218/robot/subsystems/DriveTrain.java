@@ -357,8 +357,13 @@ public class DriveTrain extends Subsystem {
     }
     
     public void configOpenLoopRampRate(double seconds) {
-    	leftMotorControllers[0].configOpenloopRamp(seconds, 0);
-    	rightMotorControllers[0].configOpenloopRamp(seconds, 0);
+    		leftMotorControllers[0].configOpenloopRamp(seconds, 0);
+    		rightMotorControllers[0].configOpenloopRamp(seconds, 0);
+    }
+    
+    public void configMaxOutputVoltage(double volts) {
+    		leftMotorControllers[0].configVoltageCompSaturation(volts, 0);
+    		rightMotorControllers[0].configVoltageCompSaturation(volts, 0);
     }
 }
 
