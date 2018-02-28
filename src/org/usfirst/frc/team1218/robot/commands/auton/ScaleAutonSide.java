@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ScaleAutonSide extends CommandGroup {
 
     public ScaleAutonSide() {
-    		TalonFollowPath pathCmd = new TalonFollowPath(RobotMap.leftStartLeftScalePath);
+    		TalonFollowPath pathCmd = new TalonFollowPath(RobotMap.rightStartRightScalePath);
     		addSequential(pathCmd);
-    		addSequential(new ElevatorMotionMagicMove(900));
+    		addSequential(new ElevatorMotionMagicMove(700));
     		addSequential(new ShootPowerCube());
     		addSequential(new ElevatorMotionMagicMove(0));
         // Add Commands here:
