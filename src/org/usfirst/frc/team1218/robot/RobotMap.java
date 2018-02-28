@@ -102,20 +102,8 @@ public class RobotMap {
 		
 		/*tuning test path*/
 		ws = new WaypointSequence(10);
-		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-<<<<<<< HEAD
-<<<<<<< HEAD
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0))
 		ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 2.0, Math.toRadians(45.0)));
-=======
-		ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));	// for a straight test
-		//for a right turn test, replace above with ws.addWaypoint(new WaypointSequence.Waypoint(6.0, -6.0, Math.toRadians(-89.99)));
-		//can adjust angle to turn less if desired
->>>>>>> 3f1c40e7f93e4f340b74f34d32602d0234e22102
-=======
-		ws.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.0, 0.0));	// for a straight test
-		//for a right turn test, replace above with ws.addWaypoint(new WaypointSequence.Waypoint(6.0, -6.0, Math.toRadians(-89.99)));
-		//can adjust angle to turn less if desired
->>>>>>> 3f1c40e7f93e4f340b74f34d32602d0234e22102
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
