@@ -17,7 +17,7 @@ public class SwitchAuton extends CommandGroup {
     public SwitchAuton() {
     		FollowPath pathCmd = Robot.followPathCmd;
     		//if(Robot.plateAssignments[Robot.outSwitch] == Plate.RIGHT) {
-    			pathCmd.setPath(RobotMap.rightSwitchPath, false);
+    			pathCmd.setPath(RobotMap.centerStartRightSwitchPath, false);
     		//}else {
     			//TODO: Implement Left Switch;
     		//}

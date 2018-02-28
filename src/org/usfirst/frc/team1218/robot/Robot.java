@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
 		//followPathCmd = new FollowPath();
 		//followPathCmd.setPath(RobotMap.tuningTestPath, false);
 		m_oi = new OI();
-        m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.tuningTestPath));
+        m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.leftStartLeftScalePath));
 
         if (RobotMap.useCamera) {
         	jevois = CameraServer.getInstance().startAutomaticCapture();

@@ -16,7 +16,7 @@ public class ScaleAutonSide extends CommandGroup {
 
     public ScaleAutonSide() {
     		FollowPath pathCmd = Robot.followPathCmd;
-    		pathCmd.setPath(RobotMap.leftStartleftScalePath, false);
+    		pathCmd.setPath(RobotMap.leftStartLeftScalePath, false);
     		addSequential(pathCmd);
     		addSequential(new ElevatorMotionMagicMove(245000));
     		addSequential(new ShootPowerCube());

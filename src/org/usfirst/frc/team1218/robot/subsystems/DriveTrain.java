@@ -41,7 +41,10 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public static int ftPerSecToEncVel(double ftPerSec) {
-		return (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * RobotMap.encTicksPerRev) / 10.0);
+		int encVel = (int)(((ftPerSec / (wheelDiameterInches * Math.PI / 12.0)) * RobotMap.encTicksPerRev) / 10.0);
+//		System.out.println("ft/sec: " + ftPerSec + " envVel: " + encVel);
+		return encVel;
+				
 	}
 	
 	public static int ftToEncPos(double ft) {
@@ -251,8 +254,8 @@ public class DriveTrain extends Subsystem {
 		
 		for(int i = 0; i < leftTrajectory.getNumSegments(); i++) {
 			point.position = ftToEncPos(leftTrajectory.getSegment(i).pos);
-			point.velocity = segmentToFFVoltage(leftTrajectory.getSegment(i), RobotMap.leftLowGearKv, 
-							RobotMap.leftLowGearKa, RobotMap.leftLowGearVInter); //ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			point.velocity = ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);//segmentToFFVoltage(leftTrajectory.getSegment(i), RobotMap.leftLowGearKv, 
+							//RobotMap.leftLowGearKa*1.2, RobotMap.leftLowGearVInter); //ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
 			System.out.println("left Point " + i + "origPos: " + leftTrajectory.getSegment(i).pos + 
 								" origVel: " + leftTrajectory.getSegment(i).vel + " pos: " + point.position + 
 								" vel: " + point.velocity);
@@ -276,8 +279,8 @@ public class DriveTrain extends Subsystem {
 		
 		for(int i = 0; i < rightTrajectory.getNumSegments(); i++) {
 			point.position = ftToEncPos(rightTrajectory.getSegment(i).pos);
-			point.velocity = segmentToFFVoltage(rightTrajectory.getSegment(i), RobotMap.rightLowGearKv,
-							RobotMap.rightLowGearKa, RobotMap.rightLowGearVInter);
+			point.velocity = ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);//segmentToFFVoltage(rightTrajectory.getSegment(i), RobotMap.rightLowGearKv,
+							//RobotMap.rightLowGearKa*1.2, RobotMap.rightLowGearVInter);
 					//ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);
 			point.headingDeg = 0;
 			point.profileSlotSelect0 = 0;
@@ -300,7 +303,7 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void startPath() {
-		loadPIDFConstants(new double[] {0.0,0.0,0.0,1023.0/12.0}, new double[] {0.0,0.0,0.0,1023.0 / 12.0}); //RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
+		loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF); //RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
 		setBrake(NeutralMode.Coast);
 		leftMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
 		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
@@ -325,8 +328,8 @@ public class DriveTrain extends Subsystem {
 		if(isPathFollowing == true) {
 			leftMotorControllers[0].getMotionProfileStatus(leftStat);
 			rightMotorControllers[0].getMotionProfileStatus(rightStat);
-			System.out.println("T-points remaining left  : top: " + leftStat.topBufferCnt + " bottom: " + leftStat.btmBufferCnt);
-			System.out.println("T-points remaining right : top: " + rightStat.topBufferCnt + " bottom: " + rightStat.btmBufferCnt);
+			//System.out.println("T-points remaining left  : top: " + leftStat.topBufferCnt + " bottom: " + leftStat.btmBufferCnt);
+			//System.out.println("T-points remaining right : top: " + rightStat.topBufferCnt + " bottom: " + rightStat.btmBufferCnt);
 			if(leftStat.hasUnderrun || rightStat.hasUnderrun) {
 				System.out.println("Has Underrun: left:" + leftStat.hasUnderrun + " right:" + rightStat.hasUnderrun);
 				leftMotorControllers[0].clearMotionProfileHasUnderrun(0);
