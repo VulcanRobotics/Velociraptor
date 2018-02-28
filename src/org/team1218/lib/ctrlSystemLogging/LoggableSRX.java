@@ -47,9 +47,10 @@ public class LoggableSRX extends TalonSRX {
 			if(srx.getControlMode() == ControlMode.Velocity || srx.getControlMode() == ControlMode.MotionMagic) {
 				data.at("error").add(srx.getClosedLoopError(0));
 				data.at("setpoint").add(srx.getClosedLoopTarget(0));
-			}else if(srx.getControlMode() == ControlMode.MotionProfile){
-				data.at("setpoint").add(srx.getActiveTrajectoryVelocity());
-				data.at("error").add(srx.getSelectedSensorVelocity(0) - srx.getActiveTrajectoryVelocity());
+			} else if(srx.getControlMode() == ControlMode.MotionProfile){
+				int pos = srx.getActiveTrajectoryPosition();
+				data.at("setpoint").add(pos);
+				data.at("error").add(srx.getSelectedSensorPosition(0) - pos);
 			}else {
 				data.at("error").add(0);
 				data.at("setpoint").add(0);
