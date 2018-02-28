@@ -93,13 +93,17 @@ public class Robot extends TimedRobot {
         m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.leftStartLeftScalePath));
 
         if (RobotMap.useCamera) {
-        	jevois = CameraServer.getInstance().startAutomaticCapture();
-        	jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
-        	VideoMode vm = jevois.getVideoMode();
-        	System.out.println("jevois pixel: " + vm.pixelFormat);
-        	System.out.println("jevois res: " + vm.width + "x" + vm.height);
-        	System.out.println("jevois fps: " + vm.fps);
-        } 
+        	try {
+        		jevois = CameraServer.getInstance().startAutomaticCapture();
+        		jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
+        		VideoMode vm = jevois.getVideoMode();
+        		System.out.println("jevois pixel: " + vm.pixelFormat);
+        		System.out.println("jevois res: " + vm.width + "x" + vm.height);
+        		System.out.println("jevois fps: " + vm.fps);
+        	} catch (Exception e) {
+        		System.out.println("Could not start USB camera");
+        	}
+        }
         
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
