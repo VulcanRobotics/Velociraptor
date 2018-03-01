@@ -1,10 +1,8 @@
 package org.usfirst.frc.team1218.robot.commands.auton;
 
-import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.Robot.Plate;
 import org.usfirst.frc.team1218.robot.RobotMap;
-import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
-import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 
@@ -13,10 +11,15 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class ScaleAutonSide extends CommandGroup {
+public class ScaleAutonSameSide extends CommandGroup {
 
-    public ScaleAutonSide() {
-    		TalonFollowPath pathCmd = new TalonFollowPath(RobotMap.rightStartRightScalePath);
+    public ScaleAutonSameSide(Plate plate) {
+    		TalonFollowPath pathCmd;
+    		if(plate == Plate.RIGHT) {
+    			pathCmd = new TalonFollowPath(RobotMap.rightStartRightScalePath);
+    		}else {
+    			pathCmd = new TalonFollowPath(RobotMap.leftStartLeftScalePath);
+    		}
     		addSequential(pathCmd);
     		addSequential(new ElevatorMotionMagicMove(700));
     		addSequential(new ShootPowerCube());

@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class SwitchAuton extends CommandGroup {
 
-    public SwitchAuton() {
+    public SwitchAuton(Plate plate) {
     		TalonFollowPath pathCmd;
-    		if(Robot.plateAssignments[Robot.outSwitch] == Plate.RIGHT) {
+    		if(plate == Plate.RIGHT) {
     			pathCmd = new TalonFollowPath(RobotMap.centerStartRightSwitchPath);
     		}else {
     			pathCmd = new TalonFollowPath(RobotMap.centerStartLeftSwitchPath);

@@ -15,9 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -25,7 +23,8 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.usfirst.frc.team1218.robot.commands.auton.ScaleAutonSide;
+import org.team1218.lib.ButtonPressDetector;
+import org.usfirst.frc.team1218.robot.commands.auton.AutonLauncher;
 import org.usfirst.frc.team1218.robot.commands.auton.SwitchAuton;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
@@ -61,6 +60,8 @@ public class Robot extends TimedRobot {
 	public static DriveTrain driveTrain;
 	public static Elevator elevator;
 	public static Arm arm;
+	
+	public static ButtonPressDetector autonBtn;
 	public static Plate plateAssignments[] = new Plate[3];
 	
 	
@@ -69,7 +70,8 @@ public class Robot extends TimedRobot {
 	public static RobotStartingPosition robotStartingPos = RobotStartingPosition.center;
 	
 	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
+	int autonIndex = 0;
+	String[] autonText =  {"No Auton", "Left Auton", "Center Auton", "Right Auton"};
 	public static Path path;
 
 	/**
@@ -87,10 +89,9 @@ public class Robot extends TimedRobot {
 			elevator = new ElevatorPot();
 		}
 		arm = new Arm();
-		//followPathCmd = new FollowPath();
-		//followPathCmd.setPath(RobotMap.tuningTestPath, false);
 		m_oi = new OI();
-        m_oi.followPathBtn.whenPressed(/*followPathCmd*/new TalonFollowPath(RobotMap.tuningTestPath));
+        autonBtn = new ButtonPressDetector(m_oi.autonSelector);
+        
 
         if (RobotMap.useCamera) {
         	try {
@@ -105,8 +106,6 @@ public class Robot extends TimedRobot {
         	}
         }
         
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", m_chooser);
 		Server jettyServer = new Server(5800);
         ServerConnector connector = new ServerConnector(jettyServer);
         connector.setPort(5800);
@@ -164,9 +163,6 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		identifyPlateAssignment();
 		driveTrain.configMaxOutputVoltage(12.0);
-		
-		m_autonomousCommand = new SwitchAuton();
-		//m_autonomousCommand = new ScaleAutonSide();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -174,6 +170,21 @@ public class Robot extends TimedRobot {
 		 * = new MyAutoCommand(); break; case "Default Auto": default:
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
+		
+		switch(autonIndex) {
+			case 1:{
+				m_autonomousCommand = new AutonLauncher(RobotStartingPosition.left);
+				break;
+			}
+			case 2:{
+				m_autonomousCommand = new AutonLauncher(RobotStartingPosition.center);
+				break;
+			}
+			case 3:{
+				m_autonomousCommand = new AutonLauncher(RobotStartingPosition.right);
+				break;
+			}
+		}
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
@@ -221,6 +232,14 @@ public class Robot extends TimedRobot {
 	public void periodicTasks() {
 		driveTrain.periodicTasks();
 		elevator.periodicTasks();
+		autonBtn.readButton();
+		if(autonBtn.isPressed() == true) {
+			autonIndex ++;
+			if(autonIndex >= autonText.length) {
+				autonIndex = 0;
+			}
+		}
+		SmartDashboard.putString("DB/String 9", "Auton: " + autonText[autonIndex]);
 		
 	}
 	
