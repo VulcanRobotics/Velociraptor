@@ -13,6 +13,7 @@ import org.usfirst.frc.team1218.robot.commands.driveTrain.StepTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMoveInches;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorTest;
 import org.usfirst.frc.team1218.robot.commands.elevator.ToggleElevatorLogging;
 
@@ -86,7 +87,7 @@ public class OI{
 		armDownBtn = new JoystickButton(operator,4);
 //		new JoystickButton(operator, 9).whileHeld(new CharacterizeDriveTrain());
 		elevatorCommandTestBtn = new JoystickButton(operator,11);
-		elevatorCommandTestBtn.whenPressed(new ElevatorMotionMagicMove(500));
+		elevatorCommandTestBtn.whenPressed(new ElevatorMotionMagicMoveInches(60.0));
 		elevatorLoggingBtn = new JoystickButton(operator,7);
 		elevatorLoggingBtn.whenPressed(new ToggleElevatorLogging());
 		
