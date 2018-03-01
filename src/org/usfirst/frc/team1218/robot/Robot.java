@@ -11,6 +11,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -25,9 +26,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.team1218.lib.ButtonPressDetector;
 import org.usfirst.frc.team1218.robot.commands.auton.AutonLauncher;
-import org.usfirst.frc.team1218.robot.commands.auton.SwitchAuton;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
-import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.subsystems.Arm;
 import org.usfirst.frc.team1218.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team1218.robot.subsystems.Elevator;
@@ -60,6 +59,7 @@ public class Robot extends TimedRobot {
 	public static DriveTrain driveTrain;
 	public static Elevator elevator;
 	public static Arm arm;
+	public static DigitalInput cubeDetector;
 	
 	public static ButtonPressDetector autonBtn;
 	public static Plate plateAssignments[] = new Plate[3];
@@ -89,6 +89,7 @@ public class Robot extends TimedRobot {
 			elevator = new ElevatorPot();
 		}
 		arm = new Arm();
+		cubeDetector = new DigitalInput(0);
 		m_oi = new OI();
         autonBtn = new ButtonPressDetector(m_oi.autonSelector);
         
@@ -240,7 +241,7 @@ public class Robot extends TimedRobot {
 			}
 		}
 		SmartDashboard.putString("DB/String 9", "Auton: " + autonText[autonIndex]);
-		
+		SmartDashboard.putBoolean("DB/LED 1", !cubeDetector.get());
 	}
 	
 	public void identifyPlateAssignment() {

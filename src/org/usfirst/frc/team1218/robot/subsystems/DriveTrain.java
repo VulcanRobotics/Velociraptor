@@ -323,6 +323,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
+		SmartDashboard.putBoolean("DB/LED 0", isPtoEngaged());
 //		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 		
 		if(isPathFollowing == true) {
