@@ -90,7 +90,6 @@ public class Robot extends TimedRobot {
 		}
 		arm = new Arm();
 		m_oi = new OI();
-        m_oi.followPathBtn.whenPressed(new TalonFollowPath(RobotMap.tuningTestPath));
         autonBtn = new ButtonPressDetector(m_oi.autonSelector);
         
 

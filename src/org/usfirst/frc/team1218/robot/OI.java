@@ -70,7 +70,7 @@ public class OI{
 	public OI() {
 		driver = new Joystick(0);
 		operator = new Joystick(1);
-		followPathBtn = new JoystickButton(driver, 2);
+		//followPathBtn = new JoystickButton(driver, 2);
 		shiftBtn = new JoystickButton(driver,1);
 		driveTrainLoggingBtn = new JoystickButton(driver,3);
 		driveTrainLoggingBtn.whenActive(new ToggleDriveTrainLogging());
@@ -85,8 +85,8 @@ public class OI{
 		armUpBtn = new JoystickButton(operator,6);
 		armDownBtn = new JoystickButton(operator,4);
 //		new JoystickButton(operator, 9).whileHeld(new CharacterizeDriveTrain());
-		elevatorCommandTestBtn = new JoystickButton(operator,11);
-		elevatorCommandTestBtn.whenPressed(new ElevatorMotionMagicMove(500));
+		//elevatorCommandTestBtn = new JoystickButton(operator,11);
+		//elevatorCommandTestBtn.whenPressed(new ElevatorMotionMagicMove(500));
 		elevatorLoggingBtn = new JoystickButton(operator,7);
 		elevatorLoggingBtn.whenPressed(new ToggleElevatorLogging());
 		autonSelector = new JoystickButton(driver,9);
