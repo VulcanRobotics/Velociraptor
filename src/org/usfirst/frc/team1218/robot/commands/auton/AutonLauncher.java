@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1218.robot.commands.auton;
 
 import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.Robot.Plate;
 import org.usfirst.frc.team1218.robot.Robot.RobotStartingPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -10,9 +11,21 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutonLauncher extends CommandGroup {
 
-    public AutonLauncher() {
-    		if(Robot.robotStartingPos == RobotStartingPosition.center) {
-    			addSequential(new SwitchAuton());
+    public AutonLauncher(RobotStartingPosition pos) {
+    		if(pos == RobotStartingPosition.center) {
+    			addSequential(new SwitchAuton(Robot.plateAssignments[Robot.outSwitch]));
+    		}else if(pos == RobotStartingPosition.left){
+    			if(Robot.plateAssignments[Robot.scale] == Plate.LEFT) {
+    				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
+    			}else {
+    				addSequential(new ScaleAutonStopShort());
+    			}
+    		}else {
+    			if(Robot.plateAssignments[Robot.scale] == Plate.RIGHT) {
+    				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
+    			}else {
+    				addSequential(new ScaleAutonStopShort());
+    			}
     		}
         // Add Commands here:
         // e.g. addSequential(new Command1());

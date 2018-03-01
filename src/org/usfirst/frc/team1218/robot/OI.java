@@ -13,7 +13,6 @@ import org.usfirst.frc.team1218.robot.commands.driveTrain.StepTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
-import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorTest;
 import org.usfirst.frc.team1218.robot.commands.elevator.ToggleElevatorLogging;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -66,6 +65,7 @@ public class OI{
 	public Button armDownBtn;
 	public Button elevatorCommandTestBtn;
 	public Button elevatorLoggingBtn;
+	public Button autonSelector;
 	
 	public OI() {
 		driver = new Joystick(0);
@@ -76,9 +76,9 @@ public class OI{
 		driveTrainLoggingBtn.whenActive(new ToggleDriveTrainLogging());
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
-		new JoystickButton(driver, 6).whileHeld(new QuasiStaticTest());
-		new JoystickButton(driver, 7).whileHeld(new StepTest());
-		new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
+		//new JoystickButton(driver, 6).whileHeld(new QuasiStaticTest());
+		//new JoystickButton(driver, 7).whileHeld(new StepTest());
+		//new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
 		intakeBtn = new JoystickButton(operator,2);
 		intakeArmBtn = new JoystickButton(operator,1);
 		outtakeBtn = new JoystickButton(operator,3);
@@ -89,6 +89,7 @@ public class OI{
 		elevatorCommandTestBtn.whenPressed(new ElevatorMotionMagicMove(500));
 		elevatorLoggingBtn = new JoystickButton(operator,7);
 		elevatorLoggingBtn.whenPressed(new ToggleElevatorLogging());
+		autonSelector = new JoystickButton(driver,9);
 		
 	}
 	
