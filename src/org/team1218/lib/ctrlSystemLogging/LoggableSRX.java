@@ -82,6 +82,7 @@ public class LoggableSRX extends TalonSRX {
 					e.printStackTrace();
 				}finally {
 					System.out.println("ending log on " + deviceName);
+					data = null;
 					srx.loggerTimer.cancel();
 				}
 			}

@@ -4,7 +4,7 @@ import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.TrajectoryGenerator;
 
-public class TurnGenerator {
+public class SimplePathGenerator {
 	
 	public static Path generateTurn(double angle,TrajectoryGenerator.Config config, double trackWidth) {
 		
