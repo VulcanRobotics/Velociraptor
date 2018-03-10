@@ -53,11 +53,13 @@ public class RobotMap {
 	public static int elevatorReverseLimit, elevatorForwardLimit, elevatorTraval;
 	public static double elevatorBottomInches, elevatorTopInches, elevatorTravalInches;
 	
+	public static TrajectoryGenerator.Config driveTrainPathConfig;
+	
 	public static Path centerStartRightSwitchPath, leftStartLeftScalePath, rightStartRightScalePath, centerStartLeftSwitchPath, tuningTestPath,
 					   leftStartLeftSwitchPath, rightStartRightSwitchPath, leftStartStopEarlyPath, rightStartStopEarlyPath;
 	
 	public static void makePaths() {
-		TrajectoryGenerator.Config driveTrainPathConfig = new TrajectoryGenerator.Config();
+		driveTrainPathConfig = new TrajectoryGenerator.Config();
 		driveTrainPathConfig.dt = .1;			// the time in seconds between each generated segment
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
@@ -145,6 +147,10 @@ public class RobotMap {
 		driveTrainPathConfig.max_jerk = 4.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 4.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		leftStartStopEarlyPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "leftStartStopEarlyPath");
+		
+		driveTrainPathConfig.max_acc = 14.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;
 	}
 	
 	public static void loadProperties() {

@@ -7,9 +7,11 @@
 
 package org.usfirst.frc.team1218.robot;
 
+import org.team1218.lib.trajectory.TurnGenerator;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.MeasureEffectiveTrackWidth;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.QuasiStaticTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.StepTest;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
@@ -70,7 +72,8 @@ public class OI{
 	public OI() {
 		driver = new Joystick(0);
 		operator = new Joystick(1);
-		//followPathBtn = new JoystickButton(driver, 2);
+		followPathBtn = new JoystickButton(driver, 2);
+		followPathBtn.whenPressed(new TalonFollowPath(TurnGenerator.generateTurn(Math.PI, RobotMap.driveTrainPathConfig, RobotMap.trackWidthInches/12.00)));
 		shiftBtn = new JoystickButton(driver,1);
 		driveTrainLoggingBtn = new JoystickButton(driver,3);
 		driveTrainLoggingBtn.whenActive(new ToggleDriveTrainLogging());
