@@ -56,7 +56,8 @@ public class RobotMap {
 	public static TrajectoryGenerator.Config driveTrainPathConfig;
 	
 	public static Path centerStartRightSwitchPath, leftStartLeftScalePath, rightStartRightScalePath, centerStartLeftSwitchPath, tuningTestPath,
-					   leftStartLeftSwitchPath, rightStartRightSwitchPath, leftStartStopEarlyPath, rightStartStopEarlyPath;
+					   leftStartLeftSwitchPath, rightStartRightSwitchPath, leftStartStopEarlyPath, rightStartStopEarlyPath,rightStartLeftScalePath,
+					   leftStartRightScalePath;
 	
 	public static void makePaths() {
 		driveTrainPathConfig = new TrajectoryGenerator.Config();
@@ -148,8 +149,27 @@ public class RobotMap {
 		driveTrainPathConfig.max_vel = 4.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		leftStartStopEarlyPath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "leftStartStopEarlyPath");
 		
-		driveTrainPathConfig.max_acc = 14.0;		// maximum acceleration for the trajectory, ft/s
-		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
+		ws = new WaypointSequence(3);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(6.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(17.8,16.0,Math.toRadians(89.0)));
+		driveTrainPathConfig.max_acc = 5.75;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		rightStartLeftScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "rightStartLeftSwitchPath");
+		
+		ws = new WaypointSequence(3);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(6.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(17.8,-16.0,Math.toRadians(-89.0)));
+		driveTrainPathConfig.max_acc = 5.75;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		leftStartRightScalePath = PathGenerator.makePath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "rightStartLeftSwitchPath");
+		
+		
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;
 	}
 	
