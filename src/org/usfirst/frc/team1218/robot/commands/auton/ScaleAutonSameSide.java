@@ -1,10 +1,12 @@
 package org.usfirst.frc.team1218.robot.commands.auton;
 
+import org.team1218.lib.trajectory.SimplePathGenerator;
 import org.usfirst.frc.team1218.robot.Robot.Plate;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMoveDelayed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -20,9 +22,10 @@ public class ScaleAutonSameSide extends CommandGroup {
     		}else {
     			pathCmd = new TalonFollowPath(RobotMap.leftStartLeftScalePath);
     		}
+    		addParallel(new ElevatorMotionMagicMoveDelayed(750,2.5));
     		addSequential(pathCmd);
-    		addSequential(new ElevatorMotionMagicMove(700));
     		addSequential(new ShootPowerCube());
+    		//addSequential(new TalonFollowPath(SimplePathGenerator.generateLine(-5, RobotMap.driveTrainPathConfig)));
     		addSequential(new ElevatorMotionMagicMove(0));
         // Add Commands here:
         // e.g. addSequential(new Command1());

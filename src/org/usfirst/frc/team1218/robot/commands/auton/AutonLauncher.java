@@ -18,13 +18,13 @@ public class AutonLauncher extends CommandGroup {
     			if(Robot.plateAssignments[Robot.scale] == Plate.LEFT) {
     				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
     			}else {
-    				addSequential(new ScaleAutonStopShort());
+    				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}
     		}else {
     			if(Robot.plateAssignments[Robot.scale] == Plate.RIGHT) {
     				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
     			}else {
-    				addSequential(new ScaleAutonStopShort());
+    				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}
     		}
         // Add Commands here:

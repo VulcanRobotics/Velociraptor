@@ -73,7 +73,7 @@ public class OI{
 		driver = new Joystick(0);
 		operator = new Joystick(1);
 		followPathBtn = new JoystickButton(driver, 2);
-		followPathBtn.whenPressed(new TalonFollowPath(SimplePathGenerator.generateLine(5, RobotMap.driveTrainPathConfig)));
+		followPathBtn.whenPressed(new TalonFollowPath(SimplePathGenerator.generateTurn(Math.PI/2, RobotMap.driveTrainPathConfig,RobotMap.trackWidthInches/12.0*1.25)));
 		shiftBtn = new JoystickButton(driver,1);
 		driveTrainLoggingBtn = new JoystickButton(driver,3);
 		driveTrainLoggingBtn.whenActive(new ToggleDriveTrainLogging());
