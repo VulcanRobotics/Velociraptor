@@ -216,11 +216,11 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void engagePto(boolean engage) {
-		pto.set(!engage);
+		pto.set(engage);
 	}
 	
 	public boolean isPtoEngaged() {
-		return !pto.get();
+		return pto.get();
 	}
 	/*
 	public double getHeading() {

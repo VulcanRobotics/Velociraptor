@@ -6,26 +6,29 @@ import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
-import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMoveDelayed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class ScaleAutonSameSide extends CommandGroup {
+public class ScaleAutonCrossOver extends CommandGroup {
 
-    public ScaleAutonSameSide(Plate plate) {
+    public ScaleAutonCrossOver(Plate plate) {
     		TalonFollowPath pathCmd;
+    		TalonFollowPath turnCmd;
     		if(plate == Plate.RIGHT) {
-    			pathCmd = new TalonFollowPath(RobotMap.rightStartRightScalePath);
+    			pathCmd = new TalonFollowPath(RobotMap.leftStartRightScalePath);
+    			turnCmd = new TalonFollowPath(SimplePathGenerator.generateTurn(Math.toRadians(-91.0), RobotMap.driveTrainPathConfig, RobotMap.trackWidthInches/12.0));
     		}else {
-    			pathCmd = new TalonFollowPath(RobotMap.leftStartLeftScalePath);
+    			pathCmd = new TalonFollowPath(RobotMap.rightStartLeftScalePath);
+    			turnCmd = new TalonFollowPath(SimplePathGenerator.generateTurn(Math.toRadians(91.0), RobotMap.driveTrainPathConfig, RobotMap.trackWidthInches/12.0));
     		}
-    		addParallel(new ElevatorMotionMagicMoveDelayed(750,2.5));
     		addSequential(pathCmd);
+    		addSequential(turnCmd);
+    		addParallel(new TalonFollowPath(SimplePathGenerator.generateLine(3.0, RobotMap.driveTrainPathConfig)));
+    		addSequential(new ElevatorMotionMagicMove(700));
     		addSequential(new ShootPowerCube());
-    		//addSequential(new TalonFollowPath(SimplePathGenerator.generateLine(-5, RobotMap.driveTrainPathConfig)));
     		addSequential(new ElevatorMotionMagicMove(0));
         // Add Commands here:
         // e.g. addSequential(new Command1());

@@ -8,6 +8,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ScaleAutonStopShort extends CommandGroup {
 	
 	public ScaleAutonStopShort() {
-		addSequential(new TalonFollowPath(RobotMap.leftStartStopEarlyPath));
+		addSequential(new TalonFollowPath(RobotMap.leftStartLeftSwitchPath));
 	}
 }
