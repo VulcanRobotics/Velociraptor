@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorDefaultMotionMagicAssisted extends Command {
 	
-	protected static final double deadband = 0.1;
+	protected static final double deadband = 0.2;
 	
 	protected ControlMode controlMode = ControlMode.PercentOutput, lastControlMode = ControlMode.PercentOutput;
 	protected int setpoint = RobotMap.elevatorReverseLimit;
