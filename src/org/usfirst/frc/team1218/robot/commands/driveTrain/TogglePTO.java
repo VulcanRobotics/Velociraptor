@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1218.robot.commands.driveTrain;
 
 import org.usfirst.frc.team1218.robot.Robot;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -20,6 +21,7 @@ public class TogglePTO extends InstantCommand{
 		}else {
 			Robot.driveTrain.setBrake(NeutralMode.Brake);
 			Robot.driveTrain.engagePto(true);
+			new ElevatorDefault().start();
 		}
 		System.out.println("PTO Enable set to:" + !enablePto);
 	}
