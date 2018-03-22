@@ -67,7 +67,7 @@ public class DriveTrain extends Subsystem {
 	LoggableSRX[] rightMotorControllers = new LoggableSRX[3];
 	Solenoid shifter;
 	Solenoid pto;
-	//AHRS navx;
+	public AHRS navx;
 	
 	MotionProfileStatus leftStat = new MotionProfileStatus();
 	MotionProfileStatus rightStat = new MotionProfileStatus();
@@ -99,7 +99,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].set(ControlMode.Follower, RobotMap.rightMotorControllerIds[0]);
 		}
 		
-		//navx = new AHRS(I2C.Port.kMXP);
+		navx = new AHRS(I2C.Port.kOnboard);
 		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
@@ -120,6 +120,11 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].configPeakOutputForward(1, 0);
 		rightMotorControllers[0].configNominalOutputReverse(0, 0);
 		rightMotorControllers[0].configPeakOutputReverse(-1, 0);
+		
+		leftMotorControllers[0].configMotionCruiseVelocity(7900, 0);
+		leftMotorControllers[0].configMotionAcceleration(7900, 0);
+		rightMotorControllers[0].configMotionCruiseVelocity(7900, 0);
+		rightMotorControllers[0].configMotionAcceleration(7900, 0);
 		
 		shifter = new Solenoid(RobotMap.shifterPort);
 		pto = new Solenoid(RobotMap.ptoPort);
@@ -222,11 +227,10 @@ public class DriveTrain extends Subsystem {
 	public boolean isPtoEngaged() {
 		return pto.get();
 	}
-	/*
+	
 	public double getHeading() {
 		return navx.getAngle();
 	}
-	*/
 	
 	public boolean isPathFollowing() {
 		return isPathFollowing;
@@ -315,6 +319,24 @@ public class DriveTrain extends Subsystem {
 			startLogging();
 		}
 		isPathFollowing = true;
+	}
+	public void turnMotionMagic(double angle) {
+		double distance = angle*RobotMap.trackWidthInches/12.0;
+		moveMotionMagic(-distance,distance);
+	}
+	
+	public void moveMotionMagic(double leftFt,double rightFt) {
+		moveMotionMagic(ftToEncPos(leftFt),ftToEncPos(rightFt));
+	}
+	
+	public void moveMotionMagic(int leftEncCounts,int rightEncCounts) {
+		leftMotorControllers[0].set(ControlMode.MotionMagic, leftMotorControllers[0].getSelectedSensorPosition(0) + leftEncCounts);
+		rightMotorControllers[0].set(ControlMode.MotionMagic, rightMotorControllers[0].getSelectedSensorPosition(0) + rightEncCounts);
+	}
+	
+	public boolean motionMagicOnTarget() {
+		return (leftMotorControllers[0].getClosedLoopTarget(0)-leftMotorControllers[0].getSelectedSensorPosition(0))<40
+				&& (rightMotorControllers[0].getClosedLoopTarget(0)-rightMotorControllers[0].getSelectedSensorPosition(0))<40;
 	}
 	
 	public void periodicTasks() {
