@@ -32,7 +32,8 @@ public class RobotMap {
 	public static boolean useCamera;
 	public static boolean useEncElevator;
 	
-	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF;
+	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF,
+						   gyroTurnPIDF;
 	public static double leftLowGearKv,		// = 0.7458140859603571, 
 						leftLowGearKa,		// = 0.35191285889333246, //0.6971349598549942, 
 						leftLowGearVInter, 	//= 0.6961006248023573, 
@@ -188,7 +189,8 @@ public class RobotMap {
 		rightLowGearTalonMPPIDF = pm.getDoubles("rightLowGearTalonMPPIDF",new double[] {0.0,0.0,0.0,0.79});
 		rightLowGearPIDF = pm.getDoubles("rightLowGearPIDF", new double[] {1.05,0,50,0.79});
 		leftHighGearPIDF = pm.getDoubles("leftHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
-		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});;
+		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
+		gyroTurnPIDF = pm.getDoubles("gyroTurnPIDF", new double[] {0.0, 0.0, 0.0, 0.0});
 		leftLowGearKv = pm.getDouble("leftLowGearKv");
 		leftLowGearKa = pm.getDouble("leftLowGearKa");
 		leftLowGearVInter = pm.getDouble("leftLowGearVInter");

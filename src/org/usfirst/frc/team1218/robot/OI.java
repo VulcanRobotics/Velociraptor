@@ -17,6 +17,7 @@ import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLoggin
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 import org.usfirst.frc.team1218.robot.commands.elevator.ToggleElevatorLogging;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.ZeroYaw;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -69,6 +70,7 @@ public class OI{
 	public Button elevatorCommandTestBtn;
 	public Button elevatorLoggingBtn;
 	public Button autonSelector;
+	public Button zeroYaw;
 	
 	public OI() {
 		driver = new Joystick(0);
@@ -94,6 +96,8 @@ public class OI{
 		elevatorLoggingBtn = new JoystickButton(operator,7);
 		elevatorLoggingBtn.whenPressed(new ToggleElevatorLogging());
 		autonSelector = new JoystickButton(driver,9);
+		zeroYaw = new JoystickButton(driver,5);
+		zeroYaw.whenPressed(new ZeroYaw());
 		
 	}
 	
