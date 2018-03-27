@@ -133,7 +133,7 @@ public class DriveTrain extends Subsystem {
 		System.out.println("DriveTrain: rightInverted="+rightMotorControllers[0].getInverted());
 	}
 	
-	protected void loadPIDFConstants(double[] leftPIDF,double[] rightPIDF) {
+	public void loadPIDFConstants(double[] leftPIDF,double[] rightPIDF) {
 		leftMotorControllers[0].config_kP(0, leftPIDF[0], 0);
 		leftMotorControllers[0].config_kI(0, leftPIDF[1], 0);
 		leftMotorControllers[0].config_kD(0, leftPIDF[2], 0);
