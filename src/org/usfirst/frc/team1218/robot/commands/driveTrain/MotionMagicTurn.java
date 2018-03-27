@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class MotionProfileTurn extends Command {
+public class MotionMagicTurn extends Command {
 	
 	double angle = 0;
 	
-    public MotionProfileTurn(double angle) {
+    public MotionMagicTurn(double angle) {
         requires(Robot.driveTrain);
         this.angle = angle;
     }
