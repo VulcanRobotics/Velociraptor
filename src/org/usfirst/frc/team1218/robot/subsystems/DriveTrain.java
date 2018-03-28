@@ -27,6 +27,8 @@ public class DriveTrain extends Subsystem {
 	
 	public static final double wheelDiameterInches = 4.0;
 	
+	public static final double kSGL = 1.0;
+	
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
 	 * @param ftPerSec robot velocity in ft/sec
@@ -115,16 +117,22 @@ public class DriveTrain extends Subsystem {
 		leftMotorControllers[0].configPeakOutputForward(1, 0);
 		leftMotorControllers[0].configNominalOutputReverse(0, 0);
 		leftMotorControllers[0].configPeakOutputReverse(-1, 0);
+		leftMotorControllers[0].configAllowableClosedloopError(200, 0, 0);
 		
 		rightMotorControllers[0].configNominalOutputForward(0, 0);
 		rightMotorControllers[0].configPeakOutputForward(1, 0);
 		rightMotorControllers[0].configNominalOutputReverse(0, 0);
 		rightMotorControllers[0].configPeakOutputReverse(-1, 0);
+		rightMotorControllers[0].configAllowableClosedloopError(200, 0, 0);
 		
-		leftMotorControllers[0].configMotionCruiseVelocity(7900, 0);
-		leftMotorControllers[0].configMotionAcceleration(7900, 0);
-		rightMotorControllers[0].configMotionCruiseVelocity(7900, 0);
-		rightMotorControllers[0].configMotionAcceleration(7900, 0);
+		leftMotorControllers[0].configMotionCruiseVelocity(2600, 0);
+		leftMotorControllers[0].configMotionAcceleration(2600, 0);
+		leftMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10, 0);
+		leftMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 10,0);
+		rightMotorControllers[0].configMotionCruiseVelocity(2600, 0);
+		rightMotorControllers[0].configMotionAcceleration(2600, 0);
+		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10, 0);
+		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 10,0);
 		
 		shifter = new Solenoid(RobotMap.shifterPort);
 		pto = new Solenoid(RobotMap.ptoPort);
@@ -321,7 +329,7 @@ public class DriveTrain extends Subsystem {
 		isPathFollowing = true;
 	}
 	public void turnMotionMagic(double angle) {
-		double distance = angle*RobotMap.trackWidthInches/12.0;
+		double distance = angle*RobotMap.trackWidthInches/12.0*0.5*kSGL;
 		moveMotionMagic(-distance,distance);
 	}
 	
@@ -330,13 +338,19 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void moveMotionMagic(int leftEncCounts,int rightEncCounts) {
+		loadPIDFConstants(new double[]{0.09,0.0,0.4,0.6}, new double[]{0.09,0.0,0.4,0.7});
+		leftMotorControllers[0].configMotionCruiseVelocity(2600, 0);
+		leftMotorControllers[0].configMotionAcceleration(2600, 0);
+		rightMotorControllers[0].configMotionCruiseVelocity(2600, 0);
+		rightMotorControllers[0].configMotionAcceleration(2600, 0);
 		leftMotorControllers[0].set(ControlMode.MotionMagic, leftMotorControllers[0].getSelectedSensorPosition(0) + leftEncCounts);
 		rightMotorControllers[0].set(ControlMode.MotionMagic, rightMotorControllers[0].getSelectedSensorPosition(0) + rightEncCounts);
 	}
 	
 	public boolean motionMagicOnTarget() {
-		return (leftMotorControllers[0].getClosedLoopTarget(0)-leftMotorControllers[0].getSelectedSensorPosition(0))<40
-				&& (rightMotorControllers[0].getClosedLoopTarget(0)-rightMotorControllers[0].getSelectedSensorPosition(0))<40;
+		//System.out.println("Lerr: " + (leftMotorControllers[0].getClosedLoopTarget(0)-leftMotorControllers[0].getSelectedSensorPosition(0)) + "Rerr: " + (rightMotorControllers[0].getClosedLoopTarget(0)-rightMotorControllers[0].getSelectedSensorPosition(0)));
+		return Math.abs(leftMotorControllers[0].getClosedLoopTarget(0)-leftMotorControllers[0].getSelectedSensorPosition(0))<600
+				&& Math.abs(rightMotorControllers[0].getClosedLoopTarget(0)-rightMotorControllers[0].getSelectedSensorPosition(0))<600;
 	}
 	
 	public void periodicTasks() {
@@ -347,6 +361,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
 		SmartDashboard.putBoolean("DB/LED 0", isPtoEngaged());
 		SmartDashboard.putString("DB/String 4", "H" + getHeading());
+		SmartDashboard.putString("DB/String 8", leftMotorControllers[0].getControlMode().toString());
 		
 		if(isPathFollowing == true) {
 			leftMotorControllers[0].getMotionProfileStatus(leftStat);
