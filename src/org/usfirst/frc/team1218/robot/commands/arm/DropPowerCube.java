@@ -10,9 +10,9 @@ public class DropPowerCube extends CommandGroup {
 
     public DropPowerCube() {
     		addSequential(new ActuateIntakeArm(true));
-    		addSequential(new TimedCommand(0.25));
+    		addSequential(new TimedCommand(0.2));
     		addSequential(new ActuateIntakeWheels(-0.75));
-    		addSequential(new TimedCommand(1));
+    		addSequential(new TimedCommand(0.3));
     		addSequential(new ActuateIntakeWheels(0));
     		addSequential(new ActuateIntakeArm(false));
        

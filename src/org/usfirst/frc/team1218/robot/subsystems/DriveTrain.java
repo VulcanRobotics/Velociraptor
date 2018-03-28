@@ -254,6 +254,16 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void setPath(Path path, double period) {
+		setPath(path, period, false);
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 * @param period does noting, there only for compatibility reasons.
+	 * @param reverse
+	 */
+	public void setPath(Path path, double period, boolean reverse) {
 		//clear any outstanding motion profile points
 		leftMotorControllers[0].clearMotionProfileTrajectories();
 		rightMotorControllers[0].clearMotionProfileTrajectories();
@@ -270,9 +280,16 @@ public class DriveTrain extends Subsystem {
 		TrajectoryPoint point = new TrajectoryPoint();
 		
 		for(int i = 0; i < leftTrajectory.getNumSegments(); i++) {
-			point.position = ftToEncPos(leftTrajectory.getSegment(i).pos);
-			point.velocity = ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);//segmentToFFVoltage(leftTrajectory.getSegment(i), RobotMap.leftLowGearKv, 
-							//RobotMap.leftLowGearKa*1.2, RobotMap.leftLowGearVInter); //ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			if(reverse) {
+				point.position = -ftToEncPos(leftTrajectory.getSegment(i).pos);
+				point.velocity = -ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			}else {
+				point.position = ftToEncPos(leftTrajectory.getSegment(i).pos);
+				point.velocity = ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			}
+			//segmentToFFVoltage(leftTrajectory.getSegment(i), RobotMap.leftLowGearKv, 
+			//RobotMap.leftLowGearKa*1.2, RobotMap.leftLowGearVInter); //ftPerSecToEncVel(leftTrajectory.getSegment(i).vel);
+			
 			System.out.println("left Point " + i + "origPos: " + leftTrajectory.getSegment(i).pos + 
 								" origVel: " + leftTrajectory.getSegment(i).vel + " pos: " + point.position + 
 								" vel: " + point.velocity);
@@ -295,8 +312,13 @@ public class DriveTrain extends Subsystem {
 		}
 		
 		for(int i = 0; i < rightTrajectory.getNumSegments(); i++) {
-			point.position = ftToEncPos(rightTrajectory.getSegment(i).pos);
-			point.velocity = ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);//segmentToFFVoltage(rightTrajectory.getSegment(i), RobotMap.rightLowGearKv,
+			if(reverse) {
+				point.position = -ftToEncPos(rightTrajectory.getSegment(i).pos);
+				point.velocity = -ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);
+			}else {
+				point.position = ftToEncPos(rightTrajectory.getSegment(i).pos);
+				point.velocity = ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);
+			}//segmentToFFVoltage(rightTrajectory.getSegment(i), RobotMap.rightLowGearKv,
 							//RobotMap.rightLowGearKa*1.2, RobotMap.rightLowGearVInter);
 					//ftPerSecToEncVel(rightTrajectory.getSegment(i).vel);
 			point.headingDeg = 0;

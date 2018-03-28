@@ -17,15 +17,21 @@ public class TalonFollowPath extends Command {
 	static final int delay = 0;
 	long startTime = 0;
 	boolean gear;
+	boolean reverse;
 	
 	public TalonFollowPath(Path path) {
-		this(path,false);
+		this(path,false,false);
 	}
 	
-    public TalonFollowPath(Path path, boolean gear) {
+	public TalonFollowPath(Path path,boolean reverse) {
+		this(path, false, reverse);
+	}
+	
+    public TalonFollowPath(Path path, boolean gear, boolean reverse) {
         requires(Robot.driveTrain);
         this.path = path;
         this.gear = gear;
+        this.reverse = reverse;
     }
 
     // Called just before this Command runs the first time
@@ -33,14 +39,14 @@ public class TalonFollowPath extends Command {
     		Robot.driveTrain.shift(gear);
     		//TODO: uncomment after tuning is complete.
     		if(gear) {
-    			//Robot.driveTrain.loadPIDFConstants(RobotMap.leftHighGearTalonMPPIDF, RobotMap.rightHighGearTalonMPPIDF);
+    			Robot.driveTrain.loadPIDFConstants(RobotMap.leftHighGearTalonMPPIDF, RobotMap.rightHighGearTalonMPPIDF);
     		}else {
     			//Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF);
     		}
     	
     		System.out.println("TalonPathFollower: Setting " + path.getName() + ".");
     		counter = 0;
-    		Robot.driveTrain.setPath(path, 0.1);
+    		Robot.driveTrain.setPath(path, 0.1,reverse);
     		Robot.driveTrain.processMotionProfileBuffer();
     	
     }

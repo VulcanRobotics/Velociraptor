@@ -13,7 +13,7 @@ public class AutonLauncher extends CommandGroup {
 
     public AutonLauncher(RobotStartingPosition pos) {
     		if(pos == RobotStartingPosition.center) {
-    			addSequential(new SwitchAuton(Robot.plateAssignments[Robot.outSwitch]));
+    			addSequential(new TwoCubeSwitchAuton(Robot.plateAssignments[Robot.outSwitch]));
     		}else if(pos == RobotStartingPosition.left){
     			if(Robot.plateAssignments[Robot.scale] == Plate.LEFT) {
     				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));

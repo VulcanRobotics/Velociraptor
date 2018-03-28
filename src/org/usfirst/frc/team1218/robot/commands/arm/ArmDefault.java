@@ -2,6 +2,7 @@ package org.usfirst.frc.team1218.robot.commands.arm;
 
 import org.usfirst.frc.team1218.robot.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -19,22 +20,24 @@ public class ArmDefault extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.m_oi.intakeBtn.get()) {
-			Robot.arm.setIntakePower(1);
-		}else if(Robot.m_oi.outtakeBtn.get()){
-			Robot.arm.setIntakePower(-0.70);
-		}else {
-			Robot.arm.setIntakePower(0);
-		}
+    		if(!DriverStation.getInstance().isAutonomous()) {
+    			if(Robot.m_oi.intakeBtn.get()) {
+    				Robot.arm.setIntakePower(1);
+    			}else if(Robot.m_oi.outtakeBtn.get()){
+    				Robot.arm.setIntakePower(-0.70);
+    			}else {
+    				Robot.arm.setIntakePower(0);
+    			}
 		
 		
-		Robot.arm.intakeSolenoidEngage(Robot.m_oi.intakeArmBtn.get());
+    			Robot.arm.intakeSolenoidEngage(Robot.m_oi.intakeArmBtn.get());
 		
-		if(Robot.m_oi.armUpBtn.get()) {
-			Robot.arm.armSolenoidEngage(true);
-		}else if(Robot.m_oi.armDownBtn.get()) {
-			Robot.arm.armSolenoidEngage(false);
-		}
+    			if(Robot.m_oi.armUpBtn.get()) {
+    				Robot.arm.armSolenoidEngage(true);
+    			}else if(Robot.m_oi.armDownBtn.get()) {
+    				Robot.arm.armSolenoidEngage(false);
+    			}
+    		}
     }
 
     // Make this return true when this Command no longer needs to run execute()
