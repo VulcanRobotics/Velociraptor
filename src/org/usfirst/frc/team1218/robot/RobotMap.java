@@ -33,7 +33,9 @@ public class RobotMap {
 	public static boolean useEncElevator;
 	
 	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, leftHighGearTalonMPPIDF,
+						   leftMotionMagicPIDF,
 						   rightLowGearPIDF, rightHighGearPIDF,rightLowGearTalonMPPIDF, rightHighGearTalonMPPIDF,
+						   rightMotionMagicPIDF,
 						   gyroTurnPIDF;
 	public static double leftLowGearKv,		// = 0.7458140859603571, 
 						leftLowGearKa,		// = 0.35191285889333246, //0.6971349598549942, 
@@ -217,6 +219,8 @@ public class RobotMap {
 		rightLowGearPIDF = pm.getDoubles("rightLowGearPIDF", new double[] {1.05,0,50,0.79});
 		leftHighGearPIDF = pm.getDoubles("leftHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
 		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
+		leftMotionMagicPIDF = pm.getDoubles("leftMotionMagicPIDF", new double[] {0.09,0.0,0.4,0.6});
+		rightMotionMagicPIDF = pm.getDoubles("rightMotionMagicPIDF", new double[] {0.09,0.0,0.4,0.7});
 		gyroTurnPIDF = pm.getDoubles("gyroTurnPIDF", new double[] {0.0, 0.0, 0.0, 0.0});
 		leftLowGearKv = pm.getDouble("leftLowGearKv");
 		leftLowGearKa = pm.getDouble("leftLowGearKa");

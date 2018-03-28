@@ -27,7 +27,8 @@ public class DriveTrain extends Subsystem {
 	
 	public static final double wheelDiameterInches = 4.0;
 	
-	public static final double kSGL = 1.0;
+	public static final double kSGL = 1.0; //SGL's constant
+	public static final double kAllowableError = 0.5; //allowable error in wheel rotations.
 	
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
@@ -117,13 +118,13 @@ public class DriveTrain extends Subsystem {
 		leftMotorControllers[0].configPeakOutputForward(1, 0);
 		leftMotorControllers[0].configNominalOutputReverse(0, 0);
 		leftMotorControllers[0].configPeakOutputReverse(-1, 0);
-		leftMotorControllers[0].configAllowableClosedloopError(200, 0, 0);
+		leftMotorControllers[0].configAllowableClosedloopError((int)(RobotMap.encTicksPerRev * kAllowableError) , 0, 0);
 		
 		rightMotorControllers[0].configNominalOutputForward(0, 0);
 		rightMotorControllers[0].configPeakOutputForward(1, 0);
 		rightMotorControllers[0].configNominalOutputReverse(0, 0);
 		rightMotorControllers[0].configPeakOutputReverse(-1, 0);
-		rightMotorControllers[0].configAllowableClosedloopError(200, 0, 0);
+		rightMotorControllers[0].configAllowableClosedloopError((int)(RobotMap.encTicksPerRev * kAllowableError) , 0, 0);
 		
 		leftMotorControllers[0].configMotionCruiseVelocity(2600, 0);
 		leftMotorControllers[0].configMotionAcceleration(2600, 0);
@@ -329,7 +330,7 @@ public class DriveTrain extends Subsystem {
 		isPathFollowing = true;
 	}
 	public void turnMotionMagic(double angle) {
-		double distance = angle*RobotMap.trackWidthInches/12.0*0.5*kSGL;
+		double distance = angle*RobotMap.trackWidthInches/12.0*0.5*kSGL; //lol, random constant
 		moveMotionMagic(-distance,distance);
 	}
 	
@@ -338,19 +339,14 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void moveMotionMagic(int leftEncCounts,int rightEncCounts) {
-		loadPIDFConstants(new double[]{0.09,0.0,0.4,0.6}, new double[]{0.09,0.0,0.4,0.7});
-		leftMotorControllers[0].configMotionCruiseVelocity(2600, 0);
-		leftMotorControllers[0].configMotionAcceleration(2600, 0);
-		rightMotorControllers[0].configMotionCruiseVelocity(2600, 0);
-		rightMotorControllers[0].configMotionAcceleration(2600, 0);
+		loadPIDFConstants(RobotMap.leftMotionMagicPIDF,RobotMap.rightHighGearPIDF);
 		leftMotorControllers[0].set(ControlMode.MotionMagic, leftMotorControllers[0].getSelectedSensorPosition(0) + leftEncCounts);
 		rightMotorControllers[0].set(ControlMode.MotionMagic, rightMotorControllers[0].getSelectedSensorPosition(0) + rightEncCounts);
 	}
 	
 	public boolean motionMagicOnTarget() {
-		//System.out.println("Lerr: " + (leftMotorControllers[0].getClosedLoopTarget(0)-leftMotorControllers[0].getSelectedSensorPosition(0)) + "Rerr: " + (rightMotorControllers[0].getClosedLoopTarget(0)-rightMotorControllers[0].getSelectedSensorPosition(0)));
-		return Math.abs(leftMotorControllers[0].getClosedLoopTarget(0)-leftMotorControllers[0].getSelectedSensorPosition(0))<600
-				&& Math.abs(rightMotorControllers[0].getClosedLoopTarget(0)-rightMotorControllers[0].getSelectedSensorPosition(0))<600;
+		return Math.abs(leftMotorControllers[0].getClosedLoopTarget(0)-leftMotorControllers[0].getSelectedSensorPosition(0))<RobotMap.encTicksPerRev * kAllowableError
+				&& Math.abs(rightMotorControllers[0].getClosedLoopTarget(0)-rightMotorControllers[0].getSelectedSensorPosition(0))<RobotMap.encTicksPerRev * kAllowableError;
 	}
 	
 	public void periodicTasks() {
