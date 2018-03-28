@@ -86,7 +86,7 @@ public class OI{
 		ptoBtn.whenActive(new TogglePTO());
 		new JoystickButton(driver, 6).whenPressed(new MotionMagicTurn(-Math.PI/2.0));
 		//new JoystickButton(driver, 7).whileHeld(new StepTest());
-		//new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
+		new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
 		intakeBtn = new JoystickButton(operator,2);
 		intakeArmBtn = new JoystickButton(operator,1);
 		outtakeBtn = new JoystickButton(operator,3);

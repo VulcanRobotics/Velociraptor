@@ -27,8 +27,8 @@ public class DriveTrain extends Subsystem {
 	
 	public static final double wheelDiameterInches = 4.0;
 	
-	public static final double kSGL = 1.0; //SGL's constant
-	public static final double kAllowableError = 0.5; //allowable error in wheel rotations.
+	public static final double kSGL = 1.0 ; //SGL's constant
+	public static final double kAllowableError = 0.01; //allowable error in wheel rotations.
 	
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
@@ -119,12 +119,14 @@ public class DriveTrain extends Subsystem {
 		leftMotorControllers[0].configNominalOutputReverse(0, 0);
 		leftMotorControllers[0].configPeakOutputReverse(-1, 0);
 		leftMotorControllers[0].configAllowableClosedloopError((int)(RobotMap.encTicksPerRev * kAllowableError) , 0, 0);
+		leftMotorControllers[0].config_IntegralZone(300, 0, 0);
 		
 		rightMotorControllers[0].configNominalOutputForward(0, 0);
 		rightMotorControllers[0].configPeakOutputForward(1, 0);
 		rightMotorControllers[0].configNominalOutputReverse(0, 0);
 		rightMotorControllers[0].configPeakOutputReverse(-1, 0);
 		rightMotorControllers[0].configAllowableClosedloopError((int)(RobotMap.encTicksPerRev * kAllowableError) , 0, 0);
+		rightMotorControllers[0].config_IntegralZone(300, 0, 0);
 		
 		leftMotorControllers[0].configMotionCruiseVelocity(2600, 0);
 		leftMotorControllers[0].configMotionAcceleration(2600, 0);
@@ -136,6 +138,8 @@ public class DriveTrain extends Subsystem {
 		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 10,0);
 		
 		shifter = new Solenoid(RobotMap.shifterPort);
+		System.out.println(RobotMap.shifterPort);
+		System.out.println(RobotMap.ptoPort);
 		pto = new Solenoid(RobotMap.ptoPort);
 		engagePto(false);
 		System.out.println("DriveTrain: leftInverted="+leftMotorControllers[0].getInverted());
@@ -339,7 +343,7 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void moveMotionMagic(int leftEncCounts,int rightEncCounts) {
-		loadPIDFConstants(RobotMap.leftMotionMagicPIDF,RobotMap.rightHighGearPIDF);
+		loadPIDFConstants(RobotMap.leftMotionMagicPIDF,RobotMap.rightMotionMagicPIDF);
 		leftMotorControllers[0].set(ControlMode.MotionMagic, leftMotorControllers[0].getSelectedSensorPosition(0) + leftEncCounts);
 		rightMotorControllers[0].set(ControlMode.MotionMagic, rightMotorControllers[0].getSelectedSensorPosition(0) + rightEncCounts);
 	}
@@ -353,8 +357,10 @@ public class DriveTrain extends Subsystem {
 		//publish left and right encoder Position to Dashboard.
 		SmartDashboard.putString("DB/String 0", "Pl:" + leftMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
-		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
-		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
+		//SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
+		//SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
+		SmartDashboard.putString("DB/String 2", "El:" + leftMotorControllers[0].getClosedLoopError(0));
+		SmartDashboard.putString("DB/String 3", "Er:" + leftMotorControllers[0].getClosedLoopError(0));
 		SmartDashboard.putBoolean("DB/LED 0", isPtoEngaged());
 		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 		SmartDashboard.putString("DB/String 8", leftMotorControllers[0].getControlMode().toString());
