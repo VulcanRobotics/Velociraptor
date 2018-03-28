@@ -164,6 +164,7 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		identifyPlateAssignment();
 		driveTrain.configMaxOutputVoltage(12.0);
+		driveTrain.navx.zeroYaw();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",

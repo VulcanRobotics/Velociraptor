@@ -32,7 +32,11 @@ public class RobotMap {
 	public static boolean useCamera;
 	public static boolean useEncElevator;
 	
-	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, rightLowGearPIDF, rightHighGearPIDF, rightLowGearTalonMPPIDF;
+	public static double[] leftLowGearPIDF, leftLowGearTalonMPPIDF, leftHighGearPIDF, leftHighGearTalonMPPIDF,
+						   leftMotionMagicPIDF,
+						   rightLowGearPIDF, rightHighGearPIDF,rightLowGearTalonMPPIDF, rightHighGearTalonMPPIDF,
+						   rightMotionMagicPIDF,
+						   gyroTurnPIDF;
 	public static double leftLowGearKv,		// = 0.7458140859603571, 
 						leftLowGearKa,		// = 0.35191285889333246, //0.6971349598549942, 
 						leftLowGearVInter, 	//= 0.6961006248023573, 
@@ -58,7 +62,7 @@ public class RobotMap {
 	
 	public static Path centerStartRightSwitchPath, leftStartLeftScalePath, rightStartRightScalePath, centerStartLeftSwitchPath, tuningTestPath,
 					   leftStartLeftSwitchPath, rightStartRightSwitchPath, leftStartStopEarlyPath, rightStartStopEarlyPath,rightStartLeftScalePath,
-					   leftStartRightScalePath;
+					   leftStartRightScalePath, crossoverStart, crossoverCross, crossoverEnd;
 	
 	public static void makePaths() {
 		driveTrainPathConfig = new TrajectoryGenerator.Config();
@@ -168,9 +172,35 @@ public class RobotMap {
 		driveTrainPathConfig.max_vel = 5.75;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		leftStartRightScalePath = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "leftStartRightSwitchPath");
 		
-		
+		ws = new WaypointSequence(2);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		//ws.addWaypoint(new WaypointSequence.Waypoint(18.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(5.0,0.0,0.0));
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		crossoverStart = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "crossoverStart");
+		
+		ws = new WaypointSequence(2);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		//ws.addWaypoint(new WaypointSequence.Waypoint(17.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(3.0,0.0,0.0));
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		crossoverCross = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "crossoverCross");
+		
+		ws = new WaypointSequence(2);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(4.5,0.0,0.0));
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		crossoverEnd = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "crossoverEnd");
+		
+		
+		driveTrainPathConfig.max_acc = 14.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;
 	}
 	
@@ -186,9 +216,14 @@ public class RobotMap {
 		leftLowGearPIDF = pm.getDoubles("leftLowGearPIDF",new double[] {1.1,0.0,10,0.79});
 		leftLowGearTalonMPPIDF = pm.getDoubles("leftLowGearTalonMPPIDF",new double[] {0.0,0.0,0.0,0.79});
 		rightLowGearTalonMPPIDF = pm.getDoubles("rightLowGearTalonMPPIDF",new double[] {0.0,0.0,0.0,0.79});
+		leftHighGearTalonMPPIDF = pm.getDoubles("leftHighGearTalonMPPIDF", new double[] {0.0,0.0,0.0,0.0});
+		rightHighGearTalonMPPIDF = pm.getDoubles("leftHighGearTalonMPPIDF", new double[] {0.0,0.0,0.0,0.0});
 		rightLowGearPIDF = pm.getDoubles("rightLowGearPIDF", new double[] {1.05,0,50,0.79});
 		leftHighGearPIDF = pm.getDoubles("leftHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
-		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});;
+		rightHighGearPIDF = pm.getDoubles("rightHighGearPIDF", new double[] {0.0,0.0,0.0,0.0});
+		leftMotionMagicPIDF = pm.getDoubles("leftMotionMagicPIDF", new double[] {0.09,0.0,0.4,0.6});
+		rightMotionMagicPIDF = pm.getDoubles("rightMotionMagicPIDF", new double[] {0.09,0.0,0.4,0.7});
+		gyroTurnPIDF = pm.getDoubles("gyroTurnPIDF", new double[] {0.0, 0.0, 0.0, 0.0});
 		leftLowGearKv = pm.getDouble("leftLowGearKv");
 		leftLowGearKa = pm.getDouble("leftLowGearKa");
 		leftLowGearVInter = pm.getDouble("leftLowGearVInter");

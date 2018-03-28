@@ -9,13 +9,16 @@ package org.usfirst.frc.team1218.robot;
 
 import org.team1218.lib.trajectory.SimplePathGenerator;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.MeasureEffectiveTrackWidth;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.MotionMagicTurn;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.QuasiStaticTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.StepTest;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.ToggleDriveTrainLogging;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TogglePTO;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.TurnToAngle;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 import org.usfirst.frc.team1218.robot.commands.elevator.ToggleElevatorLogging;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.ZeroYaw;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -68,20 +71,22 @@ public class OI{
 	public Button elevatorCommandTestBtn;
 	public Button elevatorLoggingBtn;
 	public Button autonSelector;
+	public Button zeroYaw;
 	
 	public OI() {
 		driver = new Joystick(0);
 		operator = new Joystick(1);
 		followPathBtn = new JoystickButton(driver, 2);
-		followPathBtn.whenPressed(new TalonFollowPath(SimplePathGenerator.generateTurn(Math.PI/2, RobotMap.driveTrainPathConfig,RobotMap.trackWidthInches/12.0*1.25)));
+		//followPathBtn.whenPressed(new TalonFollowPath(SimplePathGenerator.generateTurn(Math.PI/2*1.25, RobotMap.driveTrainPathConfig,RobotMap.trackWidthInches/12.0)));
+		followPathBtn.whenPressed(new MotionMagicTurn(Math.PI/2.0));
 		shiftBtn = new JoystickButton(driver,1);
 		driveTrainLoggingBtn = new JoystickButton(driver,3);
 		driveTrainLoggingBtn.whenActive(new ToggleDriveTrainLogging());
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
-		//new JoystickButton(driver, 6).whileHeld(new QuasiStaticTest());
+		new JoystickButton(driver, 6).whenPressed(new MotionMagicTurn(-Math.PI/2.0));
 		//new JoystickButton(driver, 7).whileHeld(new StepTest());
-		//new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
+		new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
 		intakeBtn = new JoystickButton(operator,2);
 		intakeArmBtn = new JoystickButton(operator,1);
 		outtakeBtn = new JoystickButton(operator,3);
@@ -93,6 +98,8 @@ public class OI{
 		elevatorLoggingBtn = new JoystickButton(operator,7);
 		elevatorLoggingBtn.whenPressed(new ToggleElevatorLogging());
 		autonSelector = new JoystickButton(driver,9);
+		zeroYaw = new JoystickButton(driver,5);
+		zeroYaw.whenPressed(new ZeroYaw());
 		
 	}
 	

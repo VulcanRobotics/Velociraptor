@@ -20,7 +20,7 @@ public class AutonLauncher extends CommandGroup {
     			}else if(Robot.plateAssignments[Robot.outSwitch] == Plate.LEFT){
     				addSequential(new SwitchSideAuton(Robot.plateAssignments[Robot.outSwitch]));
     			}else {
-    				addSequential(new ScaleAutonStopShort());
+    				addSequential(new ScaleAutonCrossOver(null));
     			}
     		}else {
     			if(Robot.plateAssignments[Robot.scale] == Plate.RIGHT) {
