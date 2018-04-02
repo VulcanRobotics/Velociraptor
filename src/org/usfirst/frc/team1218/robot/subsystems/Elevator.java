@@ -26,9 +26,9 @@ public abstract class Elevator extends Subsystem {
 			elevatorMotors[i].setInverted(RobotMap.elevatorMotorInvert);
 			elevatorMotors[i].configVoltageCompSaturation(12.0, 0);
 			elevatorMotors[i].enableVoltageCompensation(true);
-			elevatorMotors[i].configContinuousCurrentLimit(15, 0);
-			elevatorMotors[i].configPeakCurrentLimit(30, 0);
-			elevatorMotors[i].configPeakCurrentDuration(250, 0);
+			elevatorMotors[i].configContinuousCurrentLimit(40, 0);
+			elevatorMotors[i].configPeakCurrentLimit(50, 0);
+			elevatorMotors[i].configPeakCurrentDuration(10, 0);
 		}
 		
 		

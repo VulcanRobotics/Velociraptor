@@ -76,7 +76,7 @@ public class DriveTrain extends Subsystem {
 	MotionProfileStatus leftStat = new MotionProfileStatus();
 	MotionProfileStatus rightStat = new MotionProfileStatus();
 	
-	boolean enableLogging = false;
+	boolean enableLogging = true;
 	boolean isLogging = false;
 	boolean isPathFollowing = false;
 
@@ -103,7 +103,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].set(ControlMode.Follower, RobotMap.rightMotorControllerIds[0]);
 		}
 		
-		navx = new AHRS(SerialPort.Port.kUSB);
+		navx = new AHRS(I2C.Port.kOnboard);
 		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
@@ -380,10 +380,10 @@ public class DriveTrain extends Subsystem {
 		//publish left and right encoder Position to Dashboard.
 		SmartDashboard.putString("DB/String 0", "Pl:" + leftMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
-		//SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
-		//SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
-		SmartDashboard.putString("DB/String 2", "El:" + leftMotorControllers[0].getClosedLoopError(0));
-		SmartDashboard.putString("DB/String 3", "Er:" + leftMotorControllers[0].getClosedLoopError(0));
+		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
+		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
+		//SmartDashboard.putString("DB/String 2", "El:" + leftMotorControllers[0].getClosedLoopError(0));
+		//SmartDashboard.putString("DB/String 3", "Er:" + leftMotorControllers[0].getClosedLoopError(0));
 		SmartDashboard.putBoolean("DB/LED 0", isPtoEngaged());
 		SmartDashboard.putBoolean("DB/LED 1", navx.isConnected());
 		SmartDashboard.putString("DB/String 4", "H" + getHeading());
