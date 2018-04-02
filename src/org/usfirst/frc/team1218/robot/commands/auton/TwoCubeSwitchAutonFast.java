@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1218.robot.commands.auton;
+	package org.usfirst.frc.team1218.robot.commands.auton;
 
 import org.usfirst.frc.team1218.robot.Robot;
 import org.usfirst.frc.team1218.robot.Robot.Plate;
@@ -10,6 +10,7 @@ import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.WaitForProfilePointsRemaining;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -18,28 +19,31 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 /**
  *
  */
-public class TwoCubeSwitchAuton extends CommandGroup {
+public class TwoCubeSwitchAutonFast extends CommandGroup {
 
-    public TwoCubeSwitchAuton(Plate plate) {
+    public TwoCubeSwitchAutonFast(Plate plate) {
     		TalonFollowPath pathCmd;
-    		addSequential(new SwitchAuton(plate));
+    		addSequential(new SwitchAutonFast(plate));
     		if(plate == Plate.RIGHT) {
     			pathCmd = new TalonFollowPath(RobotMap.centerStartRightSwitchReversePath,true);
     		}else {
     			pathCmd = new TalonFollowPath(RobotMap.centerStartLeftSwitchReversePath,true);
     		}
-    		addSequential(pathCmd);
+    		addParallel(pathCmd);
+    		addSequential(new WaitForProfilePointsRemaining(5));
     		addSequential(new ActuateArm(false));
     		addSequential(new ActuateIntakeArm(true));
     		addSequential(new ActuateIntakeWheels(1.0));
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 3));
-    		addSequential(new TalonFollowPath(RobotMap.twoCubeSwichPickupPath,false));
+    		addParallel(new TalonFollowPath(RobotMap.twoCubeSwichPickupPath,false));
+    		addSequential(new WaitForProfilePointsRemaining(9));
     		addSequential(new ActuateIntakeArm(false));
     		addSequential(new TimedCommand(0.25));
     		addSequential(new ActuateIntakeWheels(0));
     		addSequential(new ActuateArm(true));
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 10));
-    		addSequential(new TalonFollowPath(RobotMap.twoCubeSwichPickupPath,true));
+    		addParallel(new TalonFollowPath(RobotMap.twoCubeSwichPickupPath,true));
+    		addSequential(new WaitForProfilePointsRemaining(5));
     		addSequential(new SwitchAuton(plate));
     		
         // Add Commands here:

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MotionMagicTurn extends Command {
 	
 	double angle = 0;
+	int counter = 0;
 	
     public MotionMagicTurn(double angle) {
         requires(Robot.driveTrain);
@@ -19,6 +20,7 @@ public class MotionMagicTurn extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.driveTrain.turnMotionMagic(angle);
+    	counter = 0;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -28,7 +30,12 @@ public class MotionMagicTurn extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.driveTrain.motionMagicOnTarget();
+    	if(Robot.driveTrain.motionMagicOnTarget()) {
+    		counter ++;
+    	}else {
+    		counter = 0;
+    	}
+        return counter >= 10;
     }
 
     // Called once after isFinished returns true

@@ -13,22 +13,26 @@ public class AutonLauncher extends CommandGroup {
 
     public AutonLauncher(RobotStartingPosition pos) {
     		if(pos == RobotStartingPosition.center) {
-    			addSequential(new TwoCubeSwitchAuton(Robot.plateAssignments[Robot.outSwitch]));
+    			addSequential(new TwoCubeSwitchAutonFast(Robot.plateAssignments[Robot.outSwitch]));
     		}else if(pos == RobotStartingPosition.left){
     			if(Robot.plateAssignments[Robot.scale] == Plate.LEFT) {
     				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
     			}else if(Robot.plateAssignments[Robot.outSwitch] == Plate.LEFT){
-    				addSequential(new SwitchSideAuton(Robot.plateAssignments[Robot.outSwitch]));
+    				//addSequential(new SwitchSideAuton(Robot.plateAssignments[Robot.outSwitch]));
+    				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}else {
-    				addSequential(new ScaleAutonCrossOver(null));
+    				//addSequential(new ScaleAutonStopShort());
+    				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}
     		}else {
     			if(Robot.plateAssignments[Robot.scale] == Plate.RIGHT) {
     				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
     			}else if(Robot.plateAssignments[Robot.outSwitch] == Plate.RIGHT){
-    				addSequential(new SwitchSideAuton(Robot.plateAssignments[Robot.outSwitch]));
+    				//addSequential(new SwitchSideAuton(Robot.plateAssignments[Robot.outSwitch]));
+    				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}else {
-    				addSequential(new ScaleAutonStopShort());
+    				//addSequential(new ScaleAutonStopShort());
+    				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}
     		}
         // Add Commands here:

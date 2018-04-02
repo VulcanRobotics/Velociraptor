@@ -19,15 +19,16 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 
 /**
- *
+ *0.930175
  */
 public class DriveTrain extends Subsystem {
 	
 	public static final double wheelDiameterInches = 4.0;
 	
-	public static final double kSGL = 1.0 ; //SGL's constant
+	public static final double kSGL = 0.615318 ; //SGL's constant
 	public static final double kAllowableError = 0.01; //allowable error in wheel rotations.
 	
 	/**
@@ -75,7 +76,7 @@ public class DriveTrain extends Subsystem {
 	MotionProfileStatus leftStat = new MotionProfileStatus();
 	MotionProfileStatus rightStat = new MotionProfileStatus();
 	
-	boolean enableLogging = true;
+	boolean enableLogging = false;
 	boolean isLogging = false;
 	boolean isPathFollowing = false;
 
@@ -102,7 +103,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].set(ControlMode.Follower, RobotMap.rightMotorControllerIds[0]);
 		}
 		
-		navx = new AHRS(I2C.Port.kOnboard);
+		navx = new AHRS(SerialPort.Port.kUSB);
 		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
@@ -356,7 +357,7 @@ public class DriveTrain extends Subsystem {
 		isPathFollowing = true;
 	}
 	public void turnMotionMagic(double angle) {
-		double distance = angle*RobotMap.trackWidthInches/12.0*0.5*kSGL; //lol, random constant
+		double distance = angle*RobotMap.trackWidthInches/12.0*kSGL; //lol, random constant
 		moveMotionMagic(-distance,distance);
 	}
 	
@@ -384,6 +385,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 2", "El:" + leftMotorControllers[0].getClosedLoopError(0));
 		SmartDashboard.putString("DB/String 3", "Er:" + leftMotorControllers[0].getClosedLoopError(0));
 		SmartDashboard.putBoolean("DB/LED 0", isPtoEngaged());
+		SmartDashboard.putBoolean("DB/LED 1", navx.isConnected());
 		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 		SmartDashboard.putString("DB/String 8", leftMotorControllers[0].getControlMode().toString());
 		
@@ -426,6 +428,21 @@ public class DriveTrain extends Subsystem {
     public void configMaxOutputVoltage(double volts) {
     		leftMotorControllers[0].configVoltageCompSaturation(volts, 0);
     		rightMotorControllers[0].configVoltageCompSaturation(volts, 0);
+    }
+    
+    public int getNumProfilePointLeft() {
+    	if(isPathFollowing) {
+    		int leftPoints = leftStat.btmBufferCnt + leftStat.topBufferCnt;
+    		int rightPoints = rightStat.btmBufferCnt + rightStat.topBufferCnt;
+    		if(leftPoints > rightPoints) {
+    			return rightPoints;
+    		}else {
+    			return leftPoints;
+    		}
+    	}else {	
+    		return 0;
+    	}
+    	
     }
 }
 

@@ -1,41 +1,49 @@
-package org.usfirst.frc.team1218.robot.commands;
+package org.usfirst.frc.team1218.robot.commands.driveTrain;
+
+import org.usfirst.frc.team1218.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class DescriptiveCommandName extends Command {
-
-    public DescriptiveCommandName() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+public class MotionMagicTurnToHeading extends Command {
+	
+	double angle = 0;
+	int counter = 0;
+	
+    public MotionMagicTurnToHeading(double angle) {
+        requires(Robot.driveTrain);
+        this.angle = angle;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    		System.out.println("Descriptive Command Initialized");
-    		System.out.println("This is a very");
+    	Robot.driveTrain.turnMotionMagic(Math.toRadians((Robot.driveTrain.getHeading()-angle)));
+    	counter = 0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		System.out.println("very");
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+    	if(Robot.driveTrain.motionMagicOnTarget()) {
+    		counter ++;
+    	}else {
+    		counter = 0;
+    	}
+        return counter >= 10;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    		System.out.println("desscriptive Command.");
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    		end();
     }
 }
