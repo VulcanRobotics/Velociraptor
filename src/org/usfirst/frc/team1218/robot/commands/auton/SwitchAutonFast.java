@@ -7,6 +7,7 @@ import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.FollowPath;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.WaitForProfilePointsRemaining;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -14,17 +15,18 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class SwitchAuton extends CommandGroup {
+public class SwitchAutonFast extends CommandGroup {
 
-    public SwitchAuton(Plate plate) {
+    public SwitchAutonFast(Plate plate) {
     		TalonFollowPath pathCmd;
     		if(plate == Plate.RIGHT) {
     			pathCmd = new TalonFollowPath(RobotMap.centerStartRightSwitchPath);
     		}else {
     			pathCmd = new TalonFollowPath(RobotMap.centerStartLeftSwitchPath);
     		}
-    		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 150));
-    		addSequential(pathCmd);
+    		addParallel(pathCmd);
+    		addSequential(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 150));
+    		addSequential(new WaitForProfilePointsRemaining(7));
     		addSequential(new DropPowerCube());
         // Add Commands here:
         // e.g. addSequential(new Command1());

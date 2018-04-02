@@ -6,10 +6,12 @@ import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.MotionMagicTurn;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.MotionMagicTurnToHeading;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 
 /**
  *
@@ -18,10 +20,20 @@ public class ScaleAutonCrossOver extends CommandGroup {
 
     public ScaleAutonCrossOver(Plate plate) {
     		addSequential(new TalonFollowPath(RobotMap.crossoverStart, false));
+    		//addSequential(new TimedCommand(10.0));
     		//addSequential(new TalonFollowPath(SimplePathGenerator.generateTurn(Math.PI/2.0*1.25, RobotMap.driveTrainPathConfig, RobotMap.trackWidthInches/12.0)));
-    		addSequential(new MotionMagicTurn(-Math.PI/2.0));
+    		if(plate == Plate.LEFT) {
+    			addSequential(new MotionMagicTurn(Math.PI/2.0+Math.toRadians(7.0)));
+    		}else {
+    			addSequential(new MotionMagicTurnToHeading(90));
+    		}
+    		addSequential(new TimedCommand(15.0));
     		addSequential(new TalonFollowPath(RobotMap.crossoverCross, false));
-    		addSequential(new MotionMagicTurn(Math.PI/2.0));
+    		if(plate == Plate.LEFT) {
+    			addSequential(new MotionMagicTurn(-Math.PI/2.0));
+    		}else {
+    			addSequential(new MotionMagicTurn(Math.PI/2.0));
+    		}
     		//addSequential(new TalonFollowPath(SimplePathGenerator.generateTurn(-Math.PI/2.0*1.25, RobotMap.driveTrainPathConfig, RobotMap.trackWidthInches/12.0)));
     		addParallel(new TalonFollowPath(RobotMap.crossoverEnd, false));
     		addSequential(new ElevatorMotionMagicMove(700));
