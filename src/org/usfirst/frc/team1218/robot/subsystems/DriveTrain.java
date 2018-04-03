@@ -103,7 +103,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].set(ControlMode.Follower, RobotMap.rightMotorControllerIds[0]);
 		}
 		
-		navx = new AHRS(I2C.Port.kOnboard);
+		navx = new AHRS(I2C.Port.kMXP);
 		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
@@ -357,7 +357,7 @@ public class DriveTrain extends Subsystem {
 		isPathFollowing = true;
 	}
 	public void turnMotionMagic(double angle) {
-		double distance = angle*RobotMap.trackWidthInches/12.0*kSGL; //lol, random constant
+		double distance = angle*RobotMap.trackWidthInches/12.0*RobotMap.kSGL; //lol, random constant
 		moveMotionMagic(-distance,distance);
 	}
 	
@@ -380,12 +380,12 @@ public class DriveTrain extends Subsystem {
 		//publish left and right encoder Position to Dashboard.
 		SmartDashboard.putString("DB/String 0", "Pl:" + leftMotorControllers[0].getSelectedSensorPosition(0));
 		SmartDashboard.putString("DB/String 1", "Pr:" + rightMotorControllers[0].getSelectedSensorPosition(0));
-		SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
-		SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
-		//SmartDashboard.putString("DB/String 2", "El:" + leftMotorControllers[0].getClosedLoopError(0));
-		//SmartDashboard.putString("DB/String 3", "Er:" + leftMotorControllers[0].getClosedLoopError(0));
+		//SmartDashboard.putString("DB/String 2", "Vl:" + leftMotorControllers[0].getSelectedSensorVelocity(0));
+		//SmartDashboard.putString("DB/String 3", "Vr:" + rightMotorControllers[0].getSelectedSensorVelocity(0));
+		SmartDashboard.putString("DB/String 2", "El:" + leftMotorControllers[0].getClosedLoopError(0));
+		SmartDashboard.putString("DB/String 3", "Er:" + leftMotorControllers[0].getClosedLoopError(0));
 		SmartDashboard.putBoolean("DB/LED 0", isPtoEngaged());
-		SmartDashboard.putBoolean("DB/LED 1", navx.isConnected());
+		SmartDashboard.putBoolean("DB/LED 2", navx.isConnected());
 		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 		SmartDashboard.putString("DB/String 8", leftMotorControllers[0].getControlMode().toString());
 		
