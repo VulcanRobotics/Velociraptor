@@ -29,6 +29,7 @@ public abstract class Elevator extends Subsystem {
 			elevatorMotors[i].configContinuousCurrentLimit(40, 0);
 			elevatorMotors[i].configPeakCurrentLimit(50, 0);
 			elevatorMotors[i].configPeakCurrentDuration(10, 0);
+			elevatorMotors[i].configOpenloopRamp(0.5, 0);
 		}
 		
 		
