@@ -31,7 +31,7 @@ public class ElevatorDefaultMotionMagicAssistedRamped extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		if(Math.abs(Robot.m_oi.operator.getY()) > deadband) {
+    		if(Math.abs(elevatorPower) > deadband) {
     			controlMode = ControlMode.PercentOutput;
     		}else {
     			controlMode = ControlMode.MotionMagic;
@@ -47,16 +47,15 @@ public class ElevatorDefaultMotionMagicAssistedRamped extends Command {
     		}
     		
     		lastControlMode = controlMode;
-    		
+    		double power = Robot.m_oi.operator.getY();
+		if(power > elevatorPower + rampStep) {
+			elevatorPower += rampStep;
+		}else if (power < elevatorPower - rampStep) {
+			elevatorPower -= rampStep;
+		}else {
+			elevatorPower = power;
+		}
     		if(controlMode == ControlMode.PercentOutput) {
-    			double power = Robot.m_oi.operator.getY();
-    			if(power > elevatorPower + rampStep) {
-    				elevatorPower += rampStep;
-    			}else if (power < elevatorPower - rampStep) {
-    				elevatorPower -= rampStep;
-    			}else {
-    				elevatorPower = power;
-    			}
     			if(Robot.elevator.getCurrentPosition() < (RobotMap.elevatorReverseLimit + (double)RobotMap.elevatorTraval*0.05) && elevatorPower < -0.25) {
     				elevatorPower = -0.25;
     			}
@@ -67,6 +66,7 @@ public class ElevatorDefaultMotionMagicAssistedRamped extends Command {
     		}else {
     			Robot.elevator.moveTo(setpoint);
     		}
+    		System.out.println(elevatorPower);
     }
 
     // Make this return true when this Command no longer needs to run execute()
