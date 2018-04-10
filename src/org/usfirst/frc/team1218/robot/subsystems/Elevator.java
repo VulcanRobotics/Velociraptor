@@ -27,10 +27,10 @@ public abstract class Elevator extends Subsystem {
 			elevatorMotors[i].setInverted(RobotMap.elevatorMotorInvert);
 			elevatorMotors[i].configVoltageCompSaturation(12.0, 0);
 			elevatorMotors[i].enableVoltageCompensation(true);
-			elevatorMotors[i].configContinuousCurrentLimit(40, 0);
-			elevatorMotors[i].configPeakCurrentLimit(50, 0);
+			elevatorMotors[i].configContinuousCurrentLimit(20, 0);
+			elevatorMotors[i].configPeakCurrentLimit(30, 0);
 			elevatorMotors[i].configPeakCurrentDuration(10, 0);
-			elevatorMotors[i].configOpenloopRamp(0.5, 0);
+			elevatorMotors[i].configOpenloopRamp(0.125, 0);
 		}
 		
 		
@@ -122,7 +122,8 @@ public abstract class Elevator extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new ElevatorDefaultMotionMagicAssistedRamped());
+		//setDefaultCommand(new ElevatorDefaultMotionMagicAssistedRamped());
+		setDefaultCommand(new ElevatorDefaultMotionMagicAssisted());
 		//setDefaultCommand(new ElevatorDefault());
 		
 	}

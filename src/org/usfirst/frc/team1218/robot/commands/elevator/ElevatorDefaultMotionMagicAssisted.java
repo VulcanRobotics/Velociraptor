@@ -47,10 +47,15 @@ public class ElevatorDefaultMotionMagicAssisted extends Command {
     		
     		if(controlMode == ControlMode.PercentOutput) {
     			double power = Robot.m_oi.operator.getY();
-    			if(Robot.elevator.getCurrentPosition() < (RobotMap.elevatorReverseLimit + (double)RobotMap.elevatorTraval*0.05) && power < -0.5) {
-    				power = -0.5;
+    			if(power < 0) {
+    				power *= 0.85;
     			}
-    			if(Robot.elevator.getCurrentPosition() < (RobotMap.elevatorReverseLimit + (double)RobotMap.elevatorTraval*0.05) && power < -0.5)
+    			if(Robot.elevator.getCurrentPosition() < (RobotMap.elevatorReverseLimit + (double)RobotMap.elevatorTraval*0.05) && power < -0.25) {
+    				power = -0.25;
+    			}
+    			if(Robot.elevator.getCurrentPosition() > (RobotMap.elevatorForwardLimit - (double)RobotMap.elevatorTraval*0.05) && power > 0.25) {
+    				power = 0.25;
+    			}
     			Robot.elevator.setElevatorPower(power);
     		}else {
     			Robot.elevator.moveTo(setpoint);

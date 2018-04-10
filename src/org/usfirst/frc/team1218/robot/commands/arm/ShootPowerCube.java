@@ -10,7 +10,7 @@ public class ShootPowerCube extends CommandGroup {
 
     public ShootPowerCube() {
     	addSequential(new ActuateIntakeArm(false));
-    		addSequential(new ActuateIntakeWheels(-1.0));
+    		addSequential(new ActuateIntakeWheels(-0.4));
     		addSequential(new TimedCommand(1));
     		addSequential(new ActuateIntakeWheels(0));
     }

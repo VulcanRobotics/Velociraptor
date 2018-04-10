@@ -28,8 +28,8 @@ public class DriveTrain extends Subsystem {
 	
 	public static final double wheelDiameterInches = 4.0;
 	
-	public static final double kSGL = 0.615318 ; //SGL's constant
-	public static final double kAllowableError = 0.01; //allowable error in wheel rotations.
+	//public static final double kSGL = 0.615318 ; //SGL's constant
+	public static final double kAllowableError = 0.04; //allowable error in wheel rotations.
 	
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
@@ -76,7 +76,7 @@ public class DriveTrain extends Subsystem {
 	MotionProfileStatus leftStat = new MotionProfileStatus();
 	MotionProfileStatus rightStat = new MotionProfileStatus();
 	
-	boolean enableLogging = true;
+	boolean enableLogging = false;
 	boolean isLogging = false;
 	boolean isPathFollowing = false;
 
@@ -103,7 +103,7 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].set(ControlMode.Follower, RobotMap.rightMotorControllerIds[0]);
 		}
 		
-		navx = new AHRS(I2C.Port.kMXP);
+		navx = new AHRS(SerialPort.Port.kUSB);
 		
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
