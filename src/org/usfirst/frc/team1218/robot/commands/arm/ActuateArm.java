@@ -10,7 +10,6 @@ public class ActuateArm extends InstantCommand {
 	
 	public ActuateArm(boolean up) {
 		this.up = up;
-		requires(Robot.arm);
 	}
 	
 	@Override

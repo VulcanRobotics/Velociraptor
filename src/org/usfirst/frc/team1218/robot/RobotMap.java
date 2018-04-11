@@ -46,6 +46,7 @@ public class RobotMap {
 	public static double leftHighGearKv, leftHighGearKa, leftHighGearVInter, rightHighGearKv, rightHighGearKa, rightHighGearVInter;
 	public static int lowGearMaxSpeed, highGearMaxSpeed, encTicksPerRev;
 	public static double trackWidthInches;
+	public static double kSGL;
 	
 	public static int shifterPort, ptoPort, intakePort, armPort;
 	
@@ -63,11 +64,11 @@ public class RobotMap {
 	public static Path centerStartRightSwitchPath, leftStartLeftScalePath, rightStartRightScalePath, centerStartLeftSwitchPath, tuningTestPath,
 					   leftStartLeftSwitchPath, rightStartRightSwitchPath, leftStartStopEarlyPath, rightStartStopEarlyPath,rightStartLeftScalePath,
 					   leftStartRightScalePath, crossoverStart, crossoverCross, crossoverEnd, centerStartRightSwitchReversePath, centerStartLeftSwitchReversePath,
-					   twoCubeSwichPickupPath;
+					   twoCubeSwichPickupPath, crossoverStartHigh, twoCubeBackup, twoCubeSideGrab,scaleSide;
 	
 	public static void makePaths() {
 		driveTrainPathConfig = new TrajectoryGenerator.Config();
-		driveTrainPathConfig.dt = .1;			// the time in seconds between each generated segment
+		driveTrainPathConfig.dt = .1;			// the time in seconds between each generated segment 
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 6.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -75,26 +76,26 @@ public class RobotMap {
 		WaypointSequence ws = new WaypointSequence(10);
 		/* right SWitch path with center start */
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        //ws.addWaypoint(new WaypointSequence.Waypoint(3.0, -2.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(7.0, -6, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(5.5, -7, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(7.0, -7, 0.0));
         centerStartRightSwitchPath = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "rightSwitch");
         
         ws = new WaypointSequence(10);
         
 		/* testing start left, left scale path */
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(15, 0.0, 0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(20, -5.5, Math.toRadians(-70.0)));
+		ws.addWaypoint(new WaypointSequence.Waypoint(8, 0.0, 0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(17.5, -7, 0.0));
 		driveTrainPathConfig.max_acc = 5.75;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 5.75;	// maximum jerk (derivative of acceleration), ft/s
-		driveTrainPathConfig.max_vel = 5.75;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		driveTrainPathConfig.max_vel = 5;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		leftStartLeftScalePath = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "leftStartLeftScale");
 		
 		ws = new WaypointSequence(10);
 		
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(15, 0.0, 0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(19, 4, Math.toRadians(60.0)));
+		ws.addWaypoint(new WaypointSequence.Waypoint(8, 0.0, 0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(17.5, 7, 0.0));
 		driveTrainPathConfig.max_acc = 5.75;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 5.75;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 5.75;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -103,7 +104,8 @@ public class RobotMap {
 		
 		ws = new WaypointSequence(10);
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(7.0,6,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(5.5,7.5,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(7.0,7.5,0.0)); 
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 6.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -113,7 +115,7 @@ public class RobotMap {
 		ws = new WaypointSequence(10);
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(10.0, 2.0, Math.toRadians(45.0)));
-		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_acc = 7.0;		// maximum accelerati6on for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		tuningTestPath = PathManager.getPath(ws, driveTrainPathConfig, RobotMap.trackWidthInches / 12.0, "TuningTest");
@@ -141,7 +143,7 @@ public class RobotMap {
 		// so each can be different if needed 
 		ws = new WaypointSequence(10);
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(14.0, 0.0, 0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(11.0, 0.0, 0.0));
 		driveTrainPathConfig.max_acc = 4.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 4.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 4.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -149,7 +151,7 @@ public class RobotMap {
 		
 		ws = new WaypointSequence(10);
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(14.0, 0.0, 0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(11.0, 0.0, 0.0));
 		driveTrainPathConfig.max_acc = 4.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 4.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 4.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -184,8 +186,8 @@ public class RobotMap {
 		
 		ws = new WaypointSequence(2);
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(17.0,0.0,0.0));
-		//ws.addWaypoint(new WaypointSequence.Waypoint(3.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(16.0,0.0,0.0));
+		//ws.addWaypoint(new WaypointSequence.Waypoint(6.0,0.0,0.0));
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -201,7 +203,7 @@ public class RobotMap {
 		
 		ws = new WaypointSequence(2);
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(7,-6,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(7,-8,0.0));
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -209,7 +211,7 @@ public class RobotMap {
 		
 		ws = new WaypointSequence(2);
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(7,6,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(7,7,0.0));
 		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 6.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
@@ -222,6 +224,39 @@ public class RobotMap {
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		twoCubeSwichPickupPath = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "twoCubeSwitchPickup");
+		
+		ws = new WaypointSequence(2);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(4.75,0.0,0.0));
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		twoCubeBackup = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "twoCubeBackup");
+		
+		//High Gear Path
+		ws = new WaypointSequence(2);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(18.0,0.0,0.0));
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 14.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 14.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		crossoverStartHigh = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "crossoverStartHigh");
+		
+		ws = new WaypointSequence(2);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(4.0,0.0,0.0));
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		twoCubeSideGrab = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "twoCubeSideGrab");
+		
+		ws = new WaypointSequence(2);
+		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(25.0,0.0,0.0));
+		driveTrainPathConfig.max_acc = 7.0;		// maximum acceleration for the trajectory, ft/s
+		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
+		driveTrainPathConfig.max_vel = 7.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		scaleSide = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "scaleSide");
 		
 		driveTrainPathConfig.max_acc = 14.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
@@ -258,6 +293,7 @@ public class RobotMap {
 		highGearMaxSpeed = pm.getInt("highGearMaxSpeed");
 		encTicksPerRev = pm.getInt("encTicksPerRev");
 		trackWidthInches = pm.getDouble("trackWidthInches");
+		kSGL = pm.getDouble("kSGL", 0.615318);
 			
 		intakeMotorIds = pm.getInts("intakeMotorIds", new int[] {4,11});
 		intakeMotorInvert = pm.getBooleans("intakeMotorInvert");

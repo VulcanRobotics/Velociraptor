@@ -33,6 +33,7 @@ import org.usfirst.frc.team1218.robot.subsystems.Elevator;
 import org.usfirst.frc.team1218.robot.subsystems.ElevatorEnc;
 import org.usfirst.frc.team1218.robot.subsystems.ElevatorPot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.team254.lib.trajectory.Path;
 
 /**
@@ -140,6 +141,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		Robot.driveTrain.setBrake(NeutralMode.Coast);
 		
 	}
 

@@ -10,14 +10,17 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ElevatorDefaultMotionMagicAssisted extends Command {
+public class ElevatorDefaultMotionMagicAssistedRamped extends Command {
 	
 	protected static final double deadband = 0.2;
+	protected static final double rampStep = 0.02;
 	
 	protected ControlMode controlMode = ControlMode.PercentOutput, lastControlMode = ControlMode.PercentOutput;
 	protected int setpoint = RobotMap.elevatorReverseLimit;
+	
+	protected double elevatorPower = 0;
 
-    public ElevatorDefaultMotionMagicAssisted() {
+    public ElevatorDefaultMotionMagicAssistedRamped() {
     		requires(Robot.elevator);
     }
 
@@ -28,7 +31,7 @@ public class ElevatorDefaultMotionMagicAssisted extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		if(Math.abs(Robot.m_oi.operator.getY()) > deadband) {
+    		if(Math.abs(elevatorPower) > deadband) {
     			controlMode = ControlMode.PercentOutput;
     		}else {
     			controlMode = ControlMode.MotionMagic;
@@ -44,22 +47,26 @@ public class ElevatorDefaultMotionMagicAssisted extends Command {
     		}
     		
     		lastControlMode = controlMode;
-    		
+    		double power = Robot.m_oi.operator.getY();
+		if(power > elevatorPower + rampStep) {
+			elevatorPower += rampStep;
+		}else if (power < elevatorPower - rampStep) {
+			elevatorPower -= rampStep;
+		}else {
+			elevatorPower = power;
+		}
     		if(controlMode == ControlMode.PercentOutput) {
-    			double power = Robot.m_oi.operator.getY();
-    			if(power < 0) {
-    				power *= 0.85;
+    			if(Robot.elevator.getCurrentPosition() < (RobotMap.elevatorReverseLimit + (double)RobotMap.elevatorTraval*0.05) && elevatorPower < -0.25) {
+    				elevatorPower = -0.25;
     			}
-    			if(Robot.elevator.getCurrentPosition() < (RobotMap.elevatorReverseLimit + (double)RobotMap.elevatorTraval*0.05) && power < -0.25) {
-    				power = -0.25;
+    			if(Robot.elevator.getCurrentPosition() > (RobotMap.elevatorForwardLimit - (double)RobotMap.elevatorTraval*0.05) && elevatorPower > 0.25) {
+    				elevatorPower = 0.25;
     			}
-    			if(Robot.elevator.getCurrentPosition() > (RobotMap.elevatorForwardLimit - (double)RobotMap.elevatorTraval*0.05) && power > 0.25) {
-    				power = 0.25;
-    			}
-    			Robot.elevator.setElevatorPower(power);
+    			Robot.elevator.setElevatorPower(elevatorPower);
     		}else {
     			Robot.elevator.moveTo(setpoint);
     		}
+    		System.out.println(elevatorPower);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -31,20 +31,20 @@ public class TwoCubeSwitchAutonFast extends CommandGroup {
     		}
     		addParallel(pathCmd);
     		addSequential(new WaitForProfilePointsRemaining(5));
-    		addSequential(new ActuateArm(false));
-    		addSequential(new ActuateIntakeArm(true));
-    		addSequential(new ActuateIntakeWheels(1.0));
+    		addParallel(new ActuateArm(false));
+    		addParallel(new ActuateIntakeArm(true));
+    		addParallel(new ActuateIntakeWheels(1.0));
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 3));
     		addParallel(new TalonFollowPath(RobotMap.twoCubeSwichPickupPath,false));
     		addSequential(new WaitForProfilePointsRemaining(9));
-    		addSequential(new ActuateIntakeArm(false));
+    		addParallel(new ActuateIntakeArm(false));
     		addSequential(new TimedCommand(0.25));
-    		addSequential(new ActuateIntakeWheels(0));
-    		addSequential(new ActuateArm(true));
+    		addParallel(new ActuateIntakeWheels(0));
+    		addParallel(new ActuateArm(true));
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 10));
     		addParallel(new TalonFollowPath(RobotMap.twoCubeSwichPickupPath,true));
     		addSequential(new WaitForProfilePointsRemaining(5));
-    		addSequential(new SwitchAuton(plate));
+    		addSequential(new SwitchAutonFast(plate));
     		
         // Add Commands here:
         // e.g. addSequential(new Command1());

@@ -5,6 +5,7 @@ import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefault;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMagic;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMagicAssisted;
+import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorDefaultMotionMagicAssistedRamped;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
@@ -26,9 +27,10 @@ public abstract class Elevator extends Subsystem {
 			elevatorMotors[i].setInverted(RobotMap.elevatorMotorInvert);
 			elevatorMotors[i].configVoltageCompSaturation(12.0, 0);
 			elevatorMotors[i].enableVoltageCompensation(true);
-			elevatorMotors[i].configContinuousCurrentLimit(15, 0);
+			elevatorMotors[i].configContinuousCurrentLimit(20, 0);
 			elevatorMotors[i].configPeakCurrentLimit(30, 0);
-			elevatorMotors[i].configPeakCurrentDuration(250, 0);
+			elevatorMotors[i].configPeakCurrentDuration(10, 0);
+			elevatorMotors[i].configOpenloopRamp(0.125, 0);
 		}
 		
 		
@@ -120,6 +122,7 @@ public abstract class Elevator extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
+		//setDefaultCommand(new ElevatorDefaultMotionMagicAssistedRamped());
 		setDefaultCommand(new ElevatorDefaultMotionMagicAssisted());
 		//setDefaultCommand(new ElevatorDefault());
 		

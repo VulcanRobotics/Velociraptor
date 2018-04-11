@@ -28,8 +28,8 @@ public class DriveTrain extends Subsystem {
 	
 	public static final double wheelDiameterInches = 4.0;
 	
-	public static final double kSGL = 0.615318 ; //SGL's constant
-	public static final double kAllowableError = 0.01; //allowable error in wheel rotations.
+	//public static final double kSGL = 0.615318 ; //SGL's constant
+	public static final double kAllowableError = 0.04; //allowable error in wheel rotations.
 	
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)
@@ -357,7 +357,7 @@ public class DriveTrain extends Subsystem {
 		isPathFollowing = true;
 	}
 	public void turnMotionMagic(double angle) {
-		double distance = angle*RobotMap.trackWidthInches/12.0*kSGL; //lol, random constant
+		double distance = angle*RobotMap.trackWidthInches/12.0*RobotMap.kSGL; //lol, random constant
 		moveMotionMagic(-distance,distance);
 	}
 	
@@ -385,7 +385,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putString("DB/String 2", "El:" + leftMotorControllers[0].getClosedLoopError(0));
 		SmartDashboard.putString("DB/String 3", "Er:" + leftMotorControllers[0].getClosedLoopError(0));
 		SmartDashboard.putBoolean("DB/LED 0", isPtoEngaged());
-		SmartDashboard.putBoolean("DB/LED 1", navx.isConnected());
+		SmartDashboard.putBoolean("DB/LED 2", navx.isConnected());
 		SmartDashboard.putString("DB/String 4", "H" + getHeading());
 		SmartDashboard.putString("DB/String 8", leftMotorControllers[0].getControlMode().toString());
 		

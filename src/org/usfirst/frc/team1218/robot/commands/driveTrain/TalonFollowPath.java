@@ -41,7 +41,7 @@ public class TalonFollowPath extends Command {
     		if(gear) {
     			Robot.driveTrain.loadPIDFConstants(RobotMap.leftHighGearTalonMPPIDF, RobotMap.rightHighGearTalonMPPIDF);
     		}else {
-    			//Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF);
+    			Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF);
     		}
     	
     		System.out.println("TalonPathFollower: Setting " + path.getName() + ".");
@@ -70,12 +70,18 @@ public class TalonFollowPath extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("TalonPathFollower: Completed " + path.getName() + "in " + (System.currentTimeMillis()-startTime) + "milliseconds.");
+    		System.out.println("TalonPathFollower: Completed " + path.getName() + "in " + (System.currentTimeMillis()-startTime) + "milliseconds.");
+    		stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	System.out.println("TalonPathFollower: Interrupted " + path.getName() + ", ran for " + (System.currentTimeMillis()-startTime) + "milliseconds.");
+    		System.out.println("TalonPathFollower: Interrupted " + path.getName() + ", ran for " + (System.currentTimeMillis()-startTime) + "milliseconds.");
+    		stop();
+    }
+    
+    protected void stop() {
+    		Robot.driveTrain.setPower(0, 0);
     }
 }
