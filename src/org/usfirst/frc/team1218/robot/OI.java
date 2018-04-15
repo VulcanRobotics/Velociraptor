@@ -78,14 +78,15 @@ public class OI{
 		driver = new Joystick(0);
 		operator = new Joystick(1);
 		followPathBtn = new JoystickButton(driver, 2);
+		followPathBtn.whenPressed(new TalonFollowPath(RobotMap.tuningTestPath,true,false));
 		//followPathBtn.whenPressed(new TalonFollowPath(SimplePathGenerator.generateTurn(Math.PI/2*1.25, RobotMap.driveTrainPathConfig,RobotMap.trackWidthInches/12.0)));
-		//.followPathBtn.whenPressed(new MotionMagicTurnToHeading(-90));
+		//followPathBtn.whenPressed(new MotionMagicTurnToHeading(-90));
 		shiftBtn = new JoystickButton(driver,1);
 		driveTrainLoggingBtn = new JoystickButton(driver,3);
 		driveTrainLoggingBtn.whenActive(new ToggleDriveTrainLogging());
 		ptoBtn = new JoystickButton(driver,4);
 		ptoBtn.whenActive(new TogglePTO());
-		//new JoystickButton(driver, 6).whenPressed(new MotionMagicTurnToHeading(90));
+		new JoystickButton(driver, 6).whenPressed(new MotionMagicTurnToHeading(90));
 		//new JoystickButton(driver, 7).whileHeld(new StepTest());
 		//new JoystickButton(driver, 8).whileHeld(new MeasureEffectiveTrackWidth());
 		intakeBtn = new JoystickButton(operator,2);

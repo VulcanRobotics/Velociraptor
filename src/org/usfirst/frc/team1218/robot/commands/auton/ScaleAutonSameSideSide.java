@@ -18,10 +18,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class ScaleAutonSameSideSide extends CommandGroup {
 
-    public ScaleAutonSameSideSide(Plate plate) {
+    public ScaleAutonSameSideSide(Plate plate, boolean highGear) {
     		TalonFollowPath pathCmd;
     		addParallel(new ElevatorMotionMagicMoveDelayed(750,2.5));
-    		addSequential(new TalonFollowPath(RobotMap.scaleSide,false));
+    		if(highGear) {
+    			addSequential(new TalonFollowPath(RobotMap.scaleSideHigh,true,false));
+    		}else {
+    			addSequential(new TalonFollowPath(RobotMap.scaleSide,false));
+    		}
     		if(plate == Robot.Plate.LEFT) {
     			addSequential(new MotionMagicTurnToHeading(100));
     		}else {

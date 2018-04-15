@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -118,6 +119,12 @@ public abstract class Elevator extends Subsystem {
 			SmartDashboard.putString("DB/String 7", "Te:" + elevatorMotors[0].getClosedLoopTarget(0));
 		}
 		elevatorMotors[0].getFaults(elevatorFaults);
+		
+		if(DriverStation.getInstance().isDisabled()) {
+			for(int i = 0; i <2; i++) {
+				elevatorMotors[0].set(ControlMode.Disabled, 0);
+			}
+		}
 	}
 	
 	@Override
