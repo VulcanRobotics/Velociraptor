@@ -20,38 +20,35 @@ import edu.wpi.first.wpilibj.command.TimedCommand;
 /**
  *
  */
-public class TwoCubeSwitchAutonSideCube extends CommandGroup {
+public class TwoCubeSwitchAutonMovingTurn extends CommandGroup {
 
-    public TwoCubeSwitchAutonSideCube(Plate plate) {
+    public TwoCubeSwitchAutonMovingTurn(Plate plate) {
     		addSequential(new SwitchAutonFast(plate));
-    		if(plate == Robot.Plate.LEFT) {
-    			RobotMap.leftSwitchMovingTurnPaths[0].goRight();
-    			RobotMap.leftSwitchMovingTurnPaths[1].goLeft();
-    			RobotMap.leftSwitchMovingTurnPaths[2].goRight();
-    			RobotMap.leftSwitchMovingTurnPaths[3].goLeft();
+    		addParallel(new TalonFollowPath(RobotMap.twoCubeBackup,true));
+    		addSequential(new WaitForProfilePointsRemaining(3));
+    		if(plate == Plate.RIGHT) {
+    			addSequential(new MotionMagicTurnToHeading(-55));
     		}else {
-    			RobotMap.leftSwitchMovingTurnPaths[3].goRight();
-    			RobotMap.leftSwitchMovingTurnPaths[2].goLeft();
-    			RobotMap.leftSwitchMovingTurnPaths[1].goRight();
-    			RobotMap.leftSwitchMovingTurnPaths[0].goLeft();
+    			addSequential(new MotionMagicTurnToHeading(55));
     		}
-    		addSequential(new TalonFollowPath(RobotMap.leftSwitchMovingTurnPaths[0],true));
+    		
     		addParallel(new ActuateIntakeWheels(1.0));
     		addParallel(new ActuateArm(false));
     		addSequential(new ActuateIntakeArm(true));
-    		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 130));
-    		addParallel(new TalonFollowPath(RobotMap.leftSwitchMovingTurnPaths[1],false));
+    		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 3));
+    		addParallel(new TalonFollowPath(RobotMap.twoCubeSideGrab,false));
     		addSequential(new WaitForProfilePointsRemaining(1));
     		addParallel(new ActuateIntakeArm(false));
     		addSequential(new TimedCommand(0.25));
     		addParallel(new ActuateArm(true));
     		addParallel(new ActuateIntakeWheels(0.5));
-    		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 140));
-    		addParallel(new TalonFollowPath(RobotMap.leftSwitchMovingTurnPaths[2],true));
+    		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 10));
+    		addParallel(new TalonFollowPath(RobotMap.twoCubeSideGrab,true));
     		addSequential(new WaitForProfilePointsRemaining(3));
     		addParallel(new ActuateIntakeWheels(0));
+    		addSequential(new MotionMagicTurnToHeading(0));
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 150));
-    		addParallel(new TalonFollowPath(RobotMap.leftSwitchMovingTurnPaths[3],false));
+    		addParallel(new TalonFollowPath(RobotMap.twoCubeBackup,false));
     		addSequential(new WaitForProfilePointsRemaining(3));
     		addSequential(new DropPowerCube());
     		

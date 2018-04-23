@@ -15,21 +15,22 @@ public class AutonLauncher extends CommandGroup {
     		if(pos == RobotStartingPosition.center) {
     			//addSequential(new TwoCubeSwitchAutonFast(Robot.plateAssignments[Robot.outSwitch]));
     			addSequential(new TwoCubeSwitchAutonSideCube(Robot.plateAssignments[Robot.outSwitch]));
+    			//addSequential(new TwoCubeSwitchAutonMovingTurn(Robot.plateAssignments[Robot.outSwitch]));
     		}else if(pos == RobotStartingPosition.left){
     			if(Robot.plateAssignments[Robot.scale] == Plate.LEFT) {
-    				//addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
-    				addSequential(new ScaleAutonSameSideSide(Robot.plateAssignments[Robot.scale]));
+    				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
+    				//addSequential(new ScaleAutonSameSideSide(Robot.plateAssignments[Robot.scale],false));
     			}else if(Robot.plateAssignments[Robot.outSwitch] == Plate.LEFT){
     				addSequential(new SwitchSideAuton(Robot.plateAssignments[Robot.outSwitch]));
     				//addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}else {
-    				addSequential(new ScaleAutonStopShort());
-    				//addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
+    				//addSequential(new ScaleAutonStopShort());
+    				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}
     		}else {
     			if(Robot.plateAssignments[Robot.scale] == Plate.RIGHT) {
-    				//addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
-    				addSequential(new ScaleAutonSameSideSide(Robot.plateAssignments[Robot.scale]));
+    				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
+    				//addSequential(new ScaleAutonSameSideSide(Robot.plateAssignments[Robot.scale],true));
     			}else if(Robot.plateAssignments[Robot.outSwitch] == Plate.RIGHT){
     				addSequential(new SwitchSideAuton(Robot.plateAssignments[Robot.outSwitch]));
     				//addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));

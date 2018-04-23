@@ -5,7 +5,9 @@ import org.usfirst.frc.team1218.robot.Robot.Plate;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.MotionMagicTurnToHeading;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.WaitForProfilePointsRemaining;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMoveDelayed;
 
@@ -24,11 +26,14 @@ public class ScaleAutonSameSide extends CommandGroup {
     			pathCmd = new TalonFollowPath(RobotMap.leftStartLeftScalePath);
     		}
     		addParallel(new ElevatorMotionMagicMoveDelayed(750,2.5));
-    		addSequential(pathCmd);
+    		addParallel(pathCmd);
+    		addSequential(new WaitForProfilePointsRemaining(17));
     		addSequential(new DropPowerCube());
+    		
+    		//addSequential(new MotionMagicTurnToHeading(180));
     		//addSequential(new TalonFollowPath(SimplePathGenerator.generateLine(-5, RobotMap.driveTrainPathConfig)));
-    		addSequential(new TalonFollowPath(RobotMap.crossoverEnd,true));
-    		addSequential(new ElevatorMotionMagicMove(0));
+    		//addParallel(new ElevatorMotionMagicMove(0));
+    		//addSequential(new TalonFollowPath(RobotMap.crossoverEnd));
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());

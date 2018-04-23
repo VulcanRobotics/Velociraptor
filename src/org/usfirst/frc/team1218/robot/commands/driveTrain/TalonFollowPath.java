@@ -36,13 +36,8 @@ public class TalonFollowPath extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    		Robot.driveTrain.shift(gear);
     		//TODO: uncomment after tuning is complete.
-    		if(gear) {
-    			Robot.driveTrain.loadPIDFConstants(RobotMap.leftHighGearTalonMPPIDF, RobotMap.rightHighGearTalonMPPIDF);
-    		}else {
-    			Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF);
-    		}
+    		Robot.driveTrain.loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF);
     	
     		System.out.println("TalonPathFollower: Setting " + path.getName() + ".");
     		counter = 0;
@@ -61,6 +56,11 @@ public class TalonFollowPath extends Command {
     	}
     	counter ++;
     	Robot.driveTrain.processMotionProfileBuffer();
+    	
+    	if (counter == path.getLeftWheelTrajectory().getNumSegments() && gear == true) {
+    		Robot.driveTrain.loadPIDFConstants(RobotMap.leftHighGearTalonMPPIDF, RobotMap.rightHighGearTalonMPPIDF);
+    		Robot.driveTrain.shift(true);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -18,6 +18,7 @@ import com.team254.lib.trajectory.Trajectory.Segment;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -76,7 +77,7 @@ public class DriveTrain extends Subsystem {
 	MotionProfileStatus leftStat = new MotionProfileStatus();
 	MotionProfileStatus rightStat = new MotionProfileStatus();
 	
-	boolean enableLogging = false;
+	boolean enableLogging = true;
 	boolean isLogging = false;
 	boolean isPathFollowing = false;
 
@@ -87,12 +88,19 @@ public class DriveTrain extends Subsystem {
 			leftMotorControllers[i].configVoltageCompSaturation(12.0, 0);
 			leftMotorControllers[i].enableVoltageCompensation(true);
 			leftMotorControllers[i].configOpenloopRamp(0.25, 0);
+			leftMotorControllers[i].configPeakCurrentLimit(80, 0);
+			leftMotorControllers[i].configPeakCurrentDuration(100, 0);
+			leftMotorControllers[i].configContinuousCurrentLimit(40, 0);
+			
 			
 			rightMotorControllers[i] = new LoggableSRX(RobotMap.rightMotorControllerIds[i]);
 			rightMotorControllers[i].setInverted(RobotMap.rightInverted);
 			rightMotorControllers[i].configVoltageCompSaturation(12.0, 0);
 			rightMotorControllers[i].enableVoltageCompensation(true);
 			rightMotorControllers[i].configOpenloopRamp(0.25, 0);
+			rightMotorControllers[i].configPeakCurrentLimit(80, 0);
+			rightMotorControllers[i].configPeakCurrentDuration(100, 0);
+			rightMotorControllers[i].configContinuousCurrentLimit(40, 0);
 			
 			leftMotorControllers[i].setNeutralMode(NeutralMode.Coast);
 			rightMotorControllers[i].setNeutralMode(NeutralMode.Coast);
@@ -103,8 +111,8 @@ public class DriveTrain extends Subsystem {
 			rightMotorControllers[i].set(ControlMode.Follower, RobotMap.rightMotorControllerIds[0]);
 		}
 		
-		navx = new AHRS(SerialPort.Port.kUSB);
-		
+		//navx = new AHRS(SerialPort.Port.kUSB);
+		navx = new AHRS(I2C.Port.kMXP);
 		//setting up encoder feedback on Master Controllers
 		//encoder is set as feed back device for PID loop 0(the Main loop)
 		//configSelectedFeedbackSensor(feedbackDevice,loop#,timeout)
@@ -343,7 +351,7 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void startPath() {
-		loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF); //RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
+		//loadPIDFConstants(RobotMap.leftLowGearTalonMPPIDF, RobotMap.rightLowGearTalonMPPIDF); //RobotMap.leftLowGearTalonMPPIDF,RobotMap.rightLowGearTalonMPPIDF);
 		setBrake(NeutralMode.Coast);
 		leftMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
 		rightMotorControllers[0].setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 5, 0);
@@ -366,6 +374,7 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void moveMotionMagic(int leftEncCounts,int rightEncCounts) {
+		shift(false);
 		loadPIDFConstants(RobotMap.leftMotionMagicPIDF,RobotMap.rightMotionMagicPIDF);
 		leftMotorControllers[0].set(ControlMode.MotionMagic, leftMotorControllers[0].getSelectedSensorPosition(0) + leftEncCounts);
 		rightMotorControllers[0].set(ControlMode.MotionMagic, rightMotorControllers[0].getSelectedSensorPosition(0) + rightEncCounts);
@@ -407,6 +416,10 @@ public class DriveTrain extends Subsystem {
 					stopLogging();
 				}
 			}
+		}
+		
+		if(DriverStation.getInstance().isDisabled()) {
+			setBrake(NeutralMode.Coast);
 		}
 	}
 	

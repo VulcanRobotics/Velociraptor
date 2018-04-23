@@ -30,7 +30,7 @@ public class Arm extends Subsystem {
 	}
 	
 	public void setIntakePower(double intakePower) {
-		intakeMotors[0].set(ControlMode.PercentOutput, intakePower);
+		intakeMotors[0].set(ControlMode.PercentOutput, intakePower+0.075);
 	}
 	
 	public void intakeSolenoidEngage(boolean intakeState) {
