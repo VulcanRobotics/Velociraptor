@@ -66,6 +66,8 @@ public class RobotMap {
 					   leftStartRightScalePath, crossoverStart, crossoverCross, crossoverEnd, centerStartRightSwitchReversePath, centerStartLeftSwitchReversePath,
 					   twoCubeSwichPickupPath, crossoverStartHigh, twoCubeBackup, twoCubeSideGrab,scaleSide, scaleSideHigh;
 	
+	public static Path[] leftSwitchMovingTurnPaths = new Path[4];
+	
 	public static void makePaths() {
 		driveTrainPathConfig = new TrajectoryGenerator.Config();
 		driveTrainPathConfig.dt = .1;			// the time in seconds between each generated segment 
@@ -76,19 +78,19 @@ public class RobotMap {
 		WaypointSequence ws = new WaypointSequence(10);
 		/* right SWitch path with center start */
         ws.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(5.5, -7, 0.0));
-        ws.addWaypoint(new WaypointSequence.Waypoint(7.0, -7, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(5.5, -6.25, 0.0));
+        ws.addWaypoint(new WaypointSequence.Waypoint(7.0, -6.25, 0.0));
         centerStartRightSwitchPath = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "rightSwitch");
         
         ws = new WaypointSequence(10);
         
 		/* testing start left, left scale path */
 		ws.addWaypoint(new WaypointSequence.Waypoint(0.0,0.0,0.0));
-		ws.addWaypoint(new WaypointSequence.Waypoint(8, 0.0, 0.0));
+		ws.addWaypoint(new WaypointSequence.Waypoint(12, 0.0, 0.0));
 		ws.addWaypoint(new WaypointSequence.Waypoint(17.5, -7, 0.0));
 		driveTrainPathConfig.max_acc = 5.75;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 5.75;	// maximum jerk (derivative of acceleration), ft/s
-		driveTrainPathConfig.max_vel = 5;		// maximum velocity you want the robot to reach for this trajectory, ft/s
+		driveTrainPathConfig.max_vel = 6.00;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		leftStartLeftScalePath = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "leftStartLeftScale");
 		
 		ws = new WaypointSequence(10);
@@ -265,6 +267,44 @@ public class RobotMap {
 		driveTrainPathConfig.max_jerk = 7.0;	// maximum jerk (derivative of acceleration), ft/s
 		driveTrainPathConfig.max_vel = 14.0;		// maximum velocity you want the robot to reach for this trajectory, ft/s
 		scaleSideHigh = PathManager.getPath(ws, driveTrainPathConfig, trackWidthInches / 12.0, "scaleSideHigh");
+		
+		
+		 WaypointSequence[] leftSwitchMovingTurnWaypoints = new WaypointSequence[4];
+	     leftSwitchMovingTurnWaypoints[0] = new WaypointSequence(2);
+	     leftSwitchMovingTurnWaypoints[0].addWaypoint(new WaypointSequence.Waypoint(8.0,4.5,0.0));
+	     leftSwitchMovingTurnWaypoints[0].addWaypoint(new WaypointSequence.Waypoint(3.0,6.5,Math.toRadians(-60)));
+	        
+	     leftSwitchMovingTurnWaypoints[1] = new WaypointSequence(2);
+	     leftSwitchMovingTurnWaypoints[1].addWaypoint(new WaypointSequence.Waypoint(3.0,6.5,Math.toRadians(-60)));
+	     leftSwitchMovingTurnWaypoints[1].addWaypoint(new WaypointSequence.Waypoint(6.03,1.25,Math.toRadians(-60)));
+	        
+	     leftSwitchMovingTurnWaypoints[2] = new WaypointSequence(2);
+	     leftSwitchMovingTurnWaypoints[2].addWaypoint(new WaypointSequence.Waypoint(6.03,1.25,Math.toRadians(-60)));
+	     leftSwitchMovingTurnWaypoints[2].addWaypoint(new WaypointSequence.Waypoint(2.0,4.5,0.0));
+	        
+	     leftSwitchMovingTurnWaypoints[3] = new WaypointSequence(2);
+	     leftSwitchMovingTurnWaypoints[3].addWaypoint(new WaypointSequence.Waypoint(2.0,4.5,0.0));
+	     leftSwitchMovingTurnWaypoints[3].addWaypoint(new WaypointSequence.Waypoint(8.0,4.5,0.0));
+	     
+	     TrajectoryGenerator.Config lineConfig = new TrajectoryGenerator.Config();
+	     lineConfig.dt = 0.1;
+	     lineConfig.max_acc = 7.0;
+	     lineConfig.max_jerk = 14.0;
+	     lineConfig.max_vel = 7.0;
+	     
+	     TrajectoryGenerator.Config curveConfig = new TrajectoryGenerator.Config();
+	     curveConfig.dt = 0.1;
+	     curveConfig.max_acc = 7.0;
+	     curveConfig.max_jerk = 14.0;
+	     curveConfig.max_vel = 7.0;
+	     
+	     leftSwitchMovingTurnPaths[0] = PathManager.getPath(leftSwitchMovingTurnWaypoints[0], curveConfig, trackWidthInches / 12.0, "leftSwitchMovingTurn0");
+	     leftSwitchMovingTurnPaths[1] = PathManager.getPath(leftSwitchMovingTurnWaypoints[1], lineConfig, trackWidthInches / 12.0, "leftSwitchMovingTurn1");
+	     leftSwitchMovingTurnPaths[2] = PathManager.getPath(leftSwitchMovingTurnWaypoints[2], curveConfig, trackWidthInches / 12.0, "leftSwitchMovingTurn2");
+	     leftSwitchMovingTurnPaths[3] = PathManager.getPath(leftSwitchMovingTurnWaypoints[3], lineConfig, trackWidthInches / 12.0, "leftSwitchMovingTurn3");
+	     
+	     
+	     
 		
 		driveTrainPathConfig.max_acc = 14.0;		// maximum acceleration for the trajectory, ft/s
 		driveTrainPathConfig.max_jerk = 28.0;	// maximum jerk (derivative of acceleration), ft/s
