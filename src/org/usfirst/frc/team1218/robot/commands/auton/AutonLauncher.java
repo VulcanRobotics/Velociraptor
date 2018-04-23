@@ -18,7 +18,6 @@ public class AutonLauncher extends CommandGroup {
     			//addSequential(new TwoCubeSwitchAutonMovingTurn(Robot.plateAssignments[Robot.outSwitch]));
     		}else if(pos == RobotStartingPosition.left){
     			if(Robot.plateAssignments[Robot.scale] == Plate.LEFT) {
-    				//addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
     				addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
     				//addSequential(new ScaleAutonSameSideSide(Robot.plateAssignments[Robot.scale],false));
     			}else if(Robot.plateAssignments[Robot.outSwitch] == Plate.LEFT){
