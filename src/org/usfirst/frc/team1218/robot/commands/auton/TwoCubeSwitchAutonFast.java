@@ -33,7 +33,7 @@ public class TwoCubeSwitchAutonFast extends CommandGroup {
     		addSequential(new WaitForProfilePointsRemaining(5));
     		addParallel(new ActuateArm(false));
     		addParallel(new ActuateIntakeArm(true));
-    		addParallel(new ActuateIntakeWheels(1.0));
+    		addParallel(new ActuateIntakeWheels(1.0)); // First Cube is now "hopefully" in the switch
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 3));
     		addParallel(new TalonFollowPath(RobotMap.twoCubeSwichPickupPath,false));
     		addSequential(new WaitForProfilePointsRemaining(9));
