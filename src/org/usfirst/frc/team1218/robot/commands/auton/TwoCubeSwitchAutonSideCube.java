@@ -29,27 +29,28 @@ public class TwoCubeSwitchAutonSideCube extends CommandGroup {
     		if(plate == Plate.RIGHT) {
     			addSequential(new MotionMagicTurnToHeading(-60));
     		}else {
-    			addSequential(new MotionMagicTurnToHeading(60));
+    			addSequential(new MotionMagicTurnToHeading(50));
     		}
     		
     		addParallel(new ActuateIntakeWheels(1.0));
     		addParallel(new ActuateArm(false));
     		addSequential(new ActuateIntakeArm(true));
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 3));
+    		addSequential(new TimedCommand(0.5));
     		addParallel(new TalonFollowPath(RobotMap.twoCubeSideGrab,false));
     		addSequential(new WaitForProfilePointsRemaining(1));
     		addParallel(new ActuateIntakeArm(false));
     		addSequential(new TimedCommand(0.1));
     		addParallel(new ActuateArm(true));
-    		addParallel(new ActuateIntakeWheels(0.5));
+    		addParallel(new ActuateIntakeWheels(1.0));
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 20));
     		addParallel(new TalonFollowPath(RobotMap.twoCubeSideGrab,true));
     		addSequential(new WaitForProfilePointsRemaining(3));
     		addParallel(new ActuateIntakeWheels(0));
     		if(plate == Plate.RIGHT) {
-    			addSequential(new MotionMagicTurnToHeading(60));
+    			addSequential(new MotionMagicTurnToHeading(20));
     		}else {
-    			addSequential(new MotionMagicTurnToHeading(-60));
+    			addSequential(new MotionMagicTurnToHeading(-0));
     		}
     		
     		addParallel(new ElevatorMotionMagicMove(RobotMap.elevatorReverseLimit + 200));

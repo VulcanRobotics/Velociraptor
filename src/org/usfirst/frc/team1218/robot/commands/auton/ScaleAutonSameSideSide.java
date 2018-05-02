@@ -6,6 +6,7 @@ import org.usfirst.frc.team1218.robot.Robot.Plate;
 import org.usfirst.frc.team1218.robot.RobotMap;
 import org.usfirst.frc.team1218.robot.commands.arm.DropPowerCube;
 import org.usfirst.frc.team1218.robot.commands.arm.ShootPowerCube;
+import org.usfirst.frc.team1218.robot.commands.driveTrain.MotionMagicMove;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.MotionMagicTurnToHeading;
 import org.usfirst.frc.team1218.robot.commands.driveTrain.TalonFollowPath;
 import org.usfirst.frc.team1218.robot.commands.elevator.ElevatorMotionMagicMove;
@@ -24,6 +25,7 @@ public class ScaleAutonSameSideSide extends CommandGroup {
     		addSequential(new TalonFollowPath(RobotMap.scaleSide,false));
     		if(plate == Robot.Plate.LEFT) {
     			addSequential(new MotionMagicTurnToHeading(100));
+    			addSequential(new MotionMagicMove(1.0));
     		}else {
     			addSequential(new MotionMagicTurnToHeading(-100));
     		}
