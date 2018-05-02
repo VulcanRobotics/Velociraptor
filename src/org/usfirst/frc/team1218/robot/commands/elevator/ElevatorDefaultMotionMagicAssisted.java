@@ -53,7 +53,7 @@ public class ElevatorDefaultMotionMagicAssisted extends Command {
     			if(Robot.elevator.getCurrentPosition() < (RobotMap.elevatorReverseLimit + (double)RobotMap.elevatorTraval*0.05) && power < -0.25) {
     				power = -0.25;
     			}
-    			if(Robot.elevator.getCurrentPosition() > (RobotMap.elevatorForwardLimit - (double)RobotMap.elevatorTraval*0.05) && power > 0.25) {
+    			if(Robot.elevator.getCurrentPosition() > (RobotMap.elevatorForwardLimit - (double)RobotMap.elevatorTraval*0.10) && power > 0.25) {
     				power = 0.25;
     			}
     			Robot.elevator.setElevatorPower(power);
