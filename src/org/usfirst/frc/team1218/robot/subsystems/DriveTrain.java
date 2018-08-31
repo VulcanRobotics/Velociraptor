@@ -29,7 +29,7 @@ public class DriveTrain extends Subsystem {
 	public static final double wheelDiameterInches = 4.0;
 	
 	//public static final double kSGL = 0.615318 ; //SGL's constant
-	public static final double kAllowableError = 0.04; //allowable error in wheel rotations.
+	public static final double kAllowableError = 0.06; //allowable error in wheel rotations.
 	
 	/**
 	 * Return motor velocity (in encoder counts per 100ms) for a given robot velocity (in ft per sec)

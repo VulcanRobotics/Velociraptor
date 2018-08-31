@@ -35,7 +35,7 @@ public class MotionMagicTurn extends Command {
     	}else {
     		counter = 0;
     	}
-        return counter >= 10;
+        return counter >= 2;
     }
 
     // Called once after isFinished returns true
