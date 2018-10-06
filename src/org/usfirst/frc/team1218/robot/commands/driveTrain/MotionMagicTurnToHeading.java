@@ -38,7 +38,7 @@ public class MotionMagicTurnToHeading extends Command {
     	}else {
     		counter = 0;
     	}
-        return counter >= 2;
+        return counter >= 10;
     }
 
     // Called once after isFinished returns true

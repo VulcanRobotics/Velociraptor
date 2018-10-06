@@ -23,9 +23,9 @@ public class ScaleAutonCrossOver extends CommandGroup {
     		//addSequential(new TimedCommand(10.0));
     		//addSequential(new TalonFollowPath(SimplePathGenerator.generateTurn(Math.PI/2.0*1.25, RobotMap.driveTrainPathConfig, RobotMap.trackWidthInches/12.0)));
     		if(plate == Plate.LEFT) {
-    			addSequential(new MotionMagicTurnToHeading(-94.5));
+    			addSequential(new MotionMagicTurnToHeading(-90));
     		}else {
-    			addSequential(new MotionMagicTurnToHeading(94.5));
+    			addSequential(new MotionMagicTurnToHeading(90));
     		}
     		addSequential(new TalonFollowPath(RobotMap.crossoverCross, false));
     		addSequential(new MotionMagicTurnToHeading(0));

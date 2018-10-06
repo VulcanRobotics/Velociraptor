@@ -23,15 +23,13 @@ public class ScaleAutonSameSideSide extends CommandGroup {
     		TalonFollowPath pathCmd;
     		addParallel(new ElevatorMotionMagicMoveDelayed(750,2.5));
     		addSequential(new TalonFollowPath(RobotMap.scaleSide,false));
-    		/*
     		if(plate == Robot.Plate.LEFT) {
     			addSequential(new MotionMagicTurnToHeading(100));
     			addSequential(new MotionMagicMove(1.0));
     		}else {
     			addSequential(new MotionMagicTurnToHeading(-100));
     		}
-    		*/
-    		addSequential(new DropPowerCube());
+    		addSequential(new ShootPowerCube());
     		//addSequential(new TalonFollowPath(SimplePathGenerator.generateLine(-5, RobotMap.driveTrainPathConfig)));
 
         // Add Commands here:
