@@ -26,7 +26,7 @@ public class TwoCubeSwitchAuton extends CommandGroup {
     		if(plate == Plate.RIGHT) {
     			pathCmd = new TalonFollowPath(RobotMap.centerStartRightSwitchReversePath,true);
     		}else {
-    			pathCmd = new TalonFollowPath(RobotMap.centerStartLeftSwitchReversePath,true);
+    			pathCmd = new TalonFollowxPath(RobotMap.centerStartLeftSwitchReversePath,true);
     		}
     		addSequential(pathCmd);
     		addSequential(new ActuateArm(false));

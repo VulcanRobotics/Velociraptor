@@ -46,7 +46,7 @@ import com.team254.lib.trajectory.Path;
 public class Robot extends TimedRobot {
 	
 	public enum RobotStartingPosition{
-		left,center,right;
+		left,center,right,straight;
 	}
 	
 	public static final int outSwitch = 0, scale = 1, theirSwitch = 2;
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
 	
 	Command m_autonomousCommand;
 	int autonIndex = 0;
-	String[] autonText =  {"No Auton", "Left Auton", "Center Auton", "Right Auton"};
+	String[] autonText =  {"No Auton", "Left Auton", "Center Auton", "Right Auton", "side baseline auton"};
 	public static Path path;
 
 	/**
@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
         		jevois = CameraServer.getInstance().startAutomaticCapture();
         		jevois.setVideoMode(PixelFormat.kMJPEG,320,240,30);
         		VideoMode vm = jevois.getVideoMode();
-        		System.out.println("jevois pixel: " + vm.pixelFormat);
+        		System.out.println("jevois pixel: " + vm.refpixelFormat);
         		System.out.println("jevois res: " + vm.width + "x" + vm.height);
         		System.out.println("jevois fps: " + vm.fps);
         	} catch (Exception e) {
@@ -187,6 +187,9 @@ public class Robot extends TimedRobot {
 			case 3:{
 				m_autonomousCommand = new AutonLauncher(RobotStartingPosition.right);
 				break;
+			}
+			case 4:{
+				m_autonomousCommand = new AutonLauncher(RobotStartingPosition.straight);
 			}
 		}
 

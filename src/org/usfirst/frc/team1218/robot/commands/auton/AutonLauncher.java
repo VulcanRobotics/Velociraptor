@@ -26,7 +26,7 @@ public class AutonLauncher extends CommandGroup {
     				//addSequential(new ScaleAutonStopShort());
     				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}
-    		}else {
+    		}else if(pos == RobotStartingPosition.right){
     			if(Robot.plateAssignments[Robot.scale] == Plate.RIGHT) {
     				//addSequential(new ScaleAutonSameSide(Robot.plateAssignments[Robot.scale]));
     				addSequential(new ScaleAutonSameSideSide(Robot.plateAssignments[Robot.scale]));
@@ -37,7 +37,10 @@ public class AutonLauncher extends CommandGroup {
     				//addSequential(new ScaleAutonStopShort());
     				addSequential(new ScaleAutonCrossOver(Robot.plateAssignments[Robot.scale]));
     			}
-    		}
+    		}else{
+    			addSequential(new ScaleAutonStopShort());
+
+			}
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
